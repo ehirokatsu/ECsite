@@ -1,7 +1,11 @@
 {
     "Name": "名前",
     "Log in": "ログイン",
+    "Update Password": "パスワード更新",
+
     "Password": "パスワード",
+    "Current Password": "現在のパスワード",
+    "New Password": "新しいパスワード",
     "Confirm Password": "パスワードの確認",
     "Email": "メールアドレス",
     "Forgot your password?": "パスワードをお忘れですか？",
