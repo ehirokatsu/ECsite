@@ -30,6 +30,8 @@ class ShopController extends Controller
     public function store(Request $request)
     {
         //
+        return view('index');
+        
     }
 
     /**

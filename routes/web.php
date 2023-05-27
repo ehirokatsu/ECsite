@@ -18,6 +18,8 @@ Route::get('/', 'App\Http\Controllers\ShopController@index')->name('index');
 
 Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
 
+Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

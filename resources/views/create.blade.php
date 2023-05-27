@@ -9,9 +9,18 @@
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 text-gray-900">
-                <form action="/" method="post" enctype="multipart/form-data">
+                <form action="{{ route('store') }}" method="post" enctype="multipart/form-data">
+                  @csrf
+                  <span>商品名</span>
                   <input type="text">
-                  
+                  <br>
+                  <span>単価</span>
+                  <input type="text">
+                  <br>
+                  <span>商品画像</span>
+                  <input type="file" name="image">
+                  <br>
+                  <input type="submit">
                 </form>
                   
               </div>
