@@ -14,9 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('/index');
-});
+Route::get('/', 'App\Http\Controllers\ShopController@index')->name('index');
+
+Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
