@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Product;
+
 class ShopController extends Controller
 {
     /**
@@ -21,6 +23,7 @@ class ShopController extends Controller
     public function create()
     {
         //
+
         return view('create');
     }
 
@@ -30,6 +33,18 @@ class ShopController extends Controller
     public function store(Request $request)
     {
         //
+        $product = new Product;
+
+        $product->name = $request->name;
+        $product->cost = $request->cost;
+        $product->image = "";
+        $product->save();
+        
+        $request->image->storeAs('public/', $product->id . '.' .$request->image->guessExtension());
+
+        $product->image = $product->id . '.' .$request->image->guessExtension();
+        $product->save();
+
         return view('index');
         
     }

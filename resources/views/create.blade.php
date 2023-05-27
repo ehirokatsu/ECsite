@@ -12,10 +12,10 @@
                 <form action="{{ route('store') }}" method="post" enctype="multipart/form-data">
                   @csrf
                   <span>商品名</span>
-                  <input type="text">
+                  <input type="text" name="name">
                   <br>
                   <span>単価</span>
-                  <input type="text">
+                  <input type="text" name="cost">
                   <br>
                   <span>商品画像</span>
                   <input type="file" name="image">
