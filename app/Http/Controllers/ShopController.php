@@ -15,7 +15,10 @@ class ShopController extends Controller
     public function index()
     {
         //
-        return view('index');
+        $products = Product::all();
+
+        $param = ['products' => $products];
+        return view('index', $param);
     }
 
     /**
@@ -53,7 +56,7 @@ class ShopController extends Controller
         $product->save();
 
         return view('index');
-        
+
     }
 
     /**

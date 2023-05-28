@@ -16,6 +16,11 @@
                 <a href="/create" class="" >商品追加</a>
                 <a href="/" class="" >DBメンテ</a>
               </div>
+              @foreach($products as $product)
+                商品名{{ $product->name }}
+                単価{{ $product->cost }}
+              <br>
+              @endforeach
           </div>
       </div>
   </div>
