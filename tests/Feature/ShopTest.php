@@ -37,13 +37,12 @@ class ShopTest extends TestCase
 
         //画像を投稿する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');
-
+        $image = UploadedFile::fake()->image('post.jpg');;
         
         $data = [
             //
             'name' => $faker->name(),
-            'cost' => strval($faker->randomNumber(4, true)),
+            'cost' => $faker->randomNumber(4, true),
             'image' => $image
         ];
         $response = $this->post('/', $data);
