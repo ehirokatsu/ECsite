@@ -33,17 +33,23 @@ class ShopController extends Controller
      */
     public function store(ProductRequest $request)
     {
-        //
+        //空の商品モデルを生成
         $product = new Product;
 
+        //フォームからDBへセット
         $product->name = $request->name;
         $product->cost = $request->cost;
         $product->image = "";
         $product->save();
         
-        $request->image->storeAs('public/', $product->id . '.' .$request->image->guessExtension());
+        //画像ファイル名はレコードIDにする
+        $imageFileName = $product->id . '.' .$request->image->guessExtension();
 
-        $product->image = $product->id . '.' .$request->image->guessExtension();
+        //画像をストレージに保存する
+        $request->image->storeAs('public/', $imageFileName);
+
+        //画像ファイル名をDBにセットする
+        $product->image = $imageFileName;
         $product->save();
 
         return view('index');
