@@ -52,7 +52,7 @@ class ShopTest extends TestCase
             'image' => $image
         ];
         $response = $this->post('/', $data);
-        
+
         //新規投稿をしたらindexにリダイレクトされること
         $response->assertRedirect('/');
         $response->assertStatus(302);
@@ -63,5 +63,28 @@ class ShopTest extends TestCase
             'name' => 'testA',
             'cost' => 2000,
         ]);
+
+        //商品名を数値のみにする.name.stringでエラーになること
+        $data = [
+            'name' => 10,
+            'cost' => 2000,
+            'image' => $image
+        ];
+        $response = $this->post('/', $data);
+        $response->assertRedirect('/');
+        $response->assertStatus(302);
+        $response->assertValid(['image', 'cost']);
+        $response->assertInvalid(['name']);
+
+        //商品名をnullにする.name.requiredでエラーになること
+        $data = [
+            'cost' => 2000,
+            'image' => $image
+        ];
+        $response = $this->post('/', $data);
+        $response->assertRedirect('/');
+        $response->assertStatus(302);
+        $response->assertValid(['image', 'cost']);
+        $response->assertInvalid(['name']);
     }
 }
