@@ -30,7 +30,7 @@ class ShopTest extends TestCase
 
         //$product = Product::factory()->create();
 
-        $faker = \Faker\Factory::create();
+        //$faker = \Faker\Factory::create();
         //$imagePath = $faker->image('storage/app/test', 640, 480);
         //$imageFilename = basename($imagePath);
 
@@ -39,17 +39,29 @@ class ShopTest extends TestCase
         Storage::fake('test_images');
         $image = UploadedFile::fake()->image('post.jpg');;
         
+        /*
         $data = [
-            //
             'name' => $faker->name(),
             'cost' => $faker->randomNumber(4, true),
             'image' => $image
         ];
+        */
+        $data = [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => $image
+        ];
         $response = $this->post('/', $data);
-        //新規投稿をしたらindexにリダイレクトされる
+        
+        //新規投稿をしたらindexにリダイレクトされること
         $response->assertRedirect('/');
-        //$response->assertStatus(302);
-        $response->assertValid(['image']);
-        $response->assertValid(['cost']);
+        $response->assertStatus(302);
+        $response->assertValid(['name', 'image', 'cost']);
+
+        //生成したテストデータがDBに登録されていること
+        $this->assertDatabaseHas('products', [
+            'name' => 'testA',
+            'cost' => 2000,
+        ]);
     }
 }

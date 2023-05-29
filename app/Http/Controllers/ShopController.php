@@ -48,14 +48,23 @@ class ShopController extends Controller
         //画像ファイル名はレコードIDにする
         $imageFileName = $product->id . '.' .$request->image->guessExtension();
 
-        //画像をストレージに保存する
-        $request->image->storeAs('public/', $imageFileName);
+        //テストコード実行時は専用のフォルダに保存する
+        if (app()->environment('testing')) {
+
+            //画像をストレージに保存する
+            $request->image->storeAs('test/', $imageFileName);
+
+        } else {
+
+            $request->image->storeAs('public/', $imageFileName);
+
+        }
 
         //画像ファイル名をDBにセットする
         $product->image = $imageFileName;
         $product->save();
 
-        return view('index');
+        return redirect('/');
 
     }
 

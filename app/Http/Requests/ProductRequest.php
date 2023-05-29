@@ -24,7 +24,7 @@ class ProductRequest extends FormRequest
         return [
             //
             'name' => 'required|string|max:100',
-            'cost' => 'required|integer|max:30',
+            'cost' => 'required|integer|max:10000',
             'image' => 'required|image|mimes:jpg,png,svg,gif|max:1024',
         ];
     }
@@ -36,7 +36,7 @@ class ProductRequest extends FormRequest
             'name.max' => '商品名の最大文字数は100文字です',
             'cost.required' => '単価を入力してください',
             'cost.integer' => '単価は数字で入力してください',
-            'cost.max' => '単価の最大文字数は30文字です',
+            'cost.max' => '単価の最大値は10000です',
             'image.required' => '画像を入力してください',
             'image.image' => '画像ファイルを選択してください',
             'image.mimes' => '指定された拡張子（JPG,PNG,GIF,SVG）ではありません。',
