@@ -20,6 +20,12 @@ Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('creat
 
 Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
 
+Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->where('id', '[0-9]+');
+
+Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->where('id', '[0-9]+');
+
+Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->where('id', '[0-9]+');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');

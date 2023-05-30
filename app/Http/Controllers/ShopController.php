@@ -74,6 +74,9 @@ class ShopController extends Controller
     public function show(string $id)
     {
         //
+        $product = product::findOrFail($id);
+        $param = ['product' => $product];
+        return view('show', $param);
     }
 
     /**
@@ -82,6 +85,10 @@ class ShopController extends Controller
     public function edit(string $id)
     {
         //
+        $product = product::findOrFail($id);
+        $param = ['product' => $product];
+        return view('edit', $param);
+
     }
 
     /**

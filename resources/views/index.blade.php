@@ -19,6 +19,25 @@
               @foreach($products as $product)
                 商品名{{ $product->name }}
                 単価{{ $product->cost }}
+                <a href="/{{ $product->id }}" class="" >
+                  詳細
+                </a>
+                <form action="/" method="post">
+                  @csrf
+                  <button type="submit" class="">
+                    カートに入れる
+                  </button>
+                </form>
+                <a href="/{{ $product->id }}/edit" class="" >
+                  編集
+                </a>
+                <form action="/{{ $product->id }}" method="post">
+                  @method('DELETE')
+                  @csrf
+                  <button type="submit" class="">
+                    削除
+                  </button>
+                </form>
               <br>
               @endforeach
           </div>
