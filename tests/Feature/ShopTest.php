@@ -21,7 +21,7 @@ class ShopTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_example(): void
+    public function test_product_register(): void
     {
         $response = $this->get('/');
 
@@ -46,16 +46,14 @@ class ShopTest extends TestCase
             'image' => $image
         ];
         */
-        $data = [
+        $response = $this->post('/', [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
-        ];
-        $response = $this->post('/', $data);
+        ]);
 
         //新規投稿をしたらindexにリダイレクトされること
-        $response->assertRedirect('/');
-        $response->assertStatus(302);
+        $response->assertRedirect('/')->assertStatus(302);
         $response->assertValid(['name', 'image', 'cost']);
 
         //生成したテストデータがDBに登録されていること
@@ -64,27 +62,118 @@ class ShopTest extends TestCase
             'cost' => 2000,
         ]);
 
+
+    }
+
+    
+    public function test_name_validate(): void
+    {
+        //画像を生成する
+        Storage::fake('test_images');
+        $image = UploadedFile::fake()->image('post.jpg');;
+
         //商品名を数値のみにする.name.stringでエラーになること
-        $data = [
+        $response = $this->post('/', [
             'name' => 10,
             'cost' => 2000,
             'image' => $image
-        ];
-        $response = $this->post('/', $data);
-        $response->assertRedirect('/');
-        $response->assertStatus(302);
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
 
         //商品名をnullにする.name.requiredでエラーになること
-        $data = [
+        $response = $this->post('/', [
             'cost' => 2000,
             'image' => $image
-        ];
-        $response = $this->post('/', $data);
-        $response->assertRedirect('/');
-        $response->assertStatus(302);
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
+
+        //商品名を最大文字数以上にする.name.maxでエラーになること
+        $response = $this->post('/', [
+            'name' => '0123456789012345678901234567890',
+            'cost' => 2000,
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['image', 'cost']);
+        $response->assertInvalid(['name']);
+
+    }
+
+
+    public function test_cost_validate(): void
+    {
+        //画像を生成する
+        Storage::fake('test_images');
+        $image = UploadedFile::fake()->image('post.jpg');;
+
+        //単価を文字列にする.cost.integerでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'cost' => 'AAA',
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価をnullにする.cost.requiredでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価を最大値以上にする.cost.maxでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'cost' => 10001,
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価を最小値以下にする.cost.minでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'cost' => 0,
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+    }
+
+    public function test_image_validate(): void
+    {
+        //画像を生成する
+        Storage::fake('test_images');
+        $image = UploadedFile::fake()->image('post.txt');;
+
+        //画像をnullにする.image.requiredでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'cost' => 2000,
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'cost']);
+        $response->assertInvalid(['image']);
+
+        //画像ファイル以外を指定する.image.imageでエラーになること
+        $response = $this->post('/', [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => $image
+        ]);
+        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertValid(['name', 'cost']);
+        $response->assertInvalid(['image']);
+
     }
 }
