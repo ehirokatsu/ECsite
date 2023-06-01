@@ -39,13 +39,6 @@ class ShopTest extends TestCase
         Storage::fake('test_images');
         $image = UploadedFile::fake()->image('post.jpg');;
         
-        /*
-        $data = [
-            'name' => $faker->name(),
-            'cost' => $faker->randomNumber(4, true),
-            'image' => $image
-        ];
-        */
         $response = $this->post('/', [
             'name' => 'testA',
             'cost' => 2000,
@@ -62,10 +55,43 @@ class ShopTest extends TestCase
             'cost' => 2000,
         ]);
 
+    }
+
+    public function test_product_update(): void
+    {
+        //商品を作成し編集画面を開けること
+        $product = Product::factory()->create();
+        $response = $this->get('/' . $product->id . '/edit');
+        $response->assertStatus(200);
+
+        //商品情報を更新できること
+        $response = $this->put('/' . $product->id, [
+            'name' => 'testB',
+            'cost' => 3000,
+        ]);
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'testB',
+            'cost' => 3000,
+        ]);
 
     }
 
-    
+    public function test_product_delete(): void
+    {
+
+        $product = Product::factory()->create();
+        
+        //削除できていること
+        $response = $this->delete('/' . $product->id);
+        $response->assertStatus(302);
+        $this->assertDatabaseMissing('products', ['id' => $product->id]);
+        
+    }
+
+
     public function test_name_validate(): void
     {
         //画像を生成する
