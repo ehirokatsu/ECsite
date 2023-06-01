@@ -19,6 +19,7 @@
               @foreach($products as $product)
                 商品名{{ $product->name }}
                 単価{{ $product->cost }}
+                <img class="" src="/storage/{{$product->image}}">
                 <a href="/{{ $product->id }}" class="" >
                   詳細
                 </a>
