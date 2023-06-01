@@ -97,6 +97,34 @@ class ShopController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $product = product::findOrFail($id);
+
+        //フォームからDBへセット
+        $product->name = $request->name;
+        $product->cost = $request->cost;
+
+        if (!empty($request->image)) {
+            //画像ファイル名はレコードIDにする
+            $imageFileName = $product->id . '.' .$request->image->guessExtension();
+
+            //テストコード実行時は専用のフォルダに保存する
+            if (app()->environment('testing')) {
+
+                //画像をストレージに保存する
+                $request->image->storeAs('test/', $imageFileName);
+
+            } else {
+
+                $request->image->storeAs('public/', $imageFileName);
+            }
+
+            //画像ファイル名をDBにセットする
+            $product->image = $imageFileName;
+        }
+
+        $product->save();
+        
+        return redirect("/");
     }
 
     /**
