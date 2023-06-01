@@ -19,7 +19,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
 
-        $imagePath = $this->faker->image('public', 640, 480);
+        $imagePath = $this->faker->image('public/storage', 640, 480);
         $imageFilename = basename($imagePath);
 
         return [
