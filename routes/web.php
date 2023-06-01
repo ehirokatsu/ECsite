@@ -26,6 +26,7 @@ Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->where('id'
 
 Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->where('id', '[0-9]+');
 
+Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->where('id', '[0-9]+');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

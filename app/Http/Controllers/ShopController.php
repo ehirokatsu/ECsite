@@ -133,5 +133,9 @@ class ShopController extends Controller
     public function destroy(string $id)
     {
         //
+        $product = product::findOrFail($id);
+        $product->delete();
+
+        return redirect("/");
     }
 }
