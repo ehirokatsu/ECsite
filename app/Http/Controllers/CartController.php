@@ -73,7 +73,8 @@ class CartController extends Controller
         
     }
 
-    public function searchValue($array, $value) {
+    public function searchValue($array, $value) : boolean
+    {
         foreach ($array as $index => $subArray) {
             $subIndex = array_search($value, $subArray);
             if ($subIndex !== false) {
@@ -82,4 +83,5 @@ class CartController extends Controller
         }
         return false;
     }
+
 }
