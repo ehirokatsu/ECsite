@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('cost');
-            $table->string('image');
+            $table->string('name')->nullable(false);
+            $table->string('cost')->nullable(false);
+            $table->string('image')->nullable(false);
             $table->timestamps();
         });
     }

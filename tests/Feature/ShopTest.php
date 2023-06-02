@@ -38,7 +38,8 @@ class ShopTest extends TestCase
         //画像を投稿する
         Storage::fake('test_images');
         $image = UploadedFile::fake()->image('post.jpg');;
-        
+        //\Log::info('image=' . $image);
+
         $response = $this->post('/', [
             'name' => 'testA',
             'cost' => 2000,
@@ -61,6 +62,7 @@ class ShopTest extends TestCase
     {
         //商品を作成し編集画面を開けること
         $product = Product::factory()->create();
+
         $response = $this->get('/' . $product->id . '/edit');
         $response->assertStatus(200);
 
@@ -77,6 +79,11 @@ class ShopTest extends TestCase
             'cost' => 3000,
         ]);
 
+        //factory内のfakerで生成した画像を削除する
+        //\Log::info('imagePath=' . storage_path('app/public/fake/') . $product->image);
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
     }
 
     public function test_product_delete(): void
@@ -89,6 +96,10 @@ class ShopTest extends TestCase
         $response->assertStatus(302);
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
         
+        //factory内のfakerで生成した画像を削除する
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
     }
 
 
