@@ -73,7 +73,7 @@ class CartController extends Controller
         
     }
 
-    public function searchValue($array, $value) : boolean
+    public function searchValue($array, $value)
     {
         foreach ($array as $index => $subArray) {
             $subIndex = array_search($value, $subArray);
