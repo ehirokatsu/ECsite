@@ -20,13 +20,21 @@ Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('creat
 
 Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
 
-Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->where('id', '[0-9]+');
+Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->name('show')->where('id', '[0-9]+');
 
-Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->where('id', '[0-9]+');
+Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->name('edit')->where('id', '[0-9]+');
 
-Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->where('id', '[0-9]+');
+Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->name('update')->where('id', '[0-9]+');
 
-Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->where('id', '[0-9]+');
+Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->name('destroy')->where('id', '[0-9]+');
+
+Route::get('/cart', 'App\Http\Controllers\CartController@index')->name('cart.index');
+
+Route::post('/cart', 'App\Http\Controllers\CartController@store')->name('cart.store');
+
+Route::post('/cart/{id}', 'App\Http\Controllers\CartController@destroy')->name('cart.destroy')->where('id', '[0-9]+');
+
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
