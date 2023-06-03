@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Product;
+
 class CartController extends Controller
 {
     //
@@ -19,14 +21,14 @@ class CartController extends Controller
     public function store (Request $request)
     {
         //セッションに値を保存
-        $id = $request->id;
+        $product = product::findOrFail($request->id);
 
         //現在のカート内容を取得
         $cart = $request->session()->get('cart');
 
         //追加された商品を取得
         $array = [
-            'id' => $id,
+            'product' => $product,
         ];  
         
         //カートに追加する
@@ -38,7 +40,7 @@ class CartController extends Controller
 
             $cart = [
                 [
-                    'id' => $id,
+                    'product' => $product,
                 ]
             ];  
 
@@ -56,7 +58,7 @@ class CartController extends Controller
         //現在のカート内容を取得
         $cart = $request->session()->get('cart');
 
-
+/*
         $index = $this->searchValue($cart, $id);
 
         //$cart[false]だと$cart[0]と同じ意味になる。よって先頭要素が削除されてしまう。
@@ -65,6 +67,8 @@ class CartController extends Controller
             unset($cart[$index]);
         }
         $cart = array_values($cart);
+*/
+        $cart = $this->removeCartItemById($cart, $id);
 
         //カートをsessionに保存する
         $request->session()->put('cart', $cart);
@@ -82,6 +86,15 @@ class CartController extends Controller
             }
         }
         return false;
+    }
+
+    public function removeCartItemById($cart, $id) {
+        foreach ($cart as $key => $item) {
+            if ($item['product']->id == $id) {
+                unset($cart[$key]);
+            }
+        }
+        return array_values($cart);
     }
 
 }
