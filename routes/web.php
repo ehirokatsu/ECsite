@@ -32,7 +32,7 @@ Route::get('/cart', 'App\Http\Controllers\CartController@index')->name('cart.ind
 
 Route::post('/cart', 'App\Http\Controllers\CartController@store')->name('cart.store');
 
-Route::post('/cart/{id}', 'App\Http\Controllers\CartController@destroy')->name('cart.destroy')->where('id', '[0-9]+');
+Route::delete('/cart/{id}', 'App\Http\Controllers\CartController@destroy')->name('cart.destroy')->where('id', '[0-9]+');
 
 
 

@@ -13,7 +13,7 @@ class CartController extends Controller
     {
         //セッションから値を取得
         $carts = $request->session()->get('cart');
-
+        \Log::info($carts);
         return view('cart.index', ['carts' => $carts]);
 
     }
