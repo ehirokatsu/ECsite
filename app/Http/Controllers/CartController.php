@@ -14,7 +14,7 @@ class CartController extends Controller
         //セッションから値を取得
         $carts = $request->session()->get('cart');
 
-        return view('cart', ['carts' => $carts]);
+        return view('cart.index', ['carts' => $carts]);
 
     }
 

@@ -13,11 +13,18 @@
                 @foreach($carts as $cart)
                   <p>{{ $cart['product']->id }}</p>
                   <p>{{ $cart['product']->name }}</p>
+                  <img class="" src="/storage/{{$cart['product']->image}}">
                   <form action="{{ route('cart.destroy', ['id' => $cart['product']['id']]) }}" method="post">
                     @csrf
                     <input type="submit" value="削除">
                   </form>
                 @endforeach
+                <form action="" method="post">
+                  @csrf
+                  <button type="submit" class="">
+                    購入する
+                  </button>
+                </form>
               @else
                 カートは空です。
               @endif
