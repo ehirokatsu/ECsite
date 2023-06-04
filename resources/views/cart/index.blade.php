@@ -11,10 +11,10 @@
              
               @if (!empty($carts))
                 @foreach($carts as $cart)
-                  <p>{{ $cart['product']->id }}</p>
-                  <p>{{ $cart['product']->name }}</p>
-                  <img class="" src="/storage/{{$cart['product']->image}}">
-                  <form action="{{ route('cart.destroy', ['id' => $cart['product']['id']]) }}" method="post">
+                  <p>{{ $cart->id }}</p>
+                  <p>{{ $cart->name }}</p>
+                  <img class="" src="/storage/{{$cart->image}}">
+                  <form action="{{ route('cart.destroy', ['id' => $cart['id']]) }}" method="post">
                     @method('DELETE')
                     @csrf
                     <input type="submit" value="削除">

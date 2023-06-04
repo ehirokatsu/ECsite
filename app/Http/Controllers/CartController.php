@@ -13,12 +13,30 @@ class CartController extends Controller
     {
         //セッションから値を取得
         $carts = $request->session()->get('cart');
-        \Log::info($carts);
+        //dump($carts);
         return view('cart.index', ['carts' => $carts]);
 
     }
-
     public function store (Request $request)
+    {
+        //セッションに値を保存
+        $product = product::findOrFail($request->id);
+
+        //現在のカート内容を取得
+        $cart = $request->session()->get('cart');
+
+        //カートに追加する
+        array_push($cart, $product);
+
+
+        //カートをsessionに保存する
+        $request->session()->put('cart', $cart);
+        //\Log::info($cart);
+        return redirect('/cart');
+    }
+
+
+    public function store2 (Request $request)
     {
         //セッションに値を保存
         $product = product::findOrFail($request->id);
@@ -90,7 +108,7 @@ class CartController extends Controller
 
     public function removeCartItemById($cart, $id) {
         foreach ($cart as $key => $item) {
-            if ($item['product']->id == $id) {
+            if ($item->id == $id) {
                 unset($cart[$key]);
             }
         }
