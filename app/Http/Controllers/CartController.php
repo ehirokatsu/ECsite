@@ -13,7 +13,8 @@ class CartController extends Controller
     {
         //セッションから値を取得
         $carts = $request->session()->get('cart');
-        //dump($carts);
+
+        //$cartがnullの場合はView側で表示処理を分ける
         return view('cart.index', ['carts' => $carts]);
 
     }

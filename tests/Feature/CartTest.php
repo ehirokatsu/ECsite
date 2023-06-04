@@ -43,6 +43,13 @@ class CartTest extends TestCase
             return $value[0]->id !== 1;
         });    
         
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
+
+        if (file_exists(storage_path('app/public/fake/') . $product2->image)) {
+            unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
+        }
         /*
         $response->assertSessionHas('cart', function ($value) {
             return $value[0]['product']->id === 1;
