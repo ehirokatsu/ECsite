@@ -17,16 +17,26 @@ class CartTest extends TestCase
      */
     public function test_cart_store(): void
     {
-        /*
+        
         $product = Product::factory()->create();
         \Log::info('product=' . $product);
-        $request = Request::create('/cart', 'POST', ['id' => $product->id]);
-        \Log::info('request=' . $request);
-        $cart = $request->session()->get('cart');
-        \Log::info('cart=' . $cart);
-        $this->assertEquals($product->id, $cart[0]['product']->id);
-        */
+        //$request = Request::create('/cart', 'POST', ['id' => $product->id]);
+        //\Log::info('request=' . $request);
 
+
+        $response = $this->post('/cart', [
+            'id' => $product->id,
+        ]);
+        $response->dumpSession();
+        //$this->assertEquals($product->id, $cart
+
+        //$cart = $request->session()->get('cart');
+        //\Log::info('cart=' . $cart);
+        $this->assertEquals($product->id, $cart[0]['product']->id);
+        
+        
+
+        /*
         $product = Product::factory()->create();
 
         // Create a new request instance
@@ -40,6 +50,6 @@ class CartTest extends TestCase
     
         // Assert that the cart contains the expected product
         $this->assertEquals($product->id, $cart[0]['product']->id);
-
+*/
     }
 }
