@@ -25,13 +25,16 @@ class CartController extends Controller
         //現在のカート内容を取得
         $cart = $request->session()->get('cart');
 
+        //初回は$cartがnullなので、配列初期化しないとpushできない
+        if (empty($cart)) {
+            $cart = [];
+        }
         //カートに追加する
         array_push($cart, $product);
 
-
         //カートをsessionに保存する
         $request->session()->put('cart', $cart);
-        //\Log::info($cart);
+        \Log::info($cart);
         return redirect('/cart');
     }
 
