@@ -35,9 +35,9 @@ Route::post('/cart', 'App\Http\Controllers\CartController@store')->name('cart.st
 Route::delete('/cart/{id}', 'App\Http\Controllers\CartController@destroy')->name('cart.destroy')->where('id', '[0-9]+');
 
 //問い合わせフォーム（Mailableクラスを使用）
-Route::get('/contact', 'App\Http\Controllers\ContactsController@index')->name('contact.index');
-Route::post('/contact/confirm', 'App\Http\Controllers\ContactsController@confirm')->name('contact.confirm');
-Route::post('/contact/thanks', 'App\Http\Controllers\ContactsController@send')->name('contact.send');
+Route::get('/contact', 'App\Http\Controllers\ContactController@index')->name('contact.index');
+Route::post('/contact/confirm', 'App\Http\Controllers\ContactController@confirm')->name('contact.confirm');
+Route::post('/contact/thanks', 'App\Http\Controllers\ContactController@send')->name('contact.send');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
