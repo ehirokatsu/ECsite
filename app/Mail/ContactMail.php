@@ -70,7 +70,11 @@ class ContactMail extends Mailable
     public function attachments(): array
     {
         return [
-            Attachment::fromPath('/Users/hiro/ECsite/storage/app/public/test.txt')->as('test.txt'),      
+            //フルパスを指定する
+            Attachment::fromPath('/Users/hiro/ECsite/storage/app/public/test.txt')->as('test.txt'), 
+            //storage/app配下のパスを指定する
+            Attachment::fromStorage('/attachment/test.txt')->as('test.txt'), 
+           
         ];
     }
 }
