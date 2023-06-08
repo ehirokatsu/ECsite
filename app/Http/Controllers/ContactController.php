@@ -4,41 +4,29 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Requests\ContactRequest;
+
 //イベント使用
 use App\Events\ContactSended;
 
 class ContactController extends Controller
 {
     //お問い合わせフォームトップページ
-    public function index () {
-
+    public function index ()
+    {
         return view('contact.index');
     }
 
     //問い合わせフォームの入力値を受け取って確認画面を表示する
-    public function confirm (Request $request) {
-
-        //フォームのバリデーション
-        $request->validate([
-            'email' => 'required|email',
-            'title' => 'required',
-            'body' => 'required',
-        ]);
-
+    public function confirm (ContactRequest $request)
+    {
         //フォームの入力値を確認用ビューに渡す
         $inputs = $request->all();
         return view('contact.confirm', [ 'inputs' => $inputs ]);
     }
 
-    public function send (Request $request) {
-
-        //hiddenで送信された内容をバリデーション（異常系）
-        $request->validate([
-            'email' => 'required|email',
-            'title' => 'required',
-            'body' => 'required',
-        ]);
-
+    public function send (ContactRequest $request)
+    {
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
 
