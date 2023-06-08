@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-//メール送信用
-use App\Mail\ContactMail;
-//メールクラスを使用する場合に必要
-use Mail;
+//イベント使用
+use App\Events\ContactSended;
 
 class ContactController extends Controller
 {
@@ -57,25 +55,8 @@ class ContactController extends Controller
 
         if ( $action === 'submit') {
 
-            //入力されたメールアドレスに確認メールを送進する
-            \Mail::to($inputs['email'])->send(new ContactMail($inputs));
-
-            /*
-            //Mailクラスのみ使用する場合。内容はSendMailクラスと同じ
-            //クロージャ内で$inputsを使うのでuseを使う。
-            Mail::send('contact.mail', $inputs, function ($message) use ($inputs) {
-                $message->to($inputs['email'])
-                ->from('src@example.com')
-                ->subject($inputs['title']);
-            });
-
-            //Mailクラスでテキストメールを送信する場合
-            Mail::send(['text' => 'contact.mail'], $inputs, function ($message) use ($inputs) {
-                $message->to($inputs['email'])
-                ->from('src@example.com')
-                ->subject($inputs['title']);
-            });
-            */
+            //問合せ送信処理のイベントに渡す
+            event(new ContactSended($inputs));
 
             //二重送進対策でトークン再発行
             $request->session()->regenerateToken();

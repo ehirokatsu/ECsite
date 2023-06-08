@@ -7,6 +7,11 @@ use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
+//追加
+use App\Events\ContactSended;
+use App\Listeners\SendConfirmMail;
+use App\Listeners\SendConfirmMail2;
+
 class EventServiceProvider extends ServiceProvider
 {
     /**
@@ -18,6 +23,16 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        //イベントクラスとリスナークラスを関連づけ
+        ContactSended::class => [
+            SendConfirmMail::class,
+        ],
+        /*メールクラス用リスナー。使用する時にコメントを外す
+        ContactSended::class => [
+            SendConfirmMail2::class,
+        ],
+        */
     ];
 
     /**
