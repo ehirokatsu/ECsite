@@ -23,7 +23,7 @@ class CartTest extends TestCase
             'id' => $product->id,
         ]);
         //\Log::info($response);
-        $response->dumpSession();
+        //$response->dumpSession();
         
         
         $response->assertSessionHas('cart', function ($value) {

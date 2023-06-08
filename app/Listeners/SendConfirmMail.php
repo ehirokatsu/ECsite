@@ -26,5 +26,6 @@ class SendConfirmMail
     {
         //メーラブルクラスで送信する
         \Mail::to($event->inputs['email'])->send(new ContactMail($event->inputs));
+        //\Mail::to($event->inputs['email'])->queue(new ContactMail($event->inputs));
     }
 }
