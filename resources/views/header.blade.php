@@ -7,4 +7,4 @@
 <a href="/" class="" >アカウント編集</a>
 <a href="/contact" class="" >問合せ</a>
 <a href="/create" class="" >商品追加</a>
-<a href="/" class="" >DBメンテ</a>
+<a href="/databaseManage" class="" >DBメンテ</a>
