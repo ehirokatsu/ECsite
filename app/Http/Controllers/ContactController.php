@@ -54,12 +54,13 @@ class ContactController extends Controller
 
         } else {
 
-            //前画面に戻る
-            return redirect()
-            ->route('contact.index')
-            ->without($inputs);
-
+            //入力した値を次のリクエストまでの間だけセッションに保存する
+            $request->session()->flashInput($inputs);
+            
+            //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
+            return redirect()->route('contact.index')->withInput();
         }
+
 
     }
 }
