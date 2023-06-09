@@ -119,4 +119,9 @@ class CartController extends Controller
         return array_values($cart);
     }
 
+    public function confirm (Request $request)
+    {
+        return view('cart.confirm');
+
+    }
 }
