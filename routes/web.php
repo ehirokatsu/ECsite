@@ -34,7 +34,7 @@ Route::post('/cart', 'App\Http\Controllers\CartController@store')->name('cart.st
 
 Route::delete('/cart/{id}', 'App\Http\Controllers\CartController@destroy')->name('cart.destroy')->where('id', '[0-9]+');
 
-Route::post('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
+
 
 
 //問い合わせフォーム（Mailableクラスを使用）
@@ -55,6 +55,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
+});
+
+Route::get('/welcome', function () {
+    return view('welcome');
 });
 
 require __DIR__.'/auth.php';
