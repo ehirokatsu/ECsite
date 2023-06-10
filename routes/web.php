@@ -45,6 +45,7 @@ Route::post('/contact/thanks', 'App\Http\Controllers\ContactController@send')->n
 Route::get('/databaseManage', 'App\Http\Controllers\DatabaseManageController@index')->name('databaseManage.index');
 Route::post('/databaseManage/export', 'App\Http\Controllers\DatabaseManageController@export')->name('databaseManage.export');
 
+Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->name('cart.complete');
 
 
 Route::get('/dashboard', function () {

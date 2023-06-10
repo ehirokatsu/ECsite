@@ -124,4 +124,15 @@ class CartController extends Controller
         return view('cart.confirm');
 
     }
+
+    public function complete (Request $request)
+    {
+
+        //カートを空にする
+        $request->session()->forget('cart'); 
+
+        return view('cart.complete');
+
+    }
+
 }

@@ -42,6 +42,8 @@
             <x-primary-button class="ml-3">
                 {{ __('Log in') }}
             </x-primary-button>
+            
         </div>
+        <a href="/databaseManage" class="" >ログインせずに購入する</a><!--追加-->
     </form>
 </x-guest-layout>
