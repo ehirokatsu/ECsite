@@ -8,3 +8,5 @@
 <a href="/contact" class="" >問合せ</a>
 <a href="/create" class="" >商品追加</a>
 <a href="/databaseManage" class="" >DBメンテ</a>
+<a href="{{ route('register') }}">登録</a>
+<a href="{{ route('login') }}">ログイン</a>
