@@ -8,17 +8,16 @@
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
               <div class="p-6 text-gray-900">
               </div>
-            購入者情報を入力してください。
-            <form method="post" action="{{ route('cart.buyConfirm') }}">
+            購入者情報です。
+            <form method="post" action="{{ route('cart.complete') }}">
               @csrf
               <label for="">名前</label>
-              <input type="text" name="name" value="{{ old('name') }}">
-              @if ( $errors->has('name') )
-                <p class="error-message">{{ $errors->first('name') }}</p>
-              @endif
+              {{ $inputs['name'] }}
+              <input type="hidden" name="title" value="{{ $inputs['name'] }}">
               <br>
               <label for="">メールアドレス</label>
-              <input type="text" name="email" value="{{ old('email') }}">
+              {{ $inputs['email'] }}
+              <input type="hidden" name="email" value="{{ $inputs['email'] }}">
               @if ( $errors->has('email') )
                 <p class="error-message">{{ $errors->first('email') }}</p>
               @endif
@@ -37,7 +36,7 @@
               @endif
               -->
               <br>
-              <button type="submit">入力内容確認</button>
+              <button type="submit">購入を確定する</button>
             </form>
           </div>
       </div>

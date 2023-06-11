@@ -142,4 +142,11 @@ class CartController extends Controller
 
     }
 
+    public function buyConfirm (Request $request)
+    {
+
+        $inputs = $request->all();
+        return view('cart.buyConfirm', ['inputs' => $inputs]);
+
+    }
 }

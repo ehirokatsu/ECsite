@@ -49,6 +49,8 @@ Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->n
 
 Route::post('/cart/buy', 'App\Http\Controllers\CartController@buy')->name('cart.buy');
 
+Route::post('/cart/buyConfirm', 'App\Http\Controllers\CartController@buyConfirm')->name('cart.buyConfirm');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
