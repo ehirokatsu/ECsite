@@ -29,7 +29,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        //カートからリダイレクトされた場合
         if (session()->has('redirect_to')) {
+ 
+            //セッションに保存しているルートにリダイレクトさせる
             return redirect(session()->pull('redirect_to'));
         }
         

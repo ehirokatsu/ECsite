@@ -35,7 +35,7 @@ class CartController extends Controller
 
         //カートをsessionに保存する
         $request->session()->put('cart', $cart);
-        \Log::info($cart);
+        //\Log::info($cart);
         return redirect('/cart');
     }
 
@@ -121,10 +121,15 @@ class CartController extends Controller
 
     public function confirm (Request $request)
     {
-        //$request->session()->forget('redirect_to'); 
+        //ログインしていない場合、ログイン画面にリダイレクトする
         if (\Auth::guest()) {
-            return redirect()->guest('login')->with('redirect_to', '/cart/confirm');
+
+            //セッションにログイン後のリダイレクト先を指定する
+            $request->session()->put('redirect_to', '/cart/confirm');
+
+            return redirect()->guest('login');
         }
+        
         return view('cart.confirm');
 
     }
