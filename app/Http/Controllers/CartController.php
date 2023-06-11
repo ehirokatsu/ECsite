@@ -121,6 +121,10 @@ class CartController extends Controller
 
     public function confirm (Request $request)
     {
+        //$request->session()->forget('redirect_to'); 
+        if (\Auth::guest()) {
+            return redirect()->guest('login')->with('redirect_to', '/cart/confirm');
+        }
         return view('cart.confirm');
 
     }
