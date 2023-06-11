@@ -44,6 +44,11 @@
             </x-primary-button>
             
         </div>
-        <a href="/databaseManage" class="" >ログインせずに購入する</a><!--追加-->
+        
     </form>
+    <form method="POST" action="{{ route('cart.buy') }}">
+      @csrf
+      <button type="submit">ログインせずに購入する</button><!--追加-->
+    </form>
+    <a href="{{ route('register') }}">登録</a>
 </x-guest-layout>

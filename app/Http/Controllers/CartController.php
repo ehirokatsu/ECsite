@@ -135,4 +135,11 @@ class CartController extends Controller
 
     }
 
+    public function buy (Request $request)
+    {
+
+        return view('cart.buy');
+
+    }
+
 }

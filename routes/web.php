@@ -47,6 +47,7 @@ Route::post('/databaseManage/export', 'App\Http\Controllers\DatabaseManageContro
 
 Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->name('cart.complete');
 
+Route::post('/cart/buy', 'App\Http\Controllers\CartController@buy')->name('cart.buy');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
