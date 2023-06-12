@@ -26,7 +26,7 @@ class CartTest extends TestCase
         //$response->dumpSession();
         
         
-        $response->assertSessionHas('cart', function ($value) {
+        $response->assertSessionHas('carts', function ($value) {
             return $value[0]->id === 1;
         });
 
@@ -39,7 +39,7 @@ class CartTest extends TestCase
         $response = $this->delete('/cart/' . $product->id);
         
 
-        $response->assertSessionHas('cart', function ($value) {
+        $response->assertSessionHas('carts', function ($value) {
             return $value[0]->id !== 1;
         });    
         
@@ -50,23 +50,7 @@ class CartTest extends TestCase
         if (file_exists(storage_path('app/public/fake/') . $product2->image)) {
             unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
         }
-        /*
-        $response->assertSessionHas('cart', function ($value) {
-            return $value[0]['product']->id === 1;
-        });
 
-        $product2 = Product::factory()->create();
-
-        $response = $this->post('/cart', [
-            'id' => $product2->id,
-        ]);
-        $response = $this->delete('/cart/' . $product->id);
-        
-
-        $response->assertSessionHas('cart', function ($value) {
-            return $value[0]['product']->id !== 1;
-        });    
-        */
     }
 
 }
