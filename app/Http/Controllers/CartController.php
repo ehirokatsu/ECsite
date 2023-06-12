@@ -102,4 +102,20 @@ class CartController extends Controller
         return view('cart.buyConfirm', ['inputs' => $inputs]);
 
     }
+
+    public function register (Request $request)
+    {
+        //ログインしていない場合、ログイン画面にリダイレクトする
+        if (\Auth::guest()) {
+
+            //セッションにログイン後のリダイレクト先を指定する
+            $request->session()->put('redirect_to_reg', '/cart/confirm');
+
+            return redirect()->guest('register');
+        }
+        
+        return view('cart.confirm');
+
+    }
+
 }

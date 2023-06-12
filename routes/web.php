@@ -50,8 +50,11 @@ Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->n
 Route::post('/cart/buy', 'App\Http\Controllers\CartController@buy')->name('cart.buy');
 
 Route::post('/cart/buyConfirm', 'App\Http\Controllers\CartController@buyConfirm')->name('cart.buyConfirm');
+
 Route::post('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
 Route::get('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
+
+Route::post('/cart/register', 'App\Http\Controllers\CartController@register')->name('cart.register');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

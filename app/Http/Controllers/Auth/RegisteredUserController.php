@@ -46,6 +46,13 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        //カートからリダイレクトされた場合
+        if (session()->has('redirect_to_reg')) {
+
+            //セッションに保存しているルートにリダイレクトさせる
+            return redirect(session()->pull('redirect_to_reg'));
+        }
+
         return redirect(RouteServiceProvider::HOME);
     }
 }
