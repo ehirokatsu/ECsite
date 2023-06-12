@@ -20,12 +20,7 @@
                     <input type="submit" value="削除">
                   </form>
                 @endforeach
-                <form action="{{ route('cart.confirm') }}" method="post">
-                  @csrf
-                  <button type="submit" class="">
-                    購入する
-                  </button>
-                </form>
+                <a href="{{ route('cart.confirm') }}">購入する</a>
               @else
                 カートは空です。
               @endif

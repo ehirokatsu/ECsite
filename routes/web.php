@@ -51,7 +51,7 @@ Route::post('/cart/buy', 'App\Http\Controllers\CartController@buy')->name('cart.
 
 Route::post('/cart/buyConfirm', 'App\Http\Controllers\CartController@buyConfirm')->name('cart.buyConfirm');
 
-Route::post('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
+//ログイン画面からリダイレクトするのでGETメソッドを使用する
 Route::get('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
 
 Route::post('/cart/register', 'App\Http\Controllers\CartController@register')->name('cart.register');
