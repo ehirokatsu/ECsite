@@ -81,10 +81,23 @@ class CartController extends Controller
     public function complete (Request $request)
     {
 
-        //カートを空にする
-        $request->session()->forget('carts'); 
+        $action = $request->input('action');
+        $inputs = $request->except('action');
+        if ( $action === 'submit') {
 
-        return view('cart.complete');
+            //カートを空にする
+            $request->session()->forget('carts'); 
+
+            return view('cart.complete');
+
+        } else {
+
+            //入力した値を次のリクエストまでの間だけセッションに保存する
+            $request->session()->flashInput($inputs);
+            
+            //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
+            return redirect()->route('cart.buy')->withInput();
+        }
 
     }
 
@@ -100,6 +113,8 @@ class CartController extends Controller
 
         $inputs = $request->all();
         return view('cart.buyConfirm', ['inputs' => $inputs]);
+
+        
 
     }
 

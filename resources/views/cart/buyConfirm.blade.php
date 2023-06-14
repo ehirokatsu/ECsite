@@ -36,7 +36,9 @@
               @endif
               -->
               <br>
-              <button type="submit">購入を確定する</button>
+              
+              <button type="submit" name="action" value="back">修正する</button>
+              <button type="submit" name="action" value="submit">購入を確定する</button>
             </form>
           </div>
       </div>

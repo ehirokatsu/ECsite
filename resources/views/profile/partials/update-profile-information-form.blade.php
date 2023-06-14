@@ -47,6 +47,7 @@
             @endif
         </div>
 
+        <!--住所、電話番号追加-->
         <div>
           <x-input-label for="postalCode" :value="__('Postal Code')" />
           <x-text-input id="postalCode" name="postalCode" type="text" class="mt-1 block w-full" :value="old('postalCode', $user->postal_code)" required autofocus autocomplete="postalCode" />
@@ -54,24 +55,25 @@
         </div>
         <div>
           <x-input-label for="address1" :value="__('Prefecture')" />
-          <x-text-input id="address1" name="address1" type="text" class="mt-1 block w-full" :value="old('address1', $user->address_1)" required autofocus autocomplete="postalCode" />
+          <x-text-input id="address1" name="address1" type="text" class="mt-1 block w-full" :value="old('address1', $user->address_1)" required autofocus autocomplete="address1" />
           <x-input-error class="mt-2" :messages="$errors->get('address1')" />
         </div>
         <div>
           <x-input-label for="address2" :value="__('City')" />
-          <x-text-input id="address2" name="address2" type="text" class="mt-1 block w-full" :value="old('address2', $user->address_2)" required autofocus autocomplete="postalCode" />
+          <x-text-input id="address2" name="address2" type="text" class="mt-1 block w-full" :value="old('address2', $user->address_2)" required autofocus autocomplete="address2" />
           <x-input-error class="mt-2" :messages="$errors->get('address2')" />
         </div>
         <div>
           <x-input-label for="address3" :value="__('Other Address')" />
-          <x-text-input id="address3" name="address3" type="text" class="mt-1 block w-full" :value="old('address3', $user->address_3)" required autofocus autocomplete="postalCode" />
+          <x-text-input id="address3" name="address3" type="text" class="mt-1 block w-full" :value="old('address3', $user->address_3)" required autofocus autocomplete="address3" />
           <x-input-error class="mt-2" :messages="$errors->get('address3')" />
         </div>
         <div>
           <x-input-label for="phoneNumber" :value="__('Phone Number')" />
-          <x-text-input id="phoneNumber" name="phoneNumber" type="text" class="mt-1 block w-full" :value="old('phoneNumber', $user->phone_number)" required autofocus autocomplete="postalCode" />
+          <x-text-input id="phoneNumber" name="phoneNumber" type="text" class="mt-1 block w-full" :value="old('phoneNumber', $user->phone_number)" required autofocus autocomplete="phoneNumber" />
           <x-input-error class="mt-2" :messages="$errors->get('phoneNumber')" />
         </div>
+        
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
