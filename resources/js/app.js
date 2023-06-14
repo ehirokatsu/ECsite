@@ -32,7 +32,8 @@ console.log('test');
     };
     xhr.send();
   });
-*/
+
+
 
   document.getElementById('postalCode').addEventListener('change', function() {
     var postalCode = this.value;
@@ -55,3 +56,22 @@ console.log('test');
       document.getElementById('address_3').value = addressData.address3;
     }
   }
+
+  (async () => {
+    try {
+        console.log('start');
+      const response = await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=2120033&callback=getAddNameByZipcloudAPI');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');  // fetchが成功したかどうかの判定
+      }
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+    } catch(e) {
+      alert(e);  // 例外（エラー）が発生した場合に実行
+    } finally {
+      console.log('finally');  // 処理結果の成否に関わらず実行
+    }
+})();
+
+*/
