@@ -65,6 +65,11 @@ class CartController extends Controller
 
     public function confirm (Request $request)
     {
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($request->session()->get('carts'))) {
+            return view('no');
+        }
+
         //ログインしていない場合、ログイン画面にリダイレクトする
         if (\Auth::guest()) {
 
@@ -103,6 +108,12 @@ class CartController extends Controller
 
     public function buy (Request $request)
     {
+
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($request->session()->get('carts'))) {
+            return view('no');
+        }
+
 
         return view('cart.buy');
 

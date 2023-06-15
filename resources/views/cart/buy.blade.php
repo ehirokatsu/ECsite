@@ -6,11 +6,8 @@
   <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-              <div class="p-6 text-gray-900">
-              </div>
-              @if (empty((session('carts'))))
-              カートが空です。不正な画面遷移です。
-              @else
+            <div class="p-6 text-gray-900">
+            </div>
             購入者情報を入力してください。
             <form method="post" action="{{ route('cart.buyConfirm') }}">
               @csrf
@@ -81,7 +78,6 @@
               </div>
               <button type="submit">入力内容確認</button>
             </form>
-            @endif
           </div>
       </div>
   </div>
