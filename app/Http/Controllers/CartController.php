@@ -86,9 +86,16 @@ class CartController extends Controller
     public function complete (Request $request)
     {
 
+        //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
+        
+        //フォームのaction以外の値を取得
         $inputs = $request->except('action');
+
         if ( $action === 'submit') {
+
+            //購入後の処理はここに書く
+
 
             //カートを空にする
             $request->session()->forget('carts'); 

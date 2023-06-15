@@ -32,7 +32,7 @@
 
               <x-text-input id="postalCode" class="block mt-1 w-full"
                               type="text"
-                              name="postalCode" required autocomplete="postalCode" />
+                              name="postalCode" :value="old('postalCode')" required autocomplete="postalCode" />
 
               <x-input-error :messages="$errors->get('postalCode')" class="mt-2" />
               </div>
@@ -42,7 +42,7 @@
 
               <x-text-input id="address1" class="block mt-1 w-full"
                               type="text"
-                              name="address1" required autocomplete="address1" />
+                              name="address1" :value="old('address1')" required autocomplete="address1" />
 
               <x-input-error :messages="$errors->get('address1')" class="mt-2" />
               </div>
@@ -52,7 +52,7 @@
 
               <x-text-input id="address2" class="block mt-1 w-full"
                               type="text"
-                              name="address2" required autocomplete="address2" />
+                              name="address2" :value="old('address2')" required autocomplete="address2" />
 
               <x-input-error :messages="$errors->get('address2')" class="mt-2" />
               </div>
@@ -62,7 +62,7 @@
 
               <x-text-input id="address3" class="block mt-1 w-full"
                               type="text"
-                              name="address3" required autocomplete="address3" />
+                              name="address3" :value="old('address3')" required autocomplete="address3" />
 
               <x-input-error :messages="$errors->get('address3')" class="mt-2" />
               </div>
@@ -72,7 +72,7 @@
 
               <x-text-input id="phoneNumber" class="block mt-1 w-full"
                               type="text"
-                              name="phoneNumber" required autocomplete="phoneNumber" />
+                              name="phoneNumber" :value="old('phoneNumber')" required autocomplete="phoneNumber" />
 
               <x-input-error :messages="$errors->get('phoneNumber')" class="mt-2" />
               </div>
