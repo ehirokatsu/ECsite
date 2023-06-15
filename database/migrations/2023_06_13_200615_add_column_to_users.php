@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('address_3');
             $table->string('phone_number');
             $table->string('role')->default(0);
+            
         });
     }
 
