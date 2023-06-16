@@ -24,7 +24,7 @@ class UsersTableSeeder extends Seeder
             'address_2' => '中央区',
             'address_3' => 'テスト市',
             'phone_number' => '09012345678',
-            'role' => '1',
+            'role' => 'admin',
         ];
         DB::table('users')->insert($param);
     }
