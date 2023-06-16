@@ -16,17 +16,22 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'App\Http\Controllers\ShopController@index')->name('index');
 
-Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
-
-Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
-
 Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->name('show')->where('id', '[0-9]+');
 
-Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->name('edit')->where('id', '[0-9]+');
+//管理者のみ可能
+Route::middleware(['can:admin'])->group(function() {
+    Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
 
-Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->name('update')->where('id', '[0-9]+');
+    Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
 
-Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->name('destroy')->where('id', '[0-9]+');
+    Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->name('edit')->where('id', '[0-9]+');
+
+    Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->name('update')->where('id', '[0-9]+');
+
+    Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->name('destroy')->where('id', '[0-9]+');
+});
+
+
 
 Route::get('/cart', 'App\Http\Controllers\CartController@index')->name('cart.index');
 

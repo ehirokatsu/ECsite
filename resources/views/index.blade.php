@@ -24,7 +24,7 @@
                     カートに入れる
                   </button>
                 </form>
-
+                @can('admin')
                 <a href="{{ route('edit', ['id' => $product->id]) }}" class="" >
                   編集
                 </a>
@@ -36,7 +36,7 @@
                     削除
                   </button>
                 </form>
-
+                @endcan
               <br>
               @endforeach
 

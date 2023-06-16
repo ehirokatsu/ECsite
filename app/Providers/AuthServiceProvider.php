@@ -24,8 +24,8 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //商品編集は管理者のみ可能
-        Gate::define('edit', function ($user)
+        //管理者のみ可能
+        Gate::define('admin', function ($user)
         {
             if ($user->role === 'admin') {
                 return true;

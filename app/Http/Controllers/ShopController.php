@@ -84,10 +84,6 @@ class ShopController extends Controller
      */
     public function edit(string $id)
     {
-        //管理者のみ編集可能にする
-        Gate::authorize('edit');
-
-
         $product = product::findOrFail($id);
         $param = ['product' => $product];
         return view('edit', $param);
