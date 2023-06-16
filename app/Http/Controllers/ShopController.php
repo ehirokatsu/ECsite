@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\ProductRequest;
 use App\Models\Product;
+use Gate;
 
 class ShopController extends Controller
 {
@@ -83,7 +84,10 @@ class ShopController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        //管理者のみ編集可能にする
+        Gate::authorize('edit');
+
+
         $product = product::findOrFail($id);
         $param = ['product' => $product];
         return view('edit', $param);

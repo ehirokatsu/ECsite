@@ -5,6 +5,9 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
+//Gateを使用する
+use Illuminate\Support\Facades\Gate;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
@@ -21,6 +24,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        //商品編集は管理者のみ可能
+        Gate::define('edit', function ($user)
+        {
+            if ($user->role === 'admin') {
+                return true;
+            }
+            return false;
+        });
     }
 }
