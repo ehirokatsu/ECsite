@@ -20,32 +20,45 @@ class CartController extends Controller
     }
     public function store (Request $request)
     {
-        //セッションに値を保存
+        //カートに追加する商品情報を取得
         $product = product::findOrFail($request->id);
 
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
 
+        //商品情報をカートに格納する形式にする
+        $array = [
+            'product' => $product,
+            'quantity' => 1,
+        ];  
+        
         //初回は$cartがnullなので、配列初期化しないとpushできない
         if (empty($carts)) {
-            $carts = [];
+            $carts = [
+                [
+                    'product' => $product,
+                    'quantity' => 1,
+                ]
+            ];  
+        } else {
+            //カートに追加する
+            array_push($carts, $array);
         }
-        //カートに追加する
-        array_push($carts, $product);
-
+        
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
-        //\Log::info($carts);
+
         return redirect('/cart');
     }
 
     public function destroy (Request $request, string $id)
     {
-
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
 
-        $carts = $this->removeCartItemById($carts, $id);
+        //\Log::info('log開始');
+        //カートから指定したIDを持つ要素を削除する
+        $carts = $this->removeCartItemsById($carts, $id);
 
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
@@ -54,13 +67,19 @@ class CartController extends Controller
         
     }
 
-    public function removeCartItemById($carts, $id) {
-        foreach ($carts as $key => $item) {
-            if ($item->id == $id) {
-                unset($carts[$key]);
-            }
-        }
-        return array_values($carts);
+    /*
+    array_filter()の1つ目の引数はフィルタリングする配列で、2つ目の引数は
+    コールバック関数です。配列の各要素に対して実行され、その要素が新しい配列に含まれるべきかどうかを判断する。
+    よって、$item = [
+        'product' => $product,
+        'quantity' => 1,
+        ]
+    となる。$item['product']でProductインスタンスにアクセスし、->idでID要素を参照する
+    */
+    public function removeCartItemsById($array, $id) {
+        return array_filter($array, function($item) use ($id) {
+            return $item['product']->id != $id;
+        });
     }
 
     public function confirm (Request $request)
@@ -151,4 +170,33 @@ class CartController extends Controller
 
     }
 
+    public function quantityUpdate (Request $request, string $id)
+    {
+        //現在のカート内容を取得
+        $carts = $request->session()->get('carts');
+
+        //更新したい個数を取得
+        $newQuantity = $request->quantity;
+
+        //個数を更新する
+        $carts = $this->updateQuantityById($carts, $id, $newQuantity);
+
+        //カートをsessionに保存する
+        $request->session()->put('carts', $carts);
+
+        return redirect('/cart');
+    }
+    
+    public function updateQuantityById($array, $id, $newQuantity) {
+        foreach ($array as &$item) {
+            //\Log::info('product->id=' . $item['product']->id);
+            if ($item['product']->id == $id) {
+                $item['quantity'] = $newQuantity;
+                //\Log::info('quantity=' . $item['quantity']);
+            
+                break;
+            }
+        }
+        return $array;
+    }
 }

@@ -11,10 +11,17 @@
              
               @if (!empty($carts))
                 @foreach($carts as $cart)
-                  <p>{{ $cart->id }}</p>
-                  <p>{{ $cart->name }}</p>
-                  <img class="" src="/storage/{{$cart->image}}">
-                  <form action="{{ route('cart.destroy', ['id' => $cart['id']]) }}" method="post">
+                  <p>{{ $cart['product']->id }}</p>
+                  <p>{{ $cart['product']->name }}</p>
+                  <form action="{{ route('cart.quantityUpdate', ['id' => $cart['product']['id']]) }}" method="post">
+                    @method('PUT')
+                    @csrf
+                    <label for="">個数</label>
+                    <input type="text" name="quantity" value="{{ $cart['quantity'] }}">
+                    <input type="submit" value="更新">
+                  </form>
+                  <img class="" src="/storage/{{$cart['product']->image}}">
+                  <form action="{{ route('cart.destroy', ['id' => $cart['product']['id']]) }}" method="post">
                     @method('DELETE')
                     @csrf
                     <input type="submit" value="削除">
