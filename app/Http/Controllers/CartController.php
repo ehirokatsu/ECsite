@@ -24,7 +24,9 @@ class CartController extends Controller
         $carts = $request->session()->get('carts');
 
         //既にカートに追加されている商品ならエラー画面を表示する
-        if ($this->checkIdExists($carts, (int)$request->id)) {
+        if (!empty($carts) 
+            && $this->checkIdExists($carts, (int)$request->id)
+        ) {
             return view('cart.duplication');
         }
 
