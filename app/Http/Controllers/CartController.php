@@ -11,7 +11,7 @@ class CartController extends Controller
     //
     public function index (Request $request)
     {
-        //セッションから値を取得
+        //セッションからカート内容を取得
         $carts = $request->session()->get('carts');
 
         //$cartがnullの場合はView側で表示処理を分ける
@@ -20,11 +20,16 @@ class CartController extends Controller
     }
     public function store (Request $request)
     {
-        //カートに追加する商品情報を取得
-        $product = product::findOrFail($request->id);
-
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
+
+        //既にカートに追加されている商品ならエラー画面を表示する
+        if ($this->checkIdExists($carts, (int)$request->id)) {
+            return view('cart.duplication');
+        }
+
+        //カートに追加する商品情報を取得
+        $product = product::findOrFail($request->id);
 
         //商品情報をカートに格納する形式にする
         $array = [
@@ -76,7 +81,8 @@ class CartController extends Controller
         ]
     となる。$item['product']でProductインスタンスにアクセスし、->idでID要素を参照する
     */
-    public function removeCartItemsById($array, $id) {
+    public function removeCartItemsById($array, $id)
+    {
         return array_filter($array, function($item) use ($id) {
             return $item['product']->id != $id;
         });
@@ -104,7 +110,6 @@ class CartController extends Controller
 
     public function complete (Request $request)
     {
-
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
         
@@ -134,25 +139,19 @@ class CartController extends Controller
 
     public function buy (Request $request)
     {
-
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
         if (empty($request->session()->get('carts'))) {
             return view('no');
         }
 
-
         return view('cart.buy');
-
     }
 
     public function buyConfirm (Request $request)
     {
-
         $inputs = $request->all();
+
         return view('cart.buyConfirm', ['inputs' => $inputs]);
-
-        
-
     }
 
     public function register (Request $request)
@@ -167,10 +166,9 @@ class CartController extends Controller
         }
         
         return view('cart.confirm');
-
     }
 
-    public function quantityUpdate (Request $request, string $id)
+    public function quantityUpdate (Request $request, int $id)
     {
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
@@ -187,10 +185,11 @@ class CartController extends Controller
         return redirect('/cart');
     }
     
-    public function updateQuantityById($array, $id, $newQuantity) {
+    public function updateQuantityById($array, $id, $newQuantity)
+    {
         foreach ($array as &$item) {
             //\Log::info('product->id=' . $item['product']->id);
-            if ($item['product']->id == $id) {
+            if ($item['product']->id === $id) {
                 $item['quantity'] = $newQuantity;
                 //\Log::info('quantity=' . $item['quantity']);
             
@@ -199,4 +198,14 @@ class CartController extends Controller
         }
         return $array;
     }
+    public function checkIdExists($array, $id)
+    {
+        foreach ($array as $item) {
+            if ($item['product']->id === $id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
