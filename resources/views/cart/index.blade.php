@@ -18,6 +18,7 @@
                     @csrf
                     <label for="">個数</label>
                     <input type="text" name="quantity" value="{{ $cart['quantity'] }}">
+                    <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
                     <input type="submit" value="更新">
                   </form>
                   <img class="" src="/storage/{{$cart['product']->image}}">

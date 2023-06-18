@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Product;
 
+use App\Http\Requests\QuantityRequest;
+
 class CartController extends Controller
 {
     //
@@ -170,7 +172,7 @@ class CartController extends Controller
         return view('cart.confirm');
     }
 
-    public function quantityUpdate (Request $request, int $id)
+    public function quantityUpdate (QuantityRequest $request, int $id)
     {
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
