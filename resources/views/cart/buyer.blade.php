@@ -9,7 +9,7 @@
             <div class="p-6 text-gray-900">
             </div>
             購入者情報を入力してください。
-            <form method="post" action="{{ route('cart.buyConfirm') }}">
+            <form method="post" action="{{ route('cart.buyerConfirm') }}">
               @csrf
 
               <!-- Name -->

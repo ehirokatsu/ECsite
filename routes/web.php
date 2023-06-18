@@ -52,9 +52,9 @@ Route::post('/databaseManage/export', 'App\Http\Controllers\DatabaseManageContro
 
 Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->name('cart.complete');
 
-Route::get('/cart/buy', 'App\Http\Controllers\CartController@buy')->name('cart.buy');
+Route::get('/cart/buyer', 'App\Http\Controllers\CartController@buyer')->name('cart.buyer');
 
-Route::post('/cart/buyConfirm', 'App\Http\Controllers\CartController@buyConfirm')->name('cart.buyConfirm');
+Route::post('/cart/buyerConfirm', 'App\Http\Controllers\CartController@buyerConfirm')->name('cart.buyerConfirm');
 
 //ログイン画面からリダイレクトするのでGETメソッドを使用する
 Route::get('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');

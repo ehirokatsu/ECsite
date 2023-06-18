@@ -136,26 +136,26 @@ class CartController extends Controller
             $request->session()->flashInput($inputs);
             
             //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
-            return redirect()->route('cart.buy')->withInput();
+            return redirect()->route('cart.buyer')->withInput();
         }
 
     }
 
-    public function buy (Request $request)
+    public function buyer (Request $request)
     {
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
         if (empty($request->session()->get('carts'))) {
             return view('no');
         }
 
-        return view('cart.buy');
+        return view('cart.buyer');
     }
 
-    public function buyConfirm (Request $request)
+    public function buyerConfirm (Request $request)
     {
         $inputs = $request->all();
 
-        return view('cart.buyConfirm', ['inputs' => $inputs]);
+        return view('cart.buyerConfirm', ['inputs' => $inputs]);
     }
 
     public function register (Request $request)

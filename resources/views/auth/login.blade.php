@@ -48,7 +48,7 @@
     </form>
     <!--カート画面からリダイレクトされてきた時だけ購入ボタンを表示する-->
     @if (strpos(Request::header('referer'), 'cart') !== false)
-      <a href="{{ route('cart.buy') }}">ログインせずに購入する</a>
+      <a href="{{ route('cart.buyer') }}">ログインせずに購入する</a>
     <form method="POST" action="{{ route('cart.register') }}">
       @csrf
       <button type="submit">登録</button><!--追加-->
