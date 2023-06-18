@@ -21,6 +21,13 @@ class ShopTest extends TestCase
     /**
      * A basic feature test example.
      */
+
+    //管理者のみ商品の追加、更新、削除ができること
+
+    //管理者のみ、商品追加、編集ページが開けること
+
+    //一般ユーザはできないこと
+
     public function test_product_register(): void
     {
         $response = $this->get('/');
