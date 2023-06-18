@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 
 use App\Http\Requests\QuantityRequest;
+use App\Http\Requests\BuyerRequest;
 
 class CartController extends Controller
 {
@@ -112,7 +113,7 @@ class CartController extends Controller
 
     }
 
-    public function complete (Request $request)
+    public function complete (BuyerRequest $request)
     {
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
@@ -151,7 +152,7 @@ class CartController extends Controller
         return view('cart.buyer');
     }
 
-    public function buyerConfirm (Request $request)
+    public function buyerConfirm (BuyerRequest $request)
     {
         $inputs = $request->all();
 

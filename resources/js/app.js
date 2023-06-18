@@ -56,7 +56,7 @@ console.log('test');
       document.getElementById('address_3').value = addressData.address3;
     }
   }
-*/  
+
   (async () => {
     try {
       const response = await fetch('https://zipcloud.ibsnet.co.jp/api/search?zipcode=2120033');
@@ -72,4 +72,5 @@ console.log('test');
       console.log('finally');  // 処理結果の成否に関わらず実行
     }
 })();
+*/ 
 
