@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 //factoryで使用
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class CartTest extends TestCase
@@ -17,6 +18,7 @@ class CartTest extends TestCase
      */
     public function test_cart_store(): void
     {
+        $user = User::factory()->create();
         $product = Product::factory()->create();
 
         $response = $this->post('/cart', [
@@ -27,7 +29,7 @@ class CartTest extends TestCase
         
         
         $response->assertSessionHas('carts', function ($value) {
-            return $value[0]->id === 1;
+            return $value[0]['product']->id === 1;
         });
 
         $product2 = Product::factory()->create();
@@ -38,9 +40,9 @@ class CartTest extends TestCase
 
         $response = $this->delete('/cart/' . $product->id);
         
-
+        //$response->dumpSession();
         $response->assertSessionHas('carts', function ($value) {
-            return $value[0]->id !== 1;
+            return $value[0]['product']->id !== 1;
         });    
         
         if (file_exists(storage_path('app/public/fake/') . $product->image)) {
