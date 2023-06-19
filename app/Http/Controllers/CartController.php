@@ -54,6 +54,9 @@ class CartController extends Controller
             //カートに追加する
             array_push($carts, $array);
         }
+
+        //カート配列の添え字を０オリジンにする（異常系）
+        $carts = array_values($carts);
         
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
@@ -69,6 +72,9 @@ class CartController extends Controller
         //\Log::info('log開始');
         //カートから指定したIDを持つ要素を削除する
         $carts = $this->removeCartItemsById($carts, $id);
+
+        //カート配列の添え字を０オリジンにする
+        $carts = array_values($carts);
 
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
