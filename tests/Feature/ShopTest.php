@@ -22,35 +22,39 @@ class ShopTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_product_index(): void
+    {
+        //ログインユーザ無しでアクセスできること
+        $response = $this->get('/');
+        $response->assertStatus(200)->assertViewIs('index');
 
-    //管理者のみ商品の追加、更新、削除ができること
+        //管理者ユーザでアクセスできること
+        $adminUser = User::factory()->create();
+        $response = $this->actingAs($adminUser)->get('/');
+        $response->assertStatus(200)->assertViewIs('index');
 
-    //管理者のみ、商品追加、編集ページが開けること
-
-    //一般ユーザはできないこと
+        //一般ユーザでアクセスできること
+        $generalUser = User::factory()->create(['role' => 'general']);
+        $response = $this->actingAs($generalUser)->get('/');
+        $response->assertStatus(200)->assertViewIs('index');
+    }
 
     public function test_product_register(): void
     {
         //管理者ユーザを作成
         $adminUser = User::factory()->create();
 
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-
-
         //$product = Product::factory()->create();
-
         //$faker = \Faker\Factory::create();
         //$imagePath = $faker->image('storage/app/test', 640, 480);
         //$imageFilename = basename($imagePath);
-
 
         //画像を生成する
         Storage::fake('test_images');
         $image = UploadedFile::fake()->image('post.jpg');;
         //\Log::info('image=' . $image);
 
+        //管理者ユーザで商品を登録する
         $response = $this->actingAs($adminUser)->post('/', [
             'name' => 'testA',
             'cost' => 2000,
@@ -66,11 +70,9 @@ class ShopTest extends TestCase
             'name' => 'testA',
             'cost' => 2000,
         ]);
-
-
     }
 
-    public function test_product_register_NG(): void
+    public function test_product_register_ng(): void
     {
         //一般ユーザを作成
         $generalUser = User::factory()->create(['role' => 'general']);
@@ -85,10 +87,9 @@ class ShopTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
-        //
+        //NGとなること
         $response->assertStatus(403);
     }
-
 
     public function test_product_update(): void
     {
@@ -121,6 +122,30 @@ class ShopTest extends TestCase
         }
     }
 
+    public function test_product_update_ng(): void
+    {
+        //一般ユーザを作成
+        $generalUser = User::factory()->create(['role' => 'general']);
+
+        //商品を作成し編集画面を開けること
+        $product = Product::factory()->create();
+
+        $response = $this->actingAs($generalUser)->get('/' . $product->id . '/edit');
+        $response->assertStatus(403);
+
+        //商品情報を更新できること
+        $response = $this->actingAs($generalUser)->put('/' . $product->id, [
+            'name' => 'testB',
+            'cost' => 3000,
+        ]);
+        $response->assertStatus(403);
+
+        //factory内のfakerで生成した画像を削除する
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
+    }
+
     public function test_product_delete(): void
     {
         //管理者ユーザを作成
@@ -139,6 +164,22 @@ class ShopTest extends TestCase
         }
     }
 
+    public function test_product_delete_ng(): void
+    {
+        //一般ユーザを作成
+        $generalUser = User::factory()->create(['role' => 'general']);
+
+        $product = Product::factory()->create();
+        
+        //削除できていること
+        $response = $this->actingAs($generalUser)->delete('/' . $product->id);
+        $response->assertStatus(403);
+        
+        //factory内のfakerで生成した画像を削除する
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
+    }
 
     public function test_name_validate(): void
     {
@@ -147,7 +188,7 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');;
+        $image = UploadedFile::fake()->image('post.jpg');
 
         //商品名を数値のみにする.name.stringでエラーになること
         $response = $this->actingAs($adminUser)->post('/', [
@@ -177,7 +218,6 @@ class ShopTest extends TestCase
         $response->assertRedirect('/')->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
-
     }
 
 
@@ -188,7 +228,7 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');;
+        $image = UploadedFile::fake()->image('post.jpg');
 
         //単価を文字列にする.cost.integerでエラーになること
         $response = $this->actingAs($adminUser)->post('/', [
@@ -237,7 +277,7 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.txt');;
+        $image = UploadedFile::fake()->image('post.txt');
 
         //画像をnullにする.image.requiredでエラーになること
         $response = $this->actingAs($adminUser)->post('/', [
@@ -257,6 +297,5 @@ class ShopTest extends TestCase
         $response->assertRedirect('/')->assertStatus(302);
         $response->assertValid(['name', 'cost']);
         $response->assertInvalid(['image']);
-
     }
 }

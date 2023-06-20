@@ -18,7 +18,6 @@ class CartTest extends TestCase
      */
     public function test_cart_store(): void
     {
-        $user = User::factory()->create();
         $product = Product::factory()->create();
 
         $response = $this->post('/cart', [
@@ -53,7 +52,7 @@ class CartTest extends TestCase
             unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
         }
 
-
+        $adminUser = User::factory()->create();
 
         //まずはフォームリクエストを完成させること。
         //buyフォーム、カートの個数の上限、
@@ -81,5 +80,6 @@ class CartTest extends TestCase
         //
 
     }
+
 
 }
