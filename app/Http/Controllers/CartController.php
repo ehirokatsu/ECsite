@@ -179,6 +179,15 @@ class CartController extends Controller
         return view('cart.confirm');
     }
 
+    public function allDelete (Request $request)
+    {
+        //カートを空にする
+        $request->session()->forget('carts');
+
+        return redirect('/cart');
+    }
+
+
     public function quantityUpdate (QuantityRequest $request, int $id)
     {
         //現在のカート内容を取得

@@ -63,6 +63,8 @@ Route::post('/cart/register', 'App\Http\Controllers\CartController@register')->n
 
 Route::put('/cart/{id}', 'App\Http\Controllers\CartController@quantityUpdate')->name('cart.quantityUpdate')->where('id', '[0-9]+');
 
+Route::delete('/cart', 'App\Http\Controllers\CartController@allDelete')->name('cart.allDelete');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

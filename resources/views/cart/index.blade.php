@@ -29,6 +29,11 @@
                   </form>
                 @endforeach
                 <a href="{{ route('cart.confirm') }}">購入する</a>
+                <form action="{{ route('cart.allDelete') }}" method="post">
+                  @method('DELETE')
+                  @csrf
+                  <input type="submit" value="全削除">
+                </form>
               @else
                 カートは空です。
               @endif
