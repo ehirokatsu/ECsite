@@ -103,15 +103,16 @@ class CartTest extends TestCase
         ]);
 
         //個数を変更する
+        $updateQuantity = 2;
         $response = $this->put(route('cart.quantityUpdate', ['id' => $product->id]), [
-            'quantity' => 2,
+            'quantity' => $updateQuantity,
         ]);
 
         //$response->dumpSession();
         //sessionに保存されていること
         
         $response->assertSessionHas('carts', function ($value) use ($product) {
-            return $value[0]['quantity'] === 2;
+            return $value[0]['quantity'] === $updateQuantity;
         });
 
 
