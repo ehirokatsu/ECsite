@@ -110,12 +110,9 @@ class CartTest extends TestCase
 
         //$response->dumpSession();
         //sessionに保存されていること
-        
-        $response->assertSessionHas('carts', function ($value) use ($product) {
+        $response->assertSessionHas('carts', function ($value) use ($product, $updateQuantity) {
             return $value[0]['quantity'] === $updateQuantity;
         });
-
-
 
         //商品追加で生成した画像を削除
         if (file_exists(storage_path('app/public/fake/') . $product->image)) {
@@ -124,6 +121,21 @@ class CartTest extends TestCase
     }
 
     //購入する時にログイン画面に遷移すること
+    public function test_login(): void
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->post(route('cart.store'), [
+            'id' => $product->id
+        ]);
+
+        $response = $this->get(route('cart.confirm'));
+        $response->assertStatus(302)->assertRedirect(route('login'));
+
+        $user = User::factory()->create();
+
+        $response = $this->post();
+    }
 
     //登録なしで購入者情報画面に遷移すること
 
