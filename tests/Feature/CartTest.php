@@ -43,7 +43,7 @@ class CartTest extends TestCase
         ]);
 
         //カートから最初の商品を削除
-        $response = $this->delete(route('destroy', ['id' => $product->id]));
+        $response = $this->delete(route('cart.destroy', ['id' => $product->id]));
         //$response = $this->delete('/cart/' . $product->id);
         //$response->dumpSession();
 

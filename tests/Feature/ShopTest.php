@@ -25,17 +25,17 @@ class ShopTest extends TestCase
     public function test_product_index(): void
     {
         //ログインユーザ無しでアクセスできること
-        $response = $this->get('/');
+        $response = $this->get(route('index'));
         $response->assertStatus(200)->assertViewIs('index');
 
         //管理者ユーザでアクセスできること
         $adminUser = User::factory()->create();
-        $response = $this->actingAs($adminUser)->get('/');
+        $response = $this->actingAs($adminUser)->get(route('index'));
         $response->assertStatus(200)->assertViewIs('index');
 
         //一般ユーザでアクセスできること
         $generalUser = User::factory()->create(['role' => 'general']);
-        $response = $this->actingAs($generalUser)->get('/');
+        $response = $this->actingAs($generalUser)->get(route('index'));
         $response->assertStatus(200)->assertViewIs('index');
     }
 
@@ -55,7 +55,7 @@ class ShopTest extends TestCase
         //\Log::info('image=' . $image);
 
         //管理者ユーザで商品を登録する
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
@@ -82,7 +82,7 @@ class ShopTest extends TestCase
         $image = UploadedFile::fake()->image('post.jpg');;
 
         //一般ユーザで商品登録する
-        $response = $this->actingAs($generalUser)->post('/', [
+        $response = $this->actingAs($generalUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
@@ -99,11 +99,11 @@ class ShopTest extends TestCase
         //商品を作成し編集画面を開けること
         $product = Product::factory()->create();
 
-        $response = $this->actingAs($adminUser)->get('/' . $product->id . '/edit');
+        $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
         $response->assertStatus(200);
 
         //商品情報を更新できること
-        $response = $this->put('/' . $product->id, [
+        $response = $this->put(route('update', ['id' => $product->id]), [
             'name' => 'testB',
             'cost' => 3000,
         ]);
@@ -130,11 +130,11 @@ class ShopTest extends TestCase
         //商品を作成し編集画面を開けること
         $product = Product::factory()->create();
 
-        $response = $this->actingAs($generalUser)->get('/' . $product->id . '/edit');
+        $response = $this->actingAs($generalUser)->get(route('edit', ['id' => $product->id]));
         $response->assertStatus(403);
 
         //商品情報を更新できること
-        $response = $this->actingAs($generalUser)->put('/' . $product->id, [
+        $response = $this->actingAs($generalUser)->put(route('update', ['id' => $product->id]), [
             'name' => 'testB',
             'cost' => 3000,
         ]);
@@ -154,7 +154,7 @@ class ShopTest extends TestCase
         $product = Product::factory()->create();
         
         //削除できていること
-        $response = $this->actingAs($adminUser)->delete('/' . $product->id);
+        $response = $this->actingAs($adminUser)->delete(route('destroy', ['id' => $product->id]));
         $response->assertStatus(302);
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
         
@@ -172,7 +172,7 @@ class ShopTest extends TestCase
         $product = Product::factory()->create();
         
         //削除できていること
-        $response = $this->actingAs($generalUser)->delete('/' . $product->id);
+        $response = $this->actingAs($generalUser)->delete(route('destroy', ['id' => $product->id]));
         $response->assertStatus(403);
         
         //factory内のfakerで生成した画像を削除する
@@ -191,7 +191,7 @@ class ShopTest extends TestCase
         $image = UploadedFile::fake()->image('post.jpg');
 
         //商品名を数値のみにする.name.stringでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 10,
             'cost' => 2000,
             'image' => $image
@@ -201,7 +201,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['name']);
 
         //商品名をnullにする.name.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'cost' => 2000,
             'image' => $image
         ]);
@@ -210,7 +210,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['name']);
 
         //商品名を最大文字数以上にする.name.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => '0123456789012345678901234567890',
             'cost' => 2000,
             'image' => $image
@@ -231,7 +231,7 @@ class ShopTest extends TestCase
         $image = UploadedFile::fake()->image('post.jpg');
 
         //単価を文字列にする.cost.integerでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 'AAA',
             'image' => $image
@@ -241,7 +241,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価をnullにする.cost.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'image' => $image
         ]);
@@ -250,7 +250,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価を最大値以上にする.cost.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 10001,
             'image' => $image
@@ -260,7 +260,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価を最小値以下にする.cost.minでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 0,
             'image' => $image
@@ -280,7 +280,7 @@ class ShopTest extends TestCase
         $image = UploadedFile::fake()->image('post.txt');
 
         //画像をnullにする.image.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
         ]);
@@ -289,7 +289,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['image']);
 
         //画像ファイル以外を指定する.image.imageでエラーになること
-        $response = $this->actingAs($adminUser)->post('/', [
+        $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
