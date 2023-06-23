@@ -28,7 +28,7 @@
                     <input type="submit" value="削除">
                   </form>
                 @endforeach
-                <a href="{{ route('cart.confirm') }}">購入する</a>
+                <a href="{{ route('cart.regConfirm') }}">購入する</a>
                 <form action="{{ route('cart.allDelete') }}" method="post">
                   @method('DELETE')
                   @csrf

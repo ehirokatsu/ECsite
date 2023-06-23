@@ -60,7 +60,7 @@ Route::post('/cart/buyerConfirm', 'App\Http\Controllers\CartController@buyerConf
 
 //ログイン後、又は登録後の購入者情報確認画面
 //ログイン画面からリダイレクトするのでGETメソッドを使用する
-Route::get('/cart/confirm', 'App\Http\Controllers\CartController@confirm')->name('cart.confirm');
+Route::get('/cart/regConfirm', 'App\Http\Controllers\CartController@regConfirm')->name('cart.regConfirm');
 
 //ログイン画面からの登録処理
 Route::post('/cart/register', 'App\Http\Controllers\CartController@register')->name('cart.register');
@@ -69,8 +69,10 @@ Route::post('/cart/register', 'App\Http\Controllers\CartController@register')->n
 Route::put('/cart/{id}', 'App\Http\Controllers\CartController@quantityUpdate')->name('cart.quantityUpdate')->where('id', '[0-9]+');
 
 //購入完了処理
-Route::post('/cart/complete', 'App\Http\Controllers\CartController@complete')->name('cart.complete');
+Route::post('/cart/buyerComplete', 'App\Http\Controllers\CartController@buyerComplete')->name('cart.buyerComplete');
 
+//購入完了処理
+Route::post('/cart/regComplete', 'App\Http\Controllers\CartController@regComplete')->name('cart.regComplete');
 
 //問い合わせフォーム（Mailableクラスを使用）
 Route::get('/contact', 'App\Http\Controllers\ContactController@index')->name('contact.index');

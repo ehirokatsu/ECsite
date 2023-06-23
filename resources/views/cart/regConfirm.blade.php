@@ -9,7 +9,7 @@
             <div class="p-6 text-gray-900">
             </div>
             購入者情報は以下でよろしいですか？
-            <form method="post" action="{{ route('cart.complete') }}">
+            <form method="post" action="{{ route('cart.regComplete') }}">
               @csrf
               <!-- Name -->
               <div>

@@ -99,7 +99,21 @@ class CartController extends Controller
         });
     }
 
-    public function confirm (Request $request)
+    public function register (Request $request)
+    {
+        //ログインしていない場合、登録画面にリダイレクトする
+        if (\Auth::guest()) {
+
+            //セッションにログイン後のリダイレクト先を指定する
+            $request->session()->put('redirect_to_reg', '/cart/regConfirm');
+
+            return redirect()->guest('register');
+        }
+        
+        return view('cart.confirm');
+    }
+
+    public function regConfirm (Request $request)
     {
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
         if (empty($request->session()->get('carts'))) {
@@ -110,42 +124,19 @@ class CartController extends Controller
         if (\Auth::guest()) {
 
             //セッションにログイン後のリダイレクト先を指定する
-            $request->session()->put('redirect_to', '/cart/confirm');
+            $request->session()->put('redirect_to', '/cart/regConfirm');
 
             return redirect()->guest('login');
         }
         
-        return view('cart.confirm');
-
+        return view('cart.regConfirm');
     }
 
-    public function complete (BuyerRequest $request)
+    public function regComplete (BuyerRequest $request)
     {
-        //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
-        $action = $request->input('action');
-        
-        //フォームのaction以外の値を取得
-        $inputs = $request->except('action');
+        $request->session()->forget('carts');
 
-        if ( $action === 'submit') {
-
-            //購入後の処理はここに書く
-
-
-            //カートを空にする
-            $request->session()->forget('carts'); 
-
-            return view('cart.complete');
-
-        } else {
-
-            //入力した値を次のリクエストまでの間だけセッションに保存する
-            $request->session()->flashInput($inputs);
-            
-            //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
-            return redirect()->route('cart.buyer')->withInput();
-        }
-
+        return view('cart.regComplete');
     }
 
     public function buyer (Request $request)
@@ -165,19 +156,34 @@ class CartController extends Controller
         return view('cart.buyerConfirm', ['inputs' => $inputs]);
     }
 
-    public function register (Request $request)
+    public function buyerComplete (BuyerRequest $request)
     {
-        //ログインしていない場合、ログイン画面にリダイレクトする
-        if (\Auth::guest()) {
-
-            //セッションにログイン後のリダイレクト先を指定する
-            $request->session()->put('redirect_to_reg', '/cart/confirm');
-
-            return redirect()->guest('register');
-        }
+        //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
+        $action = $request->input('action');
         
-        return view('cart.confirm');
+        //フォームのaction以外の値を取得
+        $inputs = $request->except('action');
+
+        if ( $action === 'submit') {
+
+            //購入後の処理はここに書く
+
+
+            //カートを空にする
+            $request->session()->forget('carts'); 
+
+            return view('cart.buyerComplete');
+
+        } else {
+
+            //入力した値を次のリクエストまでの間だけセッションに保存する
+            $request->session()->flashInput($inputs);
+            
+            //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
+            return redirect()->route('cart.buyer')->withInput();
+        }
     }
+
 
     public function allDelete (Request $request)
     {
@@ -186,7 +192,6 @@ class CartController extends Controller
 
         return redirect('/cart');
     }
-
 
     public function quantityUpdate (QuantityRequest $request, int $id)
     {
