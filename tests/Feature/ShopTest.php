@@ -51,7 +51,7 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');;
+        $image = UploadedFile::fake()->image('post.jpg');
         //\Log::info('image=' . $image);
 
         //管理者ユーザで商品を登録する
@@ -62,7 +62,7 @@ class ShopTest extends TestCase
         ]);
 
         //新規投稿をしたらindexにリダイレクトされること
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'image', 'cost']);
 
         //生成したテストデータがDBに登録されていること
@@ -79,7 +79,7 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');;
+        $image = UploadedFile::fake()->image('post.jpg');
 
         //一般ユーザで商品登録する
         $response = $this->actingAs($generalUser)->post(route('store'), [
@@ -196,7 +196,7 @@ class ShopTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
 
@@ -205,7 +205,7 @@ class ShopTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
 
@@ -215,7 +215,7 @@ class ShopTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
     }
@@ -236,7 +236,7 @@ class ShopTest extends TestCase
             'cost' => 'AAA',
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'image']);
         $response->assertInvalid(['cost']);
 
@@ -245,7 +245,7 @@ class ShopTest extends TestCase
             'name' => 'testA',
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'image']);
         $response->assertInvalid(['cost']);
 
@@ -255,7 +255,7 @@ class ShopTest extends TestCase
             'cost' => 10001,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'image']);
         $response->assertInvalid(['cost']);
 
@@ -265,7 +265,7 @@ class ShopTest extends TestCase
             'cost' => 0,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'image']);
         $response->assertInvalid(['cost']);
     }
@@ -284,7 +284,7 @@ class ShopTest extends TestCase
             'name' => 'testA',
             'cost' => 2000,
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
         $response->assertInvalid(['image']);
 
@@ -294,7 +294,7 @@ class ShopTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
-        $response->assertRedirect('/')->assertStatus(302);
+        $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
         $response->assertInvalid(['image']);
     }

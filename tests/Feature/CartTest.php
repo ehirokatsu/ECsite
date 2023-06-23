@@ -28,6 +28,9 @@ class CartTest extends TestCase
         ]);
         //\Log::info($response);
         //$response->dumpSession();
+
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
         
         //sessionに保存されていること
         $response->assertSessionHas('carts', function ($value) {
@@ -71,7 +74,10 @@ class CartTest extends TestCase
         $response = $this->post(route('cart.store'), [
             'id' => $product->id,
         ]);
-        
+
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+
         //sessionに保存されていること
         $response->assertSessionHas('carts', function ($value) use ($product) {
             return $value[0]['product']->id === $product->id;
@@ -102,6 +108,9 @@ class CartTest extends TestCase
             'id' => $product->id,
         ]);
 
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        
         //個数を変更する
         $updateQuantity = 2;
         $response = $this->put(route('cart.quantityUpdate', ['id' => $product->id]), [
@@ -120,38 +129,249 @@ class CartTest extends TestCase
         }
     }
 
-    //購入する時にログイン画面に遷移すること
-    public function test_login(): void
+    //購入する時にログインして購入できること
+    public function test_login_can_buy(): void
     {
+        //商品登録
         $product = Product::factory()->create();
 
+        //カートに商品を追加
         $response = $this->post(route('cart.store'), [
             'id' => $product->id
         ]);
 
-        $response = $this->get(route('cart.confirm'));
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        
+        //購入ボタンを押下
+        $response = $this->get(route('cart.regConfirm'));
+
+        //ログイン画面へリダイレクトすること
         $response->assertStatus(302)->assertRedirect(route('login'));
 
+        //ユーザー生成
         $user = User::factory()->create();
 
-        $response = $this->post();
+        //ログインする
+        $response = $this->post(route('login'), [
+            'email' => $user->email,
+            'password' => $user->password,
+        ]);
+
+        //購入確認画面へリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.regConfirm'));
+
+        //購入完了確定ボタンを押下
+        $response = $this->post(route('cart.regComplete'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'postalCode' => $user->postal_code,
+            'address1' => $user->address_1,
+            'address2' => $user->address_2,
+            'address3' => $user->address_3,
+            'phoneNumber' => $user->phone_number,
+            'action' => 'submit',
+        ]);
+
+        //購入完了画面へ遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.regComplete');
+
+        //カートの中身がクリアされていること
+        $response->assertSessionMissing('carts');
+
+        //商品追加で生成した画像を削除
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image);
+        }
     }
 
-    //登録なしで購入者情報画面に遷移すること
+    //購入する時に登録して購入できること
+    public function test_register_can_buy(): void
+    {
+        //商品登録
+        $product = Product::factory()->create();
 
-    //確認画面に遷移し購入できること
+        //カートに商品を追加
+        $response = $this->post(route('cart.store'), [
+            'id' => $product->id,
+        ]);
 
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
 
-    //ログインした後確認画面にリダイレクトすること。購入できること
+        //購入ボタンを押下
+        $response = $this->get(route('cart.regConfirm'));
 
-    //登録した後確認画面にリダイレクトし購入できること
+        //ログイン画面へリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('login'));
 
+        //登録ボタンを押下する
+        $response = $this->post(route('cart.register'));
 
-    //カートなしで確認画面にアクセスするとエラー画面が表示されること
+        //登録するユーザーデータ
+        $userData = [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'password' => 'testtest', // password
+            'password_confirmation' => 'testtest', // password
+            'postalCode' => '1001000',
+            'address1' => '東京都',
+            'address2' => '中央区',
+            'address3' => 'テスト市',
+            'phoneNumber' => '09012345678',
+        ];
 
-    //カートなしで登録なしの購入者入力画面にアクセスするとエラー画面が表示されること
+        //ユーザーデータを登録
+        $response = $this->post(route('register'), $userData);
+
+        //登録後、購入者確認画面へリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.regConfirm'));
+
+        //購入完了確定ボタンを押下
+        $response = $this->post(route('cart.regComplete'), $userData);
+
+        //購入完了画面へ遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.regComplete');
+
+        //カートの中身がクリアされていること
+        $response->assertSessionMissing('carts');
+
+        //商品追加で生成した画像を削除
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image);
+        }
+    }
 
     //最初からログインした状態でカート入力、購入確認画面、購入できること
+    public function test_logined_can_buy(): void
+    {
+        //ユーザ作成
+        $user = User::factory()->create();
+
+        //商品登録
+        $product = Product::factory()->create();
+
+        //カートに商品を追加
+        $response = $this->actingAs($user)->post(route('cart.store'), [
+            'id' => $product->id,
+        ]);
+
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+
+        //購入ボタンを押下
+        $response = $this->actingAs($user)->get(route('cart.regConfirm'));
+
+        //購入者確認画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.regConfirm');
+
+        //購入完了確定ボタンを押下
+        $response = $this->actingAs($user)->post(route('cart.regComplete'), [
+            'name' => $user->name,
+            'email' => $user->email,
+            'postalCode' => $user->postal_code,
+            'address1' => $user->address_1,
+            'address2' => $user->address_2,
+            'address3' => $user->address_3,
+            'phoneNumber' => $user->phone_number,
+            'action' => 'submit',
+        ]);
+
+        //購入完了画面へ遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.regComplete');
+
+        //カートの中身がクリアされていること
+        $response->assertSessionMissing('carts');
+
+        //商品追加で生成した画像を削除
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image);
+        }
+    }
+
+    //登録しないで購入できること
+    public function no_register_can_buy(): void
+    {
+        //商品登録
+        $product = Product::factory()->create();
+
+        //カートに商品を追加
+        $response = $this->post(route('cart.store'), [
+            'id' => $product->id,
+        ]);
+        
+        //カート一覧画面にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+
+        //購入ボタンを押下
+        $response = $this->get(route('cart.regConfirm'));
+
+        //ログイン画面へリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('login'));
+
+        //登録せずに購入するボタン押下
+        $response = $this->get(route('cart.buyer'));
+
+        //購入者情報入力画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.buyer');
+
+        //購入者データ
+        $userData = [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'postalCode' => '1001000',
+            'address1' => '東京都',
+            'address2' => '中央区',
+            'address3' => 'テスト市',
+            'phoneNumber' => '09012345678',
+        ];
+
+        //購入者データを入力する
+        $response = $this->post(route('cart.buyerConfirm'), $userData);
+
+        //購入者確認画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.buyerConfirm');
+
+        //修正ボタンを押下する
+        $response = $this->post(route('cart.buyerComplete'), array_push($userData, ['action' => 'back']));
+
+        ////購入者情報入力画面にリダイレクトすること
+        $response->assertStatus(302)->assertViewIs('cart.buyer');
+
+        //購入ボタンを押下する
+        $response = $this->post(route('cart.buyerComplete'), array_push($userData, ['action' => 'submit']));
+
+        //購入完了画面へ遷移すること
+        $response->assertStatus(200)->assertViewIs('cart.Complete');
+
+        //カートの中身がクリアされていること
+        $response->assertSessionMissing('carts');
+
+
+    }
+
+
+    public function test_error(): void
+    {
+        //ユーザ作成
+        $user = User::factory()->create();
+
+        //カートに追加せずに購入ボタンを押下
+        $response = $this->actingAs($user)->get(route('cart.regConfirm'));
+
+        //エラー画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('no');
+    }
+
+    public function test_error2(): void
+    {
+        //カートに商品を追加せずに登録しないで購入するボタンを押下
+        $response = $this->get(route('cart.buyer'));
+
+        //エラー画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('no');
+    }
+
 
     //カートを全削除できること
 
