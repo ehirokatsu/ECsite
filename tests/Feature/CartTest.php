@@ -17,7 +17,7 @@ class CartTest extends TestCase
      * A basic feature test example.
      */
     //ログイン無しでカートに商品を追加できること
-    public function test_cart_store(): void
+    public function test_cart_store_and_delete(): void
     {
         //商品を追加
         $product = Product::factory()->create();
@@ -119,7 +119,7 @@ class CartTest extends TestCase
 
         //$response->dumpSession();
         //sessionに保存されていること
-        $response->assertSessionHas('carts', function ($value) use ($product, $updateQuantity) {
+        $response->assertSessionHas('carts', function ($value) use ($updateQuantity) {
             return $value[0]['quantity'] === $updateQuantity;
         });
 
@@ -335,7 +335,7 @@ class CartTest extends TestCase
         //修正ボタンを押下する
         $response = $this->post(route('cart.buyerComplete'), array_push($userData, ['action' => 'back']));
 
-        ////購入者情報入力画面にリダイレクトすること
+        //購入者情報入力画面にリダイレクトすること
         $response->assertStatus(302)->assertViewIs('cart.buyer');
 
         //購入ボタンを押下する
@@ -346,11 +346,9 @@ class CartTest extends TestCase
 
         //カートの中身がクリアされていること
         $response->assertSessionMissing('carts');
-
-
     }
 
-
+    //ログイン中、カートに追加せずにregConfirmにGETアクセスした場合
     public function test_error(): void
     {
         //ユーザ作成
@@ -363,6 +361,7 @@ class CartTest extends TestCase
         $response->assertStatus(200)->assertViewIs('no');
     }
 
+    //ゲスト状態でカートに追加せずにbuyerにGETアクセスした場合
     public function test_error2(): void
     {
         //カートに商品を追加せずに登録しないで購入するボタンを押下
@@ -372,8 +371,48 @@ class CartTest extends TestCase
         $response->assertStatus(200)->assertViewIs('no');
     }
 
-
     //カートを全削除できること
+    public function test_cart_all_delete(): void
+    {
+        //商品を2つ追加する
+        $product = Product::factory()->create();
+        $product2 = Product::factory()->create();
 
+        //1つ目の商品をカートに入れる
+        $response = $this->post(route('cart.store'), [
+            'id' => $product->id,
+        ]);
+        
+        //カートに追加されていること
+        $response->assertSessionHas('carts', function ($value) use ($product) {
+            return $value[0]['product']->id === $product->id;
+        });
 
+        //2つ目の商品をカートに入れる
+        $response = $this->post(route('cart.store'), [
+            'id' => $product2->id,
+        ]);
+
+        //カートに追加されていること
+        $response->assertSessionHas('carts', function ($value) use ($product2) {
+            return $value[1]['product']->id === $product2->id;
+        });
+
+        //全削除ボタンを押下する
+        $response = $this->delete(route('cart.allDelete'));
+
+        //カート一覧にリダイレクトすること
+        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+
+        //カートの中身がクリアされていること
+        $response->assertSessionMissing('carts');
+
+        //商品追加で生成した画像を削除
+        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        }
+        if (file_exists(storage_path('app/public/fake/') . $product2->image)) {
+            unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
+        }
+    }
 }
