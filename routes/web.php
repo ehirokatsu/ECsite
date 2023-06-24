@@ -26,11 +26,17 @@ Route::middleware(['can:admin'])->group(function() {
     //商品追加画面
     Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
 
+    //商品追加確認画面
+    Route::post('/{id}/createConfirm', 'App\Http\Controllers\ShopController@createConfirm')->name('createConfirm')->where('id', '[0-9]+');
+
     //商品追加処理
     Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
 
     //商品編集画面
     Route::get('/{id}/edit', 'App\Http\Controllers\ShopController@edit')->name('edit')->where('id', '[0-9]+');
+
+    //商品追加確認画面
+    Route::post('/{id}/editConfirm', 'App\Http\Controllers\ShopController@editConfirm')->name('editConfirm')->where('id', '[0-9]+');
 
     //商品編集処理
     Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->name('update')->where('id', '[0-9]+');

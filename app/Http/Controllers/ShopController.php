@@ -90,6 +90,19 @@ class ShopController extends Controller
 
     }
 
+    public function editConfirm(Request $request, string $id)
+    {
+        $product = Product::findOrFail($id);
+
+        $inputs = $request->all();
+        //dd($inputs);
+        $param = [
+            'product' => $product,
+            'inputs' => $inputs,
+        ];
+        return view('editConfirm', $param);
+    }
+
     /**
      * Update the specified resource in storage.
      */
@@ -102,6 +115,7 @@ class ShopController extends Controller
         $product->name = $request->name;
         $product->cost = $request->cost;
 
+        dd($request->all());
         if (!empty($request->image)) {
             //画像ファイル名はレコードIDにする
             $imageFileName = $product->id . '.' .$request->image->guessExtension();
