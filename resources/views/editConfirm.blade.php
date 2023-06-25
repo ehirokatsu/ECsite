@@ -19,7 +19,7 @@
                   <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
                   <br>
                   <span>商品画像</span>
-                  <img class="" src="/storage/tmp/test.jpg">
+                  <img class="" src="/storage/tmp/{{ $imageFileName }}">
                   <br>
                   <input type="submit">
                 </form>

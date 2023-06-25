@@ -111,6 +111,7 @@ class ShopController extends Controller
         $param = [
             'product' => $product,
             'inputs' => $inputs,
+            'imageFileName' => $imageFileName,
         ];
         return view('editConfirm', $param);
     }
@@ -124,8 +125,14 @@ class ShopController extends Controller
         $product = product::findOrFail($id);
 
         //フォームからDBへセット
-        $product->name = $request->name;
-        $product->cost = $request->cost;
+        if (!empty($request->name)) {
+            $product->name = $request->name;
+        }
+        
+        if (!empty($request->cost)) {
+            $product->cost = $request->cost;
+        }
+        
 /*
         //dd($request->all());
         if (!empty($request->image)) {
@@ -147,10 +154,10 @@ class ShopController extends Controller
             $product->image = $imageFileName;
         }
 */
+
         //dd(file_exists(storage_path('app/public/tmp/') . 'test.jpg'));
-        \File::move(storage_path('app/public/tmp/') . 'test.jpg', storage_path('app/public/') . 'test.jpg');
-
-
+        \File::move(storage_path('app/public/tmp/') . 'test.jpg', storage_path('app/public/') . $product->id . '.jpg');
+        
         $product->save();
         
         return redirect("/");
