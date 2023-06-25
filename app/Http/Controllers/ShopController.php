@@ -96,6 +96,18 @@ class ShopController extends Controller
 
         $inputs = $request->all();
         //dd($inputs);
+
+        if (!empty($request->image)) {
+
+            $imageFileName = 'test.' . $request->image->guessExtension();
+            if (app()->environment('testing')) {
+
+                $request->image->storeAs('test/tmp/', $imageFileName);
+            } else {
+                $request->image->storeAs('public/tmp/', $imageFileName);
+            }
+        }
+
         $param = [
             'product' => $product,
             'inputs' => $inputs,
@@ -114,8 +126,8 @@ class ShopController extends Controller
         //フォームからDBへセット
         $product->name = $request->name;
         $product->cost = $request->cost;
-
-        dd($request->all());
+/*
+        //dd($request->all());
         if (!empty($request->image)) {
             //画像ファイル名はレコードIDにする
             $imageFileName = $product->id . '.' .$request->image->guessExtension();
@@ -134,6 +146,10 @@ class ShopController extends Controller
             //画像ファイル名をDBにセットする
             $product->image = $imageFileName;
         }
+*/
+        //dd(file_exists(storage_path('app/public/tmp/') . 'test.jpg'));
+        \File::move(storage_path('app/public/tmp/') . 'test.jpg', storage_path('app/public/') . 'test.jpg');
+
 
         $product->save();
         
