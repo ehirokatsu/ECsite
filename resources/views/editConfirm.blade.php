@@ -26,7 +26,8 @@
                   <img class="" src="/storage/{{$product->image}}">
                   @endif
                   <br>
-                  <input type="submit">
+                  <button type="submit" name="action" value="submit">送信する</button>
+                  <button type="submit" name="action" value="back">戻る</button>
                 </form>
                 @if ($errors->any())
                 <div class="">

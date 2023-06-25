@@ -99,7 +99,7 @@ class ShopController extends Controller
         $imageFileName = '';
         if (!empty($request->image)) {
 
-            $imageFileName = 'test.' . $request->image->guessExtension();
+            $imageFileName = \Str::random(10) . '.' . $request->image->guessExtension();
             if (app()->environment('testing')) {
 
                 $request->image->storeAs('test/tmp/', $imageFileName);
@@ -121,44 +121,58 @@ class ShopController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        //戻る処理でも使用するのでif文前で取得する
         $product = product::findOrFail($id);
-
-        
-
-        //フォームからDBへセット
-        if (!empty($request->name)) {
-            $product->name = $request->name;
-        }
-        
-        if (!empty($request->cost)) {
-            $product->cost = $request->cost;
-        }
+        $inputs = $request->except('action');
+        //
         if (!empty($request->imageFileName)) {
             $imageFileName = $request->imageFileName;
         } else {
             $imageFileName = 'dummy';
         }
-        //dd(storage_path('app/public/tmp/') . $imageFileName);
-        \Log::info(storage_path('app/public/tmp/') . $imageFileName);
-        \Log::info(public_path('tmp/') . $imageFileName);
-        //\Log::info(file_exists(storage_path('app/public/tmp/') . $imageFileName));
-        dd(\Storage::disk('local')->exists('public/tmp/' . $imageFileName));
-        //dd(storage_path('app/public/tmp/') . $imageFileName);
 
-        //ファイル名がないとディレクトリのみ指定されるが、それだとtrueになる
-        //画像がない時はダミーのファイル名を入れてfalseと判定されるようにする
-        if (file_exists(storage_path('app/public/tmp/') . $imageFileName)) {
-            \File::move(storage_path('app/public/tmp/') . $imageFileName, storage_path('app/public/') . $product->id . '.jpg');
-        }
+        if ($request->action === 'submit') {
 
-        $product->save();
+            //フォームからDBへセット
+            if (!empty($request->name)) {
+                $product->name = $request->name;
+            }
+            
+            if (!empty($request->cost)) {
+                $product->cost = $request->cost;
+            }
+            //dd(storage_path('app/public/tmp/') . $imageFileName);
+            \Log::info(storage_path('app/public/tmp/') . $imageFileName);
+            \Log::info(public_path('tmp/') . $imageFileName);
+            //\Log::info(file_exists(storage_path('app/public/tmp/') . $imageFileName));
+            //dd(\Storage::disk('local')->exists('public/tmp/' . $imageFileName));
+            //dd(storage_path('app/public/tmp/') . $imageFileName);
 
+            //ファイル名がないとディレクトリのみ指定されるが、それだとtrueになる
+            //画像がない時はダミーのファイル名を入れてfalseと判定されるようにする
+            if (file_exists(storage_path('app/public/tmp/') . $imageFileName)) {
+                \File::move(storage_path('app/public/tmp/') . $imageFileName, storage_path('app/public/') . $product->id . '.jpg');
+            }
+
+            $product->save();
+            return redirect("/");
+
+        } else {
+                
         //戻るボタンを押下した時は、入力値を戻す？画像は削除？
-        //tmpのファイル名をランダムにしないと衝突する
         //変更した項目の色を変えるなどしたい
-        
-        return redirect("/");
+
+            if (file_exists(storage_path('app/public/tmp/') . $imageFileName)) {
+                \File::move(storage_path('app/public/tmp/') . $imageFileName, storage_path('app/public/') . $product->id . '.jpg');
+            }
+
+            //入力した値を次のリクエストまでの間だけセッションに保存する
+            $request->session()->flashInput($inputs);
+    
+            //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
+            return redirect()->route('edit', ['id' => $product->id])->withInput();
+        } 
     }
 
     /**
