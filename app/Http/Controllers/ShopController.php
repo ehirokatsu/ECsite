@@ -31,6 +31,11 @@ class ShopController extends Controller
         return view('create');
     }
 
+    public function createConfirm(Request $request)
+    {
+        return view('createConfirm');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
