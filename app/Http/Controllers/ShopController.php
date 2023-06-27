@@ -35,9 +35,9 @@ class ShopController extends Controller
     {
         $inputs = $request->all();
 
-        $imageFileName = '';
+        $imageFileName = '';//フォームリクエストを使うから空はありえない。削除
 
-        if (!empty($request->image)) {
+        if (!empty($request->image)) {//これも削除？
 
             $imageFileName = \Str::random(10) . '.' . $request->image->guessExtension();
 
@@ -50,7 +50,8 @@ class ShopController extends Controller
                 $request->image->storeAs('public/tmp/', $imageFileName);
 
             }
-        }
+        }//いるなら、elseで例外をいれないと。それならnameとか他のも異常チェックがいるのでは？
+        //elseでは不正検出画面にリダイレクト？ここではフォームリクエストで行けそう
 
         $param = [
             'inputs' => $inputs,
@@ -71,13 +72,13 @@ class ShopController extends Controller
 
         $inputs = $request->except('action');
 
-        if (!empty($request->imageFileName)) {
+        if (!empty($request->imageFileName)) {//これも削除
 
-            $imageFileName = $request->imageFileName;
+            $imageFileName = $request->imageFileName;//srcimage_の名前にしないと分からない
 
         } else {
 
-            $imageFileName = 'dummy';
+            $imageFileName = 'dummy';//ダミーを使わない方法が必要
         }
 
         $srcImageFullPath = storage_path('app/public/tmp/') . $imageFileName;
@@ -95,6 +96,7 @@ class ShopController extends Controller
             //dd($srcImageFullPath);
             //dd(pathinfo($srcImageFullPath, PATHINFO_EXTENSION));
             //画像ファイル名はレコードIDにする
+            //こっちはdstimage_にすること
             $imageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
 
             $dstImageFullPath = storage_path('app/public/') . $imageFileName;
@@ -104,14 +106,17 @@ class ShopController extends Controller
 
             $product->save();
 
-            if (file_exists($srcImageFullPath)) {
+            if (file_exists($srcImageFullPath)) {//このバリデーションも別だし？
                 \File::move($srcImageFullPath, $dstImageFullPath);
             }
 
             return redirect('/');
 
         } else {
+        
 
+//tmpに画像がない場合は、不正検出画面に遷移させる必要がある。リダイレクトとかで。フォームリクエストは使えない
+//それはドメインバリデーション？どこでやる？
             
             if (file_exists($srcImageFullPath)) {
                 unlink($srcImageFullPath);
