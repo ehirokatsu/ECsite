@@ -88,6 +88,9 @@ Route::post('/contact/thanks', 'App\Http\Controllers\ContactController@send')->n
 Route::get('/databaseManage', 'App\Http\Controllers\DatabaseManageController@index')->name('databaseManage.index');
 Route::post('/databaseManage/export', 'App\Http\Controllers\DatabaseManageController@export')->name('databaseManage.export');
 
+Route::get('/no', function () {
+    return view('no');
+})->name('no');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

@@ -274,7 +274,14 @@ class ShopController extends Controller
 
         //商品画像を削除する
         if ($this->checkFileExists($imageFullPath)) {
+
             unlink($imageFullPath);
+
+
+        } else {
+
+            //エラーメッセージをViewに渡して表示出来るようにしたい
+            return redirect()->route('no');
         }
 
         //商品レコードを削除する
@@ -285,6 +292,8 @@ class ShopController extends Controller
 
 
     /** */
+    //ファイル名がないとディレクトリのみ指定されるが、それだとtrueになる
+    //するとunlinkなどが実行され、ファイルがないので例外発生してしまう
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;
