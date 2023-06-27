@@ -27,7 +27,7 @@ Route::middleware(['can:admin'])->group(function() {
     Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
 
     //商品追加確認画面
-    Route::post('/{id}/createConfirm', 'App\Http\Controllers\ShopController@createConfirm')->name('createConfirm')->where('id', '[0-9]+');
+    Route::post('/createConfirm', 'App\Http\Controllers\ShopController@createConfirm')->name('createConfirm');
 
     //商品追加処理
     Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');

@@ -33,43 +33,98 @@ class ShopController extends Controller
 
     public function createConfirm(Request $request)
     {
-        return view('createConfirm');
+        $inputs = $request->all();
+
+        $imageFileName = '';
+
+        if (!empty($request->image)) {
+
+            $imageFileName = \Str::random(10) . '.' . $request->image->guessExtension();
+
+            if (app()->environment('testing')) {
+                
+                $request->image->storeAs('test/tmp/', $imageFileName);
+
+            } else {
+
+                $request->image->storeAs('public/tmp/', $imageFileName);
+
+            }
+        }
+
+        $param = [
+            'inputs' => $inputs,
+            'imageFileName' => $imageFileName,
+        ];
+
+        return view('createConfirm', $param);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request)
+    //フォームリクエストを入れると、エラー時リダイレクトはcreateConfirmにGETでアクセスするがrouteにないのでエラーになる
+    public function store(Request $request)
     {
         //空の商品モデルを生成
         $product = new Product;
 
-        //フォームからDBへセット
-        $product->name = $request->name;
-        $product->cost = $request->cost;
-        $product->image = "";
-        $product->save();
-        
-        //画像ファイル名はレコードIDにする
-        $imageFileName = $product->id . '.' .$request->image->guessExtension();
+        $inputs = $request->except('action');
 
-        //テストコード実行時は専用のフォルダに保存する
-        if (app()->environment('testing')) {
+        if (!empty($request->imageFileName)) {
 
-            //画像をストレージに保存する
-            $request->image->storeAs('test/', $imageFileName);
+            $imageFileName = $request->imageFileName;
 
         } else {
 
-            $request->image->storeAs('public/', $imageFileName);
-
+            $imageFileName = 'dummy';
         }
 
-        //画像ファイル名をDBにセットする
-        $product->image = $imageFileName;
-        $product->save();
+        $srcImageFullPath = storage_path('app/public/tmp/') . $imageFileName;
 
-        return redirect('/');
+
+
+        if ($request->action === 'submit') {
+
+            //フォームからDBへセット
+            $product->name = $request->name;
+            $product->cost = $request->cost;
+            $product->image = "";
+            $product->save();
+
+            //dd($srcImageFullPath);
+            //dd(pathinfo($srcImageFullPath, PATHINFO_EXTENSION));
+            //画像ファイル名はレコードIDにする
+            $imageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
+
+            $dstImageFullPath = storage_path('app/public/') . $imageFileName;
+
+            //画像ファイル名をDBにセットする
+            $product->image = $imageFileName;
+
+            $product->save();
+
+            if (file_exists($srcImageFullPath)) {
+                \File::move($srcImageFullPath, $dstImageFullPath);
+            }
+
+            return redirect('/');
+
+        } else {
+
+            
+            if (file_exists($srcImageFullPath)) {
+                unlink($srcImageFullPath);
+            }
+
+            $request->session()->flashInput($inputs);
+
+            //ファイルも選択状態にして戻すにはどうしたらいいか？
+
+            return redirect()->route('create')->withInput();
+
+        }
+       
 
     }
 
@@ -210,6 +265,8 @@ class ShopController extends Controller
 
         //商品画像のフルパスを取得する
         $imageFullPath = storage_path('app/public/') . $product->image;
+
+//★画像ファイルが無い場合でもtrue判定されてしまう
 
         //商品画像を削除する
         if (file_exists($imageFullPath)) {
