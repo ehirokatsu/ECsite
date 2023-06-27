@@ -10,13 +10,13 @@
                 <form action="{{ route('createConfirm') }}" method="post" enctype="multipart/form-data">
                   @csrf
                   <span>商品名</span>
-                  <input type="text" name="name">
+                  <input type="text" name="name" value="{{ old('name') }}">
                   <br>
                   <span>単価</span>
-                  <input type="text" name="cost">
+                  <input type="text" name="cost" value="{{ old('cost') }}">
                   <br>
                   <span>商品画像</span>
-                  <input type="file" name="image">
+                  <input type="file" name="image"  value="{{ old('image') }}">
                   <br>
                   <input type="submit">
                 </form>

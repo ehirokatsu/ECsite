@@ -31,7 +31,7 @@ class ShopController extends Controller
         return view('create');
     }
 
-    public function createConfirm(Request $request)
+    public function createConfirm(ProductRequest $request)
     {
         $inputs = $request->all();
 
@@ -265,22 +265,31 @@ class ShopController extends Controller
      */
     public function destroy(string $id)
     {
+
         //削除対象のレコードを取得する
         $product = product::findOrFail($id);
 
         //商品画像のフルパスを取得する
         $imageFullPath = storage_path('app/public/') . $product->image;
 
-//★画像ファイルが無い場合でもtrue判定されてしまう
-
         //商品画像を削除する
-        if (file_exists($imageFullPath)) {
+        if ($this->checkFileExists($imageFullPath)) {
             unlink($imageFullPath);
         }
-        
+
         //商品レコードを削除する
         $product->delete();
 
         return redirect("/");
+    }
+
+
+    /** */
+    public function checkFileExists($path) {
+        if (\File::exists($path) && !is_dir($path)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
