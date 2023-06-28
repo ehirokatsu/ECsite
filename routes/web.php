@@ -28,6 +28,9 @@ Route::middleware(['can:admin'])->group(function() {
 
     //商品追加確認画面
     Route::post('/createConfirm', 'App\Http\Controllers\ShopController@createConfirm')->name('createConfirm');
+    Route::get('/createConfirm', function () {
+        return view('no');
+    });
 
     //商品追加処理
     Route::post('/', 'App\Http\Controllers\ShopController@store')->name('store');
@@ -37,6 +40,9 @@ Route::middleware(['can:admin'])->group(function() {
 
     //商品追加確認画面
     Route::post('/{id}/editConfirm', 'App\Http\Controllers\ShopController@editConfirm')->name('editConfirm')->where('id', '[0-9]+');
+    Route::get('/{id}/editConfirm', function () {
+        return view('no');
+    });
 
     //商品編集処理
     Route::put('/{id}', 'App\Http\Controllers\ShopController@update')->name('update')->where('id', '[0-9]+');

@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductConfirmRequest;
 use App\Models\Product;
 use Gate;
+use Carbon\Carbon;
 
 class ShopController extends Controller
 {
@@ -27,31 +29,29 @@ class ShopController extends Controller
     public function create()
     {
         //
-
         return view('create');
     }
 
     public function createConfirm(ProductRequest $request)
     {
+        //フォーム内容を取得する
         $inputs = $request->all();
 
-        $imageFileName = '';//フォームリクエストを使うから空はありえない。削除
+        $now = Carbon::now()->format('Y_m_d_H_i_s');
 
-        if (!empty($request->image)) {//これも削除？
+        //商品画像を一時保存する時のファイル名を作成する
+        $imageFileName = $now . '.' . $request->image->guessExtension();
 
-            $imageFileName = \Str::random(10) . '.' . $request->image->guessExtension();
+        //テスト環境、それ以外で一時画像保存場所を変更する
+        if (app()->environment('testing')) {
+            
+            $request->image->storeAs('test/tmp/', $imageFileName);
 
-            if (app()->environment('testing')) {
-                
-                $request->image->storeAs('test/tmp/', $imageFileName);
+        } else {
 
-            } else {
+            $request->image->storeAs('public/tmp/', $imageFileName);
 
-                $request->image->storeAs('public/tmp/', $imageFileName);
-
-            }
-        }//いるなら、elseで例外をいれないと。それならnameとか他のも異常チェックがいるのでは？
-        //elseでは不正検出画面にリダイレクト？ここではフォームリクエストで行けそう
+        }
 
         $param = [
             'inputs' => $inputs,
@@ -65,72 +65,63 @@ class ShopController extends Controller
      * Store a newly created resource in storage.
      */
     //フォームリクエストを入れると、エラー時リダイレクトはcreateConfirmにGETでアクセスするがrouteにないのでエラーになる
-    public function store(Request $request)
+    public function store(ProductConfirmRequest $request)
     {
         //空の商品モデルを生成
         $product = new Product;
 
+        //修正する場合にViewに渡すフォーム値
         $inputs = $request->except('action');
 
-        if (!empty($request->imageFileName)) {//これも削除
+        //一時保存した画像ファイル名
+        $srcImageFileName = $request->imageFileName;
 
-            $imageFileName = $request->imageFileName;//srcimage_の名前にしないと分からない
+        //一時保存した画像ファイルパス
+        $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
 
-        } else {
-
-            $imageFileName = 'dummy';//ダミーを使わない方法が必要
-        }
-
-        $srcImageFullPath = storage_path('app/public/tmp/') . $imageFileName;
-
-
-
+        //登録する場合
         if ($request->action === 'submit') {
 
             //フォームからDBへセット
             $product->name = $request->name;
             $product->cost = $request->cost;
             $product->image = "";
+
+            //画像ファイル名をレコードＩＤにするため一旦保存する
             $product->save();
 
-            //dd($srcImageFullPath);
-            //dd(pathinfo($srcImageFullPath, PATHINFO_EXTENSION));
-            //画像ファイル名はレコードIDにする
-            //こっちはdstimage_にすること
-            $imageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
+            //保存する画像ファイル名はレコードIDにする
+            $dstImageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
 
-            $dstImageFullPath = storage_path('app/public/') . $imageFileName;
+            //保存する画像ファイルパス
+            $dstImageFullPath = storage_path('app/public/') . $dstImageFileName;
 
             //画像ファイル名をDBにセットする
-            $product->image = $imageFileName;
+            $product->image = $dstImageFileName;
 
             $product->save();
 
-            if (file_exists($srcImageFullPath)) {//このバリデーションも別だし？
+            if ($this->checkFileExists($srcImageFullPath)) {//このバリデーションも別だし？
                 \File::move($srcImageFullPath, $dstImageFullPath);
             }
 
             return redirect('/');
 
+        //修正する場合
         } else {
         
-
-//tmpに画像がない場合は、不正検出画面に遷移させる必要がある。リダイレクトとかで。フォームリクエストは使えない
-//それはドメインバリデーション？どこでやる？
-            
-            if (file_exists($srcImageFullPath)) {
+            //tmpに画像がない場合は、不正検出画面に遷移させる必要がある。リダイレクトとかで。フォームリクエストは使えない
+            //それはドメインバリデーション？どこでやる？
+                        
+            if ($this->checkFileExists($srcImageFullPath)) {
                 unlink($srcImageFullPath);
             }
 
-            $request->session()->flashInput($inputs);
+            //$request->session()->flashInput($inputs);
 
-            //ファイルも選択状態にして戻すにはどうしたらいいか？
-
+            //ファイルも選択状態にして戻すにはどうしたらいいか？→無理そう
             return redirect()->route('create')->withInput();
-
         }
-       
-
     }
 
     /**
@@ -164,13 +155,16 @@ class ShopController extends Controller
         $inputs = $request->all();
 
         //viewの@ifで判定するため$paramで渡せるように初期化
+        //画像を更新しない場合があるから
         $imageFileName = '';
 
         //画像を一時保存する
         if (!empty($request->image)) {
-
-            //一時保存用にランダムは文字列の名称にする
-            $imageFileName = \Str::random(10) . '.' . $request->image->guessExtension();
+            
+            $now = Carbon::now()->format('Y_m_d_H_i_s');
+            
+            //商品画像を一時保存する時のファイル名を作成する
+            $imageFileName = $now . '.' . $request->image->guessExtension();
 
             //テスト時の保存場所
             if (app()->environment('testing')) {
@@ -203,41 +197,36 @@ class ShopController extends Controller
         $product = product::findOrFail($id);
         //$inputs = $request->except('action');
 
-        //画像を更新する場合、一時保存した画像ファイル名（ランダム文字列＋拡張子）
-        if (!empty($request->imageFileName)) {
-
-            $imageFileName = $request->imageFileName;
-
-        //画像を更新しない場合、ダミーの名前
-        } else {
-            $imageFileName = 'dummy';
-        }
-
-        //一時保存した画像のフルパス
-        $srcImageFullPath = storage_path('app/public/tmp/') . $imageFileName;
-
-        //商品画像保存用のフルパス
-        $dstImageFullPath = storage_path('app/public/') . $product->image;
+        $srcImageFullPath = '';
 
         //確定ボタン押下
         if ($request->action === 'submit') {
 
-            //フォームからDBへセット
+            //nameを更新する場合
             if (!empty($request->name)) {
                 $product->name = $request->name;
             }
             
+            //costを更新する場合
             if (!empty($request->cost)) {
                 $product->cost = $request->cost;
             }
-            //dd(storage_path('app/public/tmp/') . $imageFileName);
-            //\Log::info(storage_path('app/public/tmp/') . $imageFileName);
 
-            //ファイル名がないとディレクトリのみ指定されるが、それだとtrueになる
-            //するとmoveメソッドが実行されるが、画像ファイルがないのでエラーが発生する
-            //画像がない時はダミーのファイル名を入れてfalseと判定されるようにする
-            if (file_exists($srcImageFullPath)) {
-                \File::move($srcImageFullPath, $dstImageFullPath);
+            //画像を更新する場合
+            if (!empty($request->imageFileName)) {
+
+                //一時保存した画像ファイル名
+                $srcImageFileName = $request->imageFileName;
+
+                //一時保存した画像のフルパス
+                $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+
+                //商品画像保存用のフルパス
+                $dstImageFullPath = storage_path('app/public/') . $product->image;
+            
+                if ($this->checkFileExists($srcImageFullPath)) {
+                    \File::move($srcImageFullPath, $dstImageFullPath);
+                }
             }
 
             $product->save();
@@ -247,7 +236,7 @@ class ShopController extends Controller
         } else {//修正ボタン押下
 
             //確認用として保存した画像を削除する
-            if (file_exists($srcImageFullPath)) {
+            if ($this->checkFileExists($srcImageFullPath)) {
                 unlink($srcImageFullPath);
             }
 
@@ -265,7 +254,6 @@ class ShopController extends Controller
      */
     public function destroy(string $id)
     {
-
         //削除対象のレコードを取得する
         $product = product::findOrFail($id);
 
