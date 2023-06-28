@@ -121,15 +121,31 @@ class ShopTest extends TestCase
         //商品を作成し編集画面を開けること
         $product = Product::factory()->create();
 
+        //画像を生成する
+        $now = Carbon::now()->format('Y_m_d_H_i_s');
+        Storage::fake('test_images');
+        $image = UploadedFile::fake()->image($now . '.jpg');
+
         $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
-        $response->assertStatus(200);
+        $response->assertStatus(200)->assertViewIs('edit');
+
+        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
+            'name' => 'testB',
+            'cost' => 3000,
+            'image' => $image,
+        ]);
+
+        $response->assertStatus(200)->assertViewIs('editConfirm');
 
         //商品情報を更新できること
         $response = $this->put(route('update', ['id' => $product->id]), [
             'name' => 'testB',
             'cost' => 3000,
+            'imageFileName' => $now . '.jpg',
+            'action' => 'submit',
         ]);
-        $response->assertStatus(302);
+
+        $response->assertStatus(302)->assertRedirect(route('index'));
 
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
