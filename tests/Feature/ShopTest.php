@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
+use Carbon\Carbon;
 
 class ShopTest extends TestCase
 {
@@ -50,26 +51,47 @@ class ShopTest extends TestCase
         //$imageFilename = basename($imagePath);
 
         //画像を生成する
+        $now = Carbon::now()->format('Y_m_d_H_i_s');
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');
-        //\Log::info('image=' . $image);
+        $image = UploadedFile::fake()->image($now . '.jpg');
+    
 
         //管理者ユーザで商品を登録する
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
         ]);
+        
+        //商品登録確認画面に遷移すること
+        $response->assertStatus(200)->assertViewIs('createConfirm');
 
-        //新規投稿をしたらindexにリダイレクトされること
-        $response->assertRedirect(route('index'))->assertStatus(302);
+        //バリデーションエラーが無いこと
         $response->assertValid(['name', 'image', 'cost']);
+
+        //登録する
+        $response = $this->actingAs($adminUser)->post(route('store'), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'imageFileName' => $now . '.jpg',
+            'action' => 'submit',
+        ]);
+
+        //indexにリダイレクトされること
+        $response->assertRedirect(route('index'))->assertStatus(302);
+
+        //バリデーションエラーが無いこと
+        $response->assertValid(['name', 'imageFileName', 'cost']);
 
         //生成したテストデータがDBに登録されていること
         $this->assertDatabaseHas('products', [
             'name' => 'testA',
             'cost' => 2000,
         ]);
+
+
+
+        //商品登録確認画面にGETアクセスは不正画面になること
     }
 
     public function test_product_register_ng(): void
@@ -286,7 +308,7 @@ class ShopTest extends TestCase
         ]);
         $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        $response->assertInvalid(['image']);
+        $response->assertInvalid(['imageFileName']);
 
         //画像ファイル以外を指定する.image.imageでエラーになること
         $response = $this->actingAs($adminUser)->post(route('store'), [
@@ -296,6 +318,6 @@ class ShopTest extends TestCase
         ]);
         $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        $response->assertInvalid(['image']);
+        $response->assertInvalid(['imageFileName']);
     }
 }
