@@ -245,6 +245,7 @@ class ShopController extends Controller
                 if (app()->environment('testing')) {
 
                     $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
+                    //fakerで画像生成するとfakerフォルダにでたらめ文字列の画像名になり、DBにもその名前で入る。fakerを修正するか、保存するときに名前をつけ直すか
                     $dstImageFullPath = storage_path('app/test/') . $product->image;
                 //通常時の保存場所
                 } else {
