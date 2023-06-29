@@ -225,12 +225,12 @@ class ShopController extends Controller
         if ($request->action === 'submit') {
 
             //nameを更新する場合
-            if (!empty($request->name)) {
+            if (!empty($request->name)) {//更新無しでも値はあるのでifは不用
                 $product->name = $request->name;
             }
             
             //costを更新する場合
-            if (!empty($request->cost)) {
+            if (!empty($request->cost)) {//更新無しでも値はあるのでifは不用
                 $product->cost = $request->cost;
             }
 
