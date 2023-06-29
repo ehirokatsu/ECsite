@@ -18,7 +18,7 @@ use Carbon\Carbon;
 class ShopTest extends TestCase
 {
     //テスト用データベースを初期化する。これがないと以前のテストデータが残る
-    //use RefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * A basic feature test example.
@@ -69,6 +69,16 @@ class ShopTest extends TestCase
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'image', 'cost']);
 
+        //商品登録確認画面から戻る
+        $response = $this->actingAs($adminUser)->post(route('store'), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'imageFileName' => $now . '.jpg',
+            'action' => 'back',
+        ]);
+
+        $response->assertStatus(302)->assertRedirect(route('create'));
+
         //登録する
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
@@ -78,7 +88,7 @@ class ShopTest extends TestCase
         ]);
 
         //indexにリダイレクトされること
-        $response->assertRedirect(route('index'))->assertStatus(302);
+        $response->assertStatus(302)->assertRedirect(route('index'));
 
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'imageFileName', 'cost']);
@@ -155,10 +165,11 @@ class ShopTest extends TestCase
 
         //factory内のfakerで生成した画像を削除する
         //\Log::info('imagePath=' . storage_path('app/public/fake/') . $product->image);
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
     }
+
 
     public function test_product_update_ng(): void
     {
@@ -179,7 +190,7 @@ class ShopTest extends TestCase
         $response->assertStatus(403);
 
         //factory内のfakerで生成した画像を削除する
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
     }
@@ -190,14 +201,15 @@ class ShopTest extends TestCase
         $adminUser = User::factory()->create();
 
         $product = Product::factory()->create();
-        
+
+        //dd($product);
         //削除できていること
         $response = $this->actingAs($adminUser)->delete(route('destroy', ['id' => $product->id]));
         $response->assertStatus(302);
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
         
         //factory内のfakerで生成した画像を削除する
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
     }
@@ -208,13 +220,13 @@ class ShopTest extends TestCase
         $generalUser = User::factory()->create(['role' => 'general']);
 
         $product = Product::factory()->create();
-        
+     
         //削除できていること
         $response = $this->actingAs($generalUser)->delete(route('destroy', ['id' => $product->id]));
         $response->assertStatus(403);
         
         //factory内のfakerで生成した画像を削除する
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
     }
@@ -336,4 +348,12 @@ class ShopTest extends TestCase
         $response->assertValid(['name', 'cost']);
         $response->assertInvalid(['imageFileName']);
     }
+    public function checkFileExists($path) {
+        if (\File::exists($path) && !is_dir($path)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }

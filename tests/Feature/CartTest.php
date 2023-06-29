@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 
 class CartTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      */
@@ -56,10 +57,10 @@ class CartTest extends TestCase
         });    
         
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
-        if (file_exists(storage_path('app/public/fake/') . $product2->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product2->image)) {
             unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
         }
     }
@@ -92,7 +93,7 @@ class CartTest extends TestCase
         $response->assertStatus(200)->assertViewIs('cart.duplication');
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image);
         }
     }
@@ -124,7 +125,7 @@ class CartTest extends TestCase
         });
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image);
         }
     }
@@ -180,7 +181,7 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image);
         }
     }
@@ -237,7 +238,7 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image);
         }
     }
@@ -284,7 +285,7 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image);
         }
     }
@@ -346,6 +347,11 @@ class CartTest extends TestCase
 
         //カートの中身がクリアされていること
         $response->assertSessionMissing('carts');
+
+        //商品追加で生成した画像を削除
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
+            unlink(storage_path('app/public/fake/') . $product->image);
+        }
     }
 
     //ログイン中、カートに追加せずにregConfirmにGETアクセスした場合
@@ -408,11 +414,18 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if (file_exists(storage_path('app/public/fake/') . $product->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
-        if (file_exists(storage_path('app/public/fake/') . $product2->image)) {
+        if ($this->checkFileExists(storage_path('app/public/fake/') . $product2->image)) {
             unlink(storage_path('app/public/fake/') . $product2->image); // 画像を削除します
+        }
+    }
+    public function checkFileExists($path) {
+        if (\File::exists($path) && !is_dir($path)) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

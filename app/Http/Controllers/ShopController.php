@@ -77,7 +77,18 @@ class ShopController extends Controller
         $srcImageFileName = $request->imageFileName;
 
         //一時保存した画像ファイルパス
-        $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+        
+
+        //テスト環境、それ以外で一時画像保存場所を変更する
+        if (app()->environment('testing')) {
+            
+            $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
+
+        } else {
+
+            $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+
+        }
 
         //登録する場合
         if ($request->action === 'submit') {
@@ -94,7 +105,18 @@ class ShopController extends Controller
             $dstImageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
 
             //保存する画像ファイルパス
-            $dstImageFullPath = storage_path('app/public/') . $dstImageFileName;
+            
+
+            //テスト環境、それ以外で一時画像保存場所を変更する
+            if (app()->environment('testing')) {
+                
+                $dstImageFullPath = storage_path('app/test/') . $dstImageFileName;
+
+            } else {
+
+                $dstImageFullPath = storage_path('app/public/') . $dstImageFileName;
+
+            }
 
             //画像ファイル名をDBにセットする
             $product->image = $dstImageFileName;
@@ -219,10 +241,20 @@ class ShopController extends Controller
                 $srcImageFileName = $request->imageFileName;
 
                 //一時保存した画像のフルパス
-                $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+                
+                if (app()->environment('testing')) {
 
+                    $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
+                    $dstImageFullPath = storage_path('app/test/') . $product->image;
+                //通常時の保存場所
+                } else {
+    
+                    $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+                    $dstImageFullPath = storage_path('app/public/') . $product->image;
+                }
+                
                 //商品画像保存用のフルパス
-                $dstImageFullPath = storage_path('app/public/') . $product->image;
+                
             
                 if ($this->checkFileExists($srcImageFullPath)) {
                     \File::move($srcImageFullPath, $dstImageFullPath);
@@ -235,11 +267,23 @@ class ShopController extends Controller
 
         } else {//修正ボタン押下
 
-            //確認用として保存した画像を削除する
-            if ($this->checkFileExists($srcImageFullPath)) {
-                unlink($srcImageFullPath);
-            }
+            if (!empty($request->imageFileName)) {
+                //一時保存した画像ファイル名
+                $srcImageFileName = $request->imageFileName;
+                if (app()->environment('testing')) {
 
+                    $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
+                //通常時の保存場所
+                } else {
+    
+                    $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
+                }
+
+                //確認用として保存した画像を削除する
+                if ($this->checkFileExists($srcImageFullPath)) {
+                    unlink($srcImageFullPath);
+                }
+            }
             //入力した値を次のリクエストまでの間だけセッションに保存する
             //editビューではProductモデルの値を表示しているのでこの方法では入力値を渡せない
             //$request->session()->flashInput($inputs);
@@ -258,8 +302,16 @@ class ShopController extends Controller
         $product = product::findOrFail($id);
 
         //商品画像のフルパスを取得する
-        $imageFullPath = storage_path('app/public/') . $product->image;
+        
+        if (app()->environment('testing')) {
 
+            $imageFullPath = storage_path('app/test/') . $product->image;
+        //通常時の保存場所
+        } else {
+
+            $imageFullPath = storage_path('app/public/') . $product->image;
+        }
+        
         //商品画像を削除する
         if ($this->checkFileExists($imageFullPath)) {
 
@@ -269,7 +321,7 @@ class ShopController extends Controller
         } else {
 
             //エラーメッセージをViewに渡して表示出来るようにしたい
-            return redirect()->route('no');
+            //return redirect()->route('no');
         }
 
         //商品レコードを削除する
