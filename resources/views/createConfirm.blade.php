@@ -18,8 +18,7 @@
                   <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
                   <br>
                   <span>商品画像</span>
-                  <img class="" src="/storage/tmp/{{ $imageFileName }}" alt="">
-                  <input type="hidden" name="imageFileName" value="{{ $imageFileName }}">
+                  <img class="" src="/storage/tmp/{{ session('tmpImageFileName') }}" alt="">
                   <br>
                   <button type="submit" name="action" value="submit">送信する</button>
                   <button type="submit" name="action" value="back">戻る</button>

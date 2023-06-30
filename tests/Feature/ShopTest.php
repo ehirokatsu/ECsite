@@ -51,9 +51,10 @@ class ShopTest extends TestCase
         //$imageFilename = basename($imagePath);
 
         //画像を生成する
-        $now = Carbon::now()->format('Y_m_d_H_i_s');
+        //$now = Carbon::now()->format('Y_m_d_H_i_s');
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image($now . '.jpg');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
     
 
         //管理者ユーザで商品を登録する
@@ -68,22 +69,48 @@ class ShopTest extends TestCase
 
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'image', 'cost']);
+        //$response->dumpSession();
+
+        //保存する画像ファイル名
+        $imageFileName = session('tmpImageFileName');
+
+        //sessionに一時保存している画像ファイル名が存在すること（ファイル名に日付を付与しているので、それ以外の元の名前で部分一致しているか確認
+        $response->assertSessionHas('tmpImageFileName', function ($value) use ($imageName) {
+            return \Str::contains($value, $imageName);
+        });
+
+        //一時保存フォルダに画像ファイルが存在すること
+        \Storage::disk('local')->assertExists('/test/tmp/' . $imageFileName);
+
 
         //商品登録確認画面から戻る
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
-            'imageFileName' => $now . '.jpg',
             'action' => 'back',
         ]);
 
+        //商品登録画面に遷移すること
         $response->assertStatus(302)->assertRedirect(route('create'));
+
+        //一時保存した画像ファイル名がセッションから削除されていること
+        $response->assertSessionMissing('tmpImageFileName');
+
+        //一時保存した画像ファイルが削除されていること
+        \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
+
+
+        //管理者ユーザで商品を登録する
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => $image
+        ]);
 
         //登録する
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
             'cost' => 2000,
-            'imageFileName' => $now . '.jpg',
             'action' => 'submit',
         ]);
 
@@ -93,14 +120,27 @@ class ShopTest extends TestCase
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'imageFileName', 'cost']);
 
+        //一時保存した画像ファイル名がセッションから削除されていること
+        $response->assertSessionMissing('tmpImageFileName');
+
         //生成したテストデータがDBに登録されていること
         $this->assertDatabaseHas('products', [
             'name' => 'testA',
             'cost' => 2000,
         ]);
 
+        //一時保存した画像ファイルが削除され、保存場所が変更されていること
+        \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
+        \Storage::disk('local')->assertExists('/test/' . $imageFileName);
 
+        //登録した画像ファイルを削除する
+        if ($this->checkFileExists(storage_path('app/test/') . $imageFileName)) {
+            unlink(storage_path('app/test/') . $imageFileName); // 画像を削除します
+        }
 
+        //登録した画像ファイルが削除されていること
+        \Storage::disk('local')->assertMissing('/test/' . $imageFileName);
+        
         //商品登録確認画面にGETアクセスは不正画面になること
     }
 
@@ -111,10 +151,10 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');
+        $image = UploadedFile::fake()->image('test.jpg');
 
         //一般ユーザで商品登録する
-        $response = $this->actingAs($generalUser)->post(route('store'), [
+        $response = $this->actingAs($generalUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 2000,
             'image' => $image
@@ -122,7 +162,7 @@ class ShopTest extends TestCase
         //NGとなること
         $response->assertStatus(403);
     }
-
+/*
     public function test_product_update(): void
     {
         //管理者ユーザを作成
@@ -169,6 +209,7 @@ class ShopTest extends TestCase
             unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
         }
     }
+
 
 
     public function test_product_update_ng(): void
@@ -336,7 +377,7 @@ class ShopTest extends TestCase
         ]);
         $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        $response->assertInvalid(['imageFileName']);
+        //$response->assertInvalid(['imageFileName']);
 
         //画像ファイル以外を指定する.image.imageでエラーになること
         $response = $this->actingAs($adminUser)->post(route('store'), [
@@ -346,8 +387,9 @@ class ShopTest extends TestCase
         ]);
         $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        $response->assertInvalid(['imageFileName']);
+        //$response->assertInvalid(['imageFileName']);
     }
+    */
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;

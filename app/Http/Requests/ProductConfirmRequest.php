@@ -25,7 +25,6 @@ class ProductConfirmRequest extends FormRequest
             //
             'name' => 'required|string|max:30',
             'cost' => 'required|integer|max:10000|min:1',
-            'imageFileName' => 'required',
         ];
     }
     public function messages()
@@ -38,7 +37,6 @@ class ProductConfirmRequest extends FormRequest
             'cost.integer' => '単価は数字で入力してください',
             'cost.max' => '単価の最大値は10000です',
             'cost.min' => '単価の最小値は1です',
-            'imageFileName.required' => '画像を入力してください',
         ];
     }
 }

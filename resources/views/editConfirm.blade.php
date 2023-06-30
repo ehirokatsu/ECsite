@@ -19,9 +19,9 @@
                   <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
                   <br>
                   <span>商品画像</span>
-                  @if (!empty($imageFileName))
-                  <img class="" src="/storage/tmp/{{ $imageFileName }}">
-                  <input type="hidden" name="imageFileName" value="{{ $imageFileName }}">
+                  @if (!empty(session('tmpImageFileName')))
+                  <img class="" src="/storage/tmp/{{ session('tmpImageFileName') }}">
+
                   @else
                   <img class="" src="/storage/{{$product->image}}">
                   @endif
