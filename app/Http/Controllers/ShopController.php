@@ -255,10 +255,7 @@ class ShopController extends Controller
         //戻る処理でも使用するのでif文前で取得する
         $product = product::findOrFail($id);
         //$inputs = $request->except('action');
-
-//不用なので削除
-        $srcImageFullPath = '';
-
+        
         //確定ボタン押下
         if ($request->action === 'submit') {
 
@@ -282,18 +279,20 @@ class ShopController extends Controller
                     //fakerで画像生成するとfakerフォルダにでたらめ文字列の画像名になり、DBにもその名前で入る。fakerを修正するか、保存するときに名前をつけ直すか
                     $dstImageFullPath = storage_path('app/test/') . $srcImageFileName;
 
+                    $oldImageFullPath = storage_path('app/test/') . $product->image;
                     
                 //通常時の保存場所
                 } else {
     
                     $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
                     $dstImageFullPath = storage_path('app/public/') . $srcImageFileName;
-                }
+                    $oldImageFullPath = storage_path('app/public/') . $product->image;
 
-                if ($this->checkFileExists(storage_path('app/public/') . $product->image)) {
-                    unlink(storage_path('app/public/') . $product->image);
                 }
-
+                //更新前の画像を削除する
+                if ($this->checkFileExists($oldImageFullPath)) {
+                    unlink($oldImageFullPath);
+                }
 
                 $product->image = $srcImageFileName;
                 //商品画像保存用のフルパス

@@ -423,6 +423,7 @@ class CartTest extends TestCase
             unlink(storage_path('app/test/') . $product2->image); // 画像を削除します
         }
     }
+    
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;

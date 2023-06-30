@@ -199,7 +199,7 @@ class ShopTest extends TestCase
         //保存する画像ファイル名
         $imageFileName = session('tmpImageFileName');
         //$response->dumpSession();
-        dump($imageFileName);
+
         //sessionに一時保存している画像ファイル名が存在すること（ファイル名に日付を付与しているので、それ以外の元の名前で部分一致しているか確認
         $response->assertSessionHas('tmpImageFileName', function ($value) use ($imageName) {
             return \Str::contains($value, $imageName);
@@ -210,6 +210,35 @@ class ShopTest extends TestCase
 
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'cost']);
+
+        //商品情報を更新できること
+        $response = $this->put(route('update', ['id' => $product->id]), [
+            'name' => 'testB',
+            'cost' => 3000,
+            'action' => 'back',
+        ]);
+
+        //編集確認画面に遷移すること
+        $response->assertStatus(302)->assertRedirect(route('edit', ['id' => $product->id]));
+
+        //一時保存した画像ファイル名がセッションから削除されていること
+        $response->assertSessionMissing('tmpImageFileName');
+
+        //一時保存した画像ファイルが削除されていること
+        \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
+
+
+
+        //再度編集確認画面に遷移する
+        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
+            'name' => 'testB',
+            'cost' => 3000,
+            'image' => $image,
+        ]);
+
+        //保存する画像ファイル名
+        $imageFileName = session('tmpImageFileName');
+        //$response->dumpSession();
 
         //商品情報を更新できること
         $response = $this->put(route('update', ['id' => $product->id]), [
@@ -238,17 +267,17 @@ class ShopTest extends TestCase
         \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
         \Storage::disk('local')->assertExists('/test/' . $imageFileName);
 
-// $imageFileNameに修正すること。もしくは、再度レコード取得する
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
+        // $imageFileNameに修正すること。もしくは、再度レコード取得する
+        if ($this->checkFileExists(storage_path('app/test/') . $imageFileName)) {
+            unlink(storage_path('app/test/') . $imageFileName); // 画像を削除します
         }
 
         //登録した画像ファイルが削除されていること
         \Storage::disk('local')->assertMissing('/test/' . $imageFileName);
-        
+       
     }
 
-/*
+
     public function test_product_update_ng(): void
     {
         //一般ユーザを作成
@@ -257,7 +286,7 @@ class ShopTest extends TestCase
         //商品を作成し編集画面を開けること
         $product = Product::factory()->create();
 
-        $response = $this->actingAs($generalUser)->get(route('edit', ['id' => $product->id]));
+        $response = $this->actingAs($generalUser)->get(route('editConfirm', ['id' => $product->id]));
         $response->assertStatus(403);
 
         //商品情報を更新できること
@@ -268,8 +297,8 @@ class ShopTest extends TestCase
         $response->assertStatus(403);
 
         //factory内のfakerで生成した画像を削除する
-        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
-            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
+            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
     }
 
@@ -287,8 +316,8 @@ class ShopTest extends TestCase
         $this->assertDatabaseMissing('products', ['id' => $product->id]);
         
         //factory内のfakerで生成した画像を削除する
-        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
-            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
+            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
     }
 
@@ -304,8 +333,8 @@ class ShopTest extends TestCase
         $response->assertStatus(403);
         
         //factory内のfakerで生成した画像を削除する
-        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
-            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
+            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
     }
 
@@ -316,10 +345,11 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');
-
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+    
         //商品名を数値のみにする.name.stringでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 10,
             'cost' => 2000,
             'image' => $image
@@ -329,7 +359,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['name']);
 
         //商品名をnullにする.name.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'cost' => 2000,
             'image' => $image
         ]);
@@ -338,7 +368,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['name']);
 
         //商品名を最大文字数以上にする.name.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => '0123456789012345678901234567890',
             'cost' => 2000,
             'image' => $image
@@ -356,10 +386,11 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.jpg');
-
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+    
         //単価を文字列にする.cost.integerでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 'AAA',
             'image' => $image
@@ -369,7 +400,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価をnullにする.cost.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'image' => $image
         ]);
@@ -378,7 +409,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価を最大値以上にする.cost.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 10001,
             'image' => $image
@@ -388,7 +419,7 @@ class ShopTest extends TestCase
         $response->assertInvalid(['cost']);
 
         //単価を最小値以下にする.cost.minでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 0,
             'image' => $image
@@ -405,10 +436,11 @@ class ShopTest extends TestCase
 
         //画像を生成する
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image('post.txt');
-
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+    
         //画像をnullにする.image.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 2000,
         ]);
@@ -417,16 +449,16 @@ class ShopTest extends TestCase
         //$response->assertInvalid(['imageFileName']);
 
         //画像ファイル以外を指定する.image.imageでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('store'), [
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 2000,
-            'image' => $image
+            'image' => 'test',
         ]);
         $response->assertRedirect(route('index'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
         //$response->assertInvalid(['imageFileName']);
     }
-    */
+    
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;
