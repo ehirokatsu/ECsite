@@ -100,6 +100,8 @@ class ShopController extends Controller
             //フォームからDBへセット
             $product->name = $request->name;
             $product->cost = $request->cost;
+            
+            //レコードidを使用しなくなったので削除する
             $product->image = "";
 
             //画像ファイル名をレコードＩＤにするため一旦保存する
@@ -186,6 +188,7 @@ class ShopController extends Controller
 
         //viewの@ifで判定するため$paramで渡せるように初期化
         //画像を更新しない場合があるから
+        //使用しなくなったので削除すること
         $imageFileName = '';
 
         //画像を更新する場合
@@ -253,6 +256,7 @@ class ShopController extends Controller
         $product = product::findOrFail($id);
         //$inputs = $request->except('action');
 
+//不用なので削除
         $srcImageFullPath = '';
 
         //確定ボタン押下
