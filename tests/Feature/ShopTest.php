@@ -107,6 +107,9 @@ class ShopTest extends TestCase
             'image' => $image
         ]);
 
+        //保存する画像ファイル名を再取得する
+        $imageFileName = session('tmpImageFileName');
+
         //登録する
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'testA',
@@ -162,7 +165,7 @@ class ShopTest extends TestCase
         //NGとなること
         $response->assertStatus(403);
     }
-/*
+
 
     public function test_product_update(): void
     {
@@ -173,46 +176,78 @@ class ShopTest extends TestCase
         $product = Product::factory()->create();
 
         //画像を生成する
-        $now = Carbon::now()->format('Y_m_d_H_i_s');
         Storage::fake('test_images');
-        $image = UploadedFile::fake()->image($now . '.jpg');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
 
+        //管理者ユーザで編集画面に遷移する
         $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
+
+        //遷移できること
         $response->assertStatus(200)->assertViewIs('edit');
 
+        //編集確認画面に遷移する
         $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
             'name' => 'testB',
             'cost' => 3000,
             'image' => $image,
         ]);
 
+        //編集確認画面に遷移すること
         $response->assertStatus(200)->assertViewIs('editConfirm');
+
+        //保存する画像ファイル名
+        $imageFileName = session('tmpImageFileName');
+        //$response->dumpSession();
+        dump($imageFileName);
+        //sessionに一時保存している画像ファイル名が存在すること（ファイル名に日付を付与しているので、それ以外の元の名前で部分一致しているか確認
+        $response->assertSessionHas('tmpImageFileName', function ($value) use ($imageName) {
+            return \Str::contains($value, $imageName);
+        });
+
+        //一時保存フォルダに画像ファイルが存在すること
+        \Storage::disk('local')->assertExists('/test/tmp/' . $imageFileName);
+
+        //バリデーションエラーが無いこと
+        $response->assertValid(['name', 'cost']);
 
         //商品情報を更新できること
         $response = $this->put(route('update', ['id' => $product->id]), [
             'name' => 'testB',
             'cost' => 3000,
-            'imageFileName' => $now . '.jpg',
             'action' => 'submit',
         ]);
 
+        //indexにリダイレクトされること
         $response->assertStatus(302)->assertRedirect(route('index'));
 
+        //バリデーションエラーが無いこと
+        $response->assertValid(['name', 'cost']);
+
+        //一時保存した画像ファイル名がセッションから削除されていること
+        $response->assertSessionMissing('tmpImageFileName');
+
+        //更新したテストデータがDBに登録されていること
         $this->assertDatabaseHas('products', [
             'id' => $product->id,
             'name' => 'testB',
             'cost' => 3000,
         ]);
 
-        //factory内のfakerで生成した画像を削除する
-        //\Log::info('imagePath=' . storage_path('app/public/fake/') . $product->image);
+        //一時保存した画像ファイルが削除され、保存場所が変更されていること
+        \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
+        \Storage::disk('local')->assertExists('/test/' . $imageFileName);
+
         if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
             unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
-     
+
+        //登録した画像ファイルが削除されていること
+        \Storage::disk('local')->assertMissing('/test/' . $imageFileName);
+        
     }
 
-
+/*
     public function test_product_update_ng(): void
     {
         //一般ユーザを作成

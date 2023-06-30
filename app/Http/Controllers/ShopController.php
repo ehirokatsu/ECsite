@@ -40,7 +40,7 @@ class ShopController extends Controller
         $now = Carbon::now()->format('Y_m_d_H_i_s');
 
         //商品画像を一時保存する時のファイル名を作成する
-        $tmpImageFileName = $now . '_' . $request->image->getClientOriginalName();
+        $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
         //dd($imageFileName);
 
         //テスト環境、それ以外で一時画像保存場所を変更する
@@ -194,7 +194,7 @@ class ShopController extends Controller
             $now = Carbon::now()->format('Y_m_d_H_i_s');
             
             //商品画像を一時保存する時のファイル名を作成する
-            $tmpImageFileName = $now . '.' . $request->image->getClientOriginalName();
+            $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
 
             //テスト時の保存場所
             if (app()->environment('testing')) {
@@ -260,7 +260,7 @@ class ShopController extends Controller
 
             //nameを更新する場合
             $product->name = $request->name;
-            
+
             //costを更新する場合
             $product->cost = $request->cost;
 
@@ -276,13 +276,16 @@ class ShopController extends Controller
 
                     $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
                     //fakerで画像生成するとfakerフォルダにでたらめ文字列の画像名になり、DBにもその名前で入る。fakerを修正するか、保存するときに名前をつけ直すか
-                    $dstImageFullPath = storage_path('app/test/') . $product->image;
+                    $dstImageFullPath = storage_path('app/test/') . $srcImageFileName;
+
+                    
                 //通常時の保存場所
                 } else {
     
                     $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
                     $dstImageFullPath = storage_path('app/public/') . $srcImageFileName;
                 }
+
                 if ($this->checkFileExists(storage_path('app/public/') . $product->image)) {
                     unlink(storage_path('app/public/') . $product->image);
                 }
