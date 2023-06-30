@@ -238,6 +238,7 @@ class ShopTest extends TestCase
         \Storage::disk('local')->assertMissing('/test/tmp/' . $imageFileName);
         \Storage::disk('local')->assertExists('/test/' . $imageFileName);
 
+// $imageFileNameに修正すること。もしくは、再度レコード取得する
         if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
             unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
