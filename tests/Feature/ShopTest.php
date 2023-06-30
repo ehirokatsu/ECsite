@@ -163,6 +163,7 @@ class ShopTest extends TestCase
         $response->assertStatus(403);
     }
 /*
+
     public function test_product_update(): void
     {
         //管理者ユーザを作成
@@ -205,11 +206,11 @@ class ShopTest extends TestCase
 
         //factory内のfakerで生成した画像を削除する
         //\Log::info('imagePath=' . storage_path('app/public/fake/') . $product->image);
-        if ($this->checkFileExists(storage_path('app/public/fake/') . $product->image)) {
-            unlink(storage_path('app/public/fake/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
+            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
         }
+     
     }
-
 
 
     public function test_product_update_ng(): void

@@ -18,10 +18,16 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
+        //画像を生成する
+        $oldPath = $this->faker->image(storage_path('app/test'), 640, 480);
 
-        $imagePath = $this->faker->image(storage_path('app/public/fake'), 640, 480);
+        //ファイル名を作成する
+        $newPath = storage_path('app/test/') . date('Y-m-d_H-i-s') . '_test_' . \Str::random(5) . '.jpg';
+
+        //fakerだとファイル名を指定できないのでrenameをする
+        rename($oldPath, $newPath);
         //\Log::info($imagePath);
-        $imageFilename = basename($imagePath);
+        $imageFilename = basename($newPath);
 
         return [
             //
