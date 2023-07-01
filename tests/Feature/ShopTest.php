@@ -24,7 +24,7 @@ class ShopTest extends TestCase
      * A basic feature test example.
      */
     public function test_product_index(): void
-    {
+    {dump(env('IMAGE_SAVE_FOLDER'));
         //ログインユーザ無しでアクセスできること
         $response = $this->get(route('index'));
         $response->assertStatus(200)->assertViewIs('index');

@@ -17,6 +17,9 @@ class ShopController extends Controller
      */
     public function index()
     {
+        //dump(env('IMAGE_SAVE_FOLDER'));
+
+
         //
         $products = Product::all();
         $param = ['products' => $products];
@@ -186,11 +189,6 @@ class ShopController extends Controller
         //入力内容
         $inputs = $request->all();
 
-        //viewの@ifで判定するため$paramで渡せるように初期化
-        //画像を更新しない場合があるから
-        //使用しなくなったので削除すること
-        $imageFileName = '';
-
         //画像を更新する場合
         if (!empty($request->image)) {
             
@@ -230,7 +228,7 @@ class ShopController extends Controller
                 }
 
                 if ($this->checkFileExists($srcImageFullPath)) {
-                    \File::move($srcImageFullPath, $dstImageFullPath);
+                    unlink($srcImageFullPath);
                 }
 
                 $request->session()->forget('tmpImageFileName');
