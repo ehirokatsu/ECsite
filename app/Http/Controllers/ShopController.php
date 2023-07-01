@@ -37,13 +37,14 @@ class ShopController extends Controller
         //フォーム内容を取得する
         $inputs = $request->all();
 
+        //現在日時を取得
         $now = Carbon::now()->format('Y_m_d_H_i_s');
 
-        //商品画像を一時保存する時のファイル名を作成する
+        //商品画像を一時保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
         $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
         //dd($imageFileName);
 
-        //テスト環境、それ以外で一時画像保存場所を変更する
+        //一時保存フォルダに画像を保存する
         $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
 
         //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
@@ -51,7 +52,6 @@ class ShopController extends Controller
 
         $param = [
             'inputs' => $inputs,
-            //'imageFileName' => $imageFileName,
         ];
 
         return view('createConfirm', $param);
@@ -73,9 +73,6 @@ class ShopController extends Controller
         $srcImageFileName = $request->session()->get('tmpImageFileName');
 
         //一時保存した画像ファイルパス
-        
-
-        //テスト環境、それ以外で一時画像保存場所を変更する
         $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
         //登録する場合
@@ -84,31 +81,26 @@ class ShopController extends Controller
             //フォームからDBへセット
             $product->name = $request->name;
             $product->cost = $request->cost;
-            
-            //レコードidを使用しなくなったので削除する
-            $product->image = "";
 
-            //画像ファイル名をレコードＩＤにするため一旦保存する
-            $product->save();
-
-            //保存する画像ファイル名はレコードIDにする
+            //保存する画像ファイル名
             //$dstImageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
             $dstImageFileName = $srcImageFileName;
-            //保存する画像ファイルパス
-            
 
-            //テスト環境、それ以外で一時画像保存場所を変更する  
+            //保存する画像ファイルパス 
             $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $dstImageFileName;
 
             //画像ファイル名をDBにセットする
             $product->image = $dstImageFileName;
 
+            //商品レコードを保存する
             $product->save();
 
+            //一時保存した画像を移動する
             if ($this->checkFileExists($srcImageFullPath)) {//このバリデーションも別だし？
                 \File::move($srcImageFullPath, $dstImageFullPath);
             }
 
+            //セッションに保存した画像ファイル名が不要になるので削除する
             $request->session()->forget('tmpImageFileName');
 
             return redirect('/');
@@ -116,11 +108,13 @@ class ShopController extends Controller
         //修正する場合
         } else {
 
+            //セッションに保存した画像ファイル名が不要になるので削除する
             $request->session()->forget('tmpImageFileName');
         
             //tmpに画像がない場合は、不正検出画面に遷移させる必要がある。リダイレクトとかで。フォームリクエストは使えない
             //それはドメインバリデーション？どこでやる？
-                        
+            
+            //一時保存した画像を削除する
             if ($this->checkFileExists($srcImageFullPath)) {
                 unlink($srcImageFullPath);
             }
@@ -165,12 +159,13 @@ class ShopController extends Controller
         //画像を更新する場合
         if (!empty($request->image)) {
             
+            //現在日時を取得
             $now = Carbon::now()->format('Y_m_d_H_i_s');
-            
-            //商品画像を一時保存する時のファイル名を作成する
+
+            //商品画像を一時保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
             $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
 
-            //テスト時の保存場所
+            //一時保存フォルダに画像を保存する
             $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
             
             //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
@@ -228,7 +223,11 @@ class ShopController extends Controller
 
                 //一時保存した画像のフルパス
                 $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
+
+                //保存する画像のフルパス
                 $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $srcImageFileName;
+
+                //更新前の画像のフルパス
                 $oldImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
 
                 //更新前の画像を削除する
@@ -236,11 +235,13 @@ class ShopController extends Controller
                     unlink($oldImageFullPath);
                 }
 
+                //DBの画像ファイル名を更新する
                 $product->image = $srcImageFileName;
-                //商品画像保存用のフルパス
-                
+
+                //セッションに保存した画像ファイル名が不要になるので削除する
                 $request->session()->forget('tmpImageFileName');
 
+                //一時保存した画像を移動する
                 if ($this->checkFileExists($srcImageFullPath)) {
                     \File::move($srcImageFullPath, $dstImageFullPath);
                 }
@@ -257,13 +258,13 @@ class ShopController extends Controller
                 //一時保存した画像ファイル名
                 $srcImageFileName = $request->session()->get('tmpImageFileName');
 
+                //一時保存した画像のフルパス
                 $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
                 //確認用として保存した画像を削除する
                 if ($this->checkFileExists($srcImageFullPath)) {
                     unlink($srcImageFullPath);
                 }
-
 
                 $request->session()->forget('tmpImageFileName');
             }
@@ -291,7 +292,6 @@ class ShopController extends Controller
         if ($this->checkFileExists($imageFullPath)) {
 
             unlink($imageFullPath);
-
 
         } else {
 

@@ -59,11 +59,11 @@ class CartTest extends TestCase
         //商品追加で生成した画像を削除
         //dd(storage_path('app/test/') . $product->image);
         //dd($this->checkFileExists(storage_path('app/test/') . $product->image));
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
         }
-        if ($this->checkFileExists(storage_path('app/test/') . $product2->image)) {
-            unlink(storage_path('app/test/') . $product2->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image); // 画像を削除します
         }
     }
 
@@ -95,8 +95,8 @@ class CartTest extends TestCase
         $response->assertStatus(200)->assertViewIs('cart.duplication');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
         
@@ -127,8 +127,8 @@ class CartTest extends TestCase
         });
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
 
@@ -183,8 +183,8 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
 
@@ -240,8 +240,8 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
 
@@ -287,8 +287,8 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
 
@@ -351,8 +351,8 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image);
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
 
@@ -416,11 +416,11 @@ class CartTest extends TestCase
         $response->assertSessionMissing('carts');
 
         //商品追加で生成した画像を削除
-        if ($this->checkFileExists(storage_path('app/test/') . $product->image)) {
-            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
         }
-        if ($this->checkFileExists(storage_path('app/test/') . $product2->image)) {
-            unlink(storage_path('app/test/') . $product2->image); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image); // 画像を削除します
         }
     }
     
