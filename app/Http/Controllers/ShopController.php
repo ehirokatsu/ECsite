@@ -17,9 +17,6 @@ class ShopController extends Controller
      */
     public function index()
     {
-        //dump(env('IMAGE_SAVE_FOLDER'));
-
-
         //
         $products = Product::all();
         $param = ['products' => $products];
@@ -49,11 +46,11 @@ class ShopController extends Controller
         //テスト環境、それ以外で一時画像保存場所を変更する
         if (app()->environment('testing')) {
             
-            $request->image->storeAs('test/tmp/', $tmpImageFileName);
+            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
 
         } else {
 
-            $request->image->storeAs('public/tmp/', $tmpImageFileName);
+            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
 
         }
 

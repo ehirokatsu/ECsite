@@ -30,7 +30,8 @@
 
         <!-- テスト用データベース名を指定 -->
         <env name="DB_DATABASE" value="ECsite_test"/>
+        <!-- テスト用画像保存フォルダを指定 -->
         <env name="IMAGE_SAVE_FOLDER" value="test/"/>
-       
+        <env name="IMAGE_TMP_SAVE_FOLDER" value="test/tmp/"/>
     </php>
 </phpunit>
