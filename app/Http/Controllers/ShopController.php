@@ -44,15 +44,7 @@ class ShopController extends Controller
         //dd($imageFileName);
 
         //テスト環境、それ以外で一時画像保存場所を変更する
-        if (app()->environment('testing')) {
-            
-            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
-
-        } else {
-
-            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
-
-        }
+        $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
 
         //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
         $request->session()->put('tmpImageFileName', $tmpImageFileName);
@@ -84,15 +76,7 @@ class ShopController extends Controller
         
 
         //テスト環境、それ以外で一時画像保存場所を変更する
-        if (app()->environment('testing')) {
-            
-            $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
-
-        } else {
-
-            $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
-
-        }
+        $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
         //登録する場合
         if ($request->action === 'submit') {
@@ -113,16 +97,8 @@ class ShopController extends Controller
             //保存する画像ファイルパス
             
 
-            //テスト環境、それ以外で一時画像保存場所を変更する
-            if (app()->environment('testing')) {
-                
-                $dstImageFullPath = storage_path('app/test/') . $dstImageFileName;
-
-            } else {
-
-                $dstImageFullPath = storage_path('app/public/') . $dstImageFileName;
-
-            }
+            //テスト環境、それ以外で一時画像保存場所を変更する  
+            $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $dstImageFileName;
 
             //画像ファイル名をDBにセットする
             $product->image = $dstImageFileName;
@@ -195,16 +171,7 @@ class ShopController extends Controller
             $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
 
             //テスト時の保存場所
-            if (app()->environment('testing')) {
-
-                $request->image->storeAs('test/tmp/', $tmpImageFileName);
-
-            //通常時の保存場所
-            } else {
-
-                $request->image->storeAs('public/tmp/', $tmpImageFileName);
-
-            }
+            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
             
             //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
             $request->session()->put('tmpImageFileName', $tmpImageFileName);
@@ -215,14 +182,7 @@ class ShopController extends Controller
             //セッションと一時画像ファイルが残っていたら削除する
             if (!empty($request->session()->get('tmpImageFileName'))) {
                 
-                if (app()->environment('testing')) {
-
-                    $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
-                //通常時の保存場所
-                } else {
-    
-                    $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
-                }
+                $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
                 if ($this->checkFileExists($srcImageFullPath)) {
                     unlink($srcImageFullPath);
@@ -267,23 +227,10 @@ class ShopController extends Controller
                 $srcImageFileName = $request->session()->get('tmpImageFileName');
 
                 //一時保存した画像のフルパス
-                
-                if (app()->environment('testing')) {
+                $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
+                $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $srcImageFileName;
+                $oldImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
 
-                    $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
-                    //fakerで画像生成するとfakerフォルダにでたらめ文字列の画像名になり、DBにもその名前で入る。fakerを修正するか、保存するときに名前をつけ直すか
-                    $dstImageFullPath = storage_path('app/test/') . $srcImageFileName;
-
-                    $oldImageFullPath = storage_path('app/test/') . $product->image;
-                    
-                //通常時の保存場所
-                } else {
-    
-                    $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
-                    $dstImageFullPath = storage_path('app/public/') . $srcImageFileName;
-                    $oldImageFullPath = storage_path('app/public/') . $product->image;
-
-                }
                 //更新前の画像を削除する
                 if ($this->checkFileExists($oldImageFullPath)) {
                     unlink($oldImageFullPath);
@@ -309,15 +256,8 @@ class ShopController extends Controller
 
                 //一時保存した画像ファイル名
                 $srcImageFileName = $request->session()->get('tmpImageFileName');
-                
-                if (app()->environment('testing')) {
 
-                    $srcImageFullPath = storage_path('app/test/tmp/') . $srcImageFileName;
-                //通常時の保存場所
-                } else {
-    
-                    $srcImageFullPath = storage_path('app/public/tmp/') . $srcImageFileName;
-                }
+                $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
                 //確認用として保存した画像を削除する
                 if ($this->checkFileExists($srcImageFullPath)) {
@@ -345,15 +285,7 @@ class ShopController extends Controller
         $product = product::findOrFail($id);
 
         //商品画像のフルパスを取得する
-        
-        if (app()->environment('testing')) {
-
-            $imageFullPath = storage_path('app/test/') . $product->image;
-        //通常時の保存場所
-        } else {
-
-            $imageFullPath = storage_path('app/public/') . $product->image;
-        }
+        $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
         
         //商品画像を削除する
         if ($this->checkFileExists($imageFullPath)) {
