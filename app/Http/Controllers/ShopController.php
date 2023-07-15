@@ -174,8 +174,10 @@ class ShopController extends Controller
         //画像を更新しない場合
         } else {
 
+            $srcImageFileName = $request->session()->get('tmpImageFileName');
+
             //セッションと一時画像ファイルが残っていたら削除する
-            if (!empty($request->session()->get('tmpImageFileName'))) {
+            if (!empty($srcImageFileName)) {
                 
                 $srcImageFullPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $srcImageFileName;
 
