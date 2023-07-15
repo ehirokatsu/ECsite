@@ -114,4 +114,8 @@ Route::get('/welcome', function () {
     return view('welcome');
 });
 
+Route::get('/htmlTest', function () {
+    return view('htmlTest');
+})->name('htmlTest');
+
 require __DIR__.'/auth.php';

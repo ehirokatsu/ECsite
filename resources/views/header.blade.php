@@ -12,3 +12,4 @@
 @endcan
 <a href="{{ route('register') }}">登録</a>
 <a href="{{ route('login') }}">ログイン</a>
+<a href="{{ route('htmlTest') }}">HTMLテスト</a>
