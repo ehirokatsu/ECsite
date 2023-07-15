@@ -10,24 +10,39 @@
                 <form action="{{ route('update', ['id' => $product->id]) }}" method="post" enctype="multipart/form-data">
                   @method('PUT')
                   @csrf
-                  <span>商品名</span>
-                  {{ $inputs['name'] }}
-                  <input type="hidden" name="name" value="{{ $inputs['name'] }}">
-                  <br>
-                  <span>単価</span>
-                  {{ $inputs['cost'] }}
-                  <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
-                  <br>
-                  <span>商品画像</span>
-                  @if (!empty(session('tmpImageFileName')))
-                  <img class="" src="/storage/tmp/{{ session('tmpImageFileName') }}">
-
-                  @else
-                  <img class="" src="/storage/{{$product->image}}">
-                  @endif
-                  <br>
-                  <button type="submit" name="action" value="submit">送信する</button>
-                  <button type="submit" name="action" value="back">戻る</button>
+                  <div class="flex p-2 border rounded-md justify-center">
+                    <div class="">
+                      @if (!empty(session('tmpImageFileName')))
+                        <img class="max-h-60 max-w-60" src="/storage/tmp/{{ session('tmpImageFileName') }}">
+                      @else
+                        <img class="max-h-60 max-w-60" src="/storage/{{$product->image}}">
+                      @endif
+                    </div>
+                    <div class="">
+                      <div class="flex border-b">
+                        <div class="p-4">
+                          商品名 : {{ $inputs['name'] }}
+                          <input type="hidden" name="name" value="{{ $inputs['name'] }}">
+                        </div>
+                        <div class="p-4 text-lg font-semibold text-slate-500">
+                          単価 : {{ $inputs['cost'] }}
+                          <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
+                        </div>
+                      </div>
+                      <div class="flex">
+                        <div class="p-3">
+                          <x-primary-button type="submit" class="" name="action" value="submit">
+                            更新する
+                          </x-primary-button>
+                        </div>
+                        <div class="p-3">
+                          <x-secondary-button type="submit" class="" name="action" value="back">
+                            修正する
+                          </x-secondary-button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </form>
                 @if ($errors->any())
                 <div class="">
