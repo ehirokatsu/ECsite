@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductConfirmRequest;
+use App\Http\Requests\ProductUpdateRequest;
+use App\Http\Requests\ProductUpdateConfirmRequest;
 use App\Models\Product;
 use Gate;
 use Carbon\Carbon;
@@ -148,7 +150,7 @@ class ShopController extends Controller
 
     }
 
-    public function editConfirm(Request $request, string $id)
+    public function editConfirm(ProductUpdateRequest $request, string $id)
     {
         //編集する商品レコード
         $product = Product::findOrFail($id);
@@ -202,7 +204,7 @@ class ShopController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductUpdateConfirmRequest $request, string $id)
     {
         //戻る処理でも使用するのでif文前で取得する
         $product = product::findOrFail($id);
