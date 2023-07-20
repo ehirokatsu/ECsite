@@ -83,6 +83,9 @@ class ProductValidateTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
+        //保存する画像ファイル名を再取得する
+        $imageFileName = session('tmpImageFileName');
+
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 10,
             'cost' => 2000,
@@ -111,7 +114,11 @@ class ProductValidateTest extends TestCase
         $response->assertValid(['cost']);
         $response->assertInvalid(['name']);
 
-        //一時画像削除処理を入れること
+        //登録した画像ファイルを削除する
+        //createConfirmのみなのでtmpフォルダ内を削除する
+        if ($this->checkFileExists(storage_path('app/test/tmp/') . $imageFileName)) {
+            unlink(storage_path('app/test/tmp/') . $imageFileName); // 画像を削除します
+        }
     }
     
     public function test_StoreConfirmRequest_cost_validate(): void
@@ -185,6 +192,9 @@ class ProductValidateTest extends TestCase
             'cost' => 2000,
             'image' => $image
         ]);
+        //保存する画像ファイル名を再取得する
+        $imageFileName = session('tmpImageFileName');
+
         $response = $this->actingAs($adminUser)->post(route('store'), [
             'name' => 'test',
             'cost' => 'AAA',
@@ -211,7 +221,11 @@ class ProductValidateTest extends TestCase
         $response->assertValid(['name']);
         $response->assertInvalid(['cost']);
 
-        //一時画像削除処理を入れること
+        //登録した画像ファイルを削除する
+        //createConfirmのみなのでtmpフォルダ内を削除する
+        if ($this->checkFileExists(storage_path('app/test/tmp/') . $imageFileName)) {
+            unlink(storage_path('app/test/tmp/') . $imageFileName); // 画像を削除します
+        }
     }
 
     public function test_StoreConfirmRequest_image_validate(): void
