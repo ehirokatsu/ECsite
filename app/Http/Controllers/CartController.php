@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\OrderDetail;
 
 use App\Http\Requests\QuantityRequest;
 use App\Http\Requests\BuyerRequest;
@@ -134,6 +136,10 @@ class CartController extends Controller
 
     public function regComplete (BuyerRequest $request)
     {
+        //購入後の処理
+        //cartsの中身をDBに保存する
+        //購入者情報をDBに保存する
+
         $request->session()->forget('carts');
 
         return view('cart.regComplete');
