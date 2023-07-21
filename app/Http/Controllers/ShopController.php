@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Product\StoreRequest;
-use App\Http\Requests\Product\StoreConfirmRequest;
+use App\Http\Requests\Product\CreateConfirmRequest;
 use App\Http\Requests\Product\UpdateRequest;
-use App\Http\Requests\Product\UpdateConfirmRequest;
+use App\Http\Requests\Product\EditConfirmRequest;
 use App\Models\Product;
 use Gate;
 use Carbon\Carbon;
@@ -34,7 +34,7 @@ class ShopController extends Controller
         return view('create');
     }
 
-    public function createConfirm(StoreConfirmRequest $request)
+    public function createConfirm(CreateConfirmRequest $request)
     {
         //フォーム内容を取得する
         $inputs = $request->all();
@@ -150,7 +150,7 @@ class ShopController extends Controller
 
     }
 
-    public function editConfirm(UpdateConfirmRequest $request, string $id)
+    public function editConfirm(EditConfirmRequest $request, string $id)
     {
         //編集する商品レコード
         $product = Product::findOrFail($id);

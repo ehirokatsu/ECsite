@@ -21,7 +21,7 @@ class ProductValidateTest extends TestCase
     use RefreshDatabase;
 
 
-    public function test_StoreConfirmRequest_name_validate(): void
+    public function test_CreateConfirmRequest_name_validate(): void
     {
         //管理者ユーザを作成
         $adminUser = User::factory()->create();
@@ -62,6 +62,89 @@ class ProductValidateTest extends TestCase
         $response->assertRedirect(route('create'))->assertStatus(302);
         $response->assertValid(['image', 'cost']);
         $response->assertInvalid(['name']);
+    }
+    
+    public function test_CreateConfirmRequest_cost_validate(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+
+        //画像を生成する
+        Storage::fake('test_images');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+    
+        //フォームリクエスト失敗時のリダイレクト先を実機と同じくcreateにするためにgetしておく
+        $response = $this->actingAs($adminUser)->get(route('create'));
+
+        //単価を文字列にする.cost.integerでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 'AAA',
+            'image' => $image
+        ]);
+        $response->assertRedirect(route('create'))->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価をnullにする.cost.requiredでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'image' => $image
+        ]);
+        $response->assertRedirect(route('create'))->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価を最大値以上にする.cost.maxでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 10001,
+            'image' => $image
+        ]);
+        $response->assertRedirect(route('create'))->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+
+        //単価を最小値以下にする.cost.minでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 0,
+            'image' => $image
+        ]);
+        $response->assertRedirect(route('create'))->assertStatus(302);
+        $response->assertValid(['name', 'image']);
+        $response->assertInvalid(['cost']);
+    }
+
+    public function test_CreateConfirmRequest_image_validate(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+
+        //画像を生成する
+        Storage::fake('test_images');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+    
+        //画像をnullにする.image.requiredでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 2000,
+        ]);
+        $response->assertRedirect(route('index'))->assertStatus(302);
+        $response->assertValid(['name', 'cost']);
+        //$response->assertInvalid(['imageFileName']);
+
+        //画像ファイル以外を指定する.image.imageでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => 'test',
+        ]);
+        $response->assertRedirect(route('index'))->assertStatus(302);
+        $response->assertValid(['name', 'cost']);
+        //$response->assertInvalid(['imageFileName']);
     }
 
     public function test_StoreRequest_name_validate(): void
@@ -117,62 +200,9 @@ class ProductValidateTest extends TestCase
 
         //登録した画像ファイルを削除する
         //createConfirmのみなのでtmpフォルダ内を削除する
-        if ($this->checkFileExists(storage_path('app/test/tmp/') . $imageFileName)) {
-            unlink(storage_path('app/test/tmp/') . $imageFileName); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $imageFileName)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $imageFileName); // 画像を削除します
         }
-    }
-    
-    public function test_StoreConfirmRequest_cost_validate(): void
-    {
-        //管理者ユーザを作成
-        $adminUser = User::factory()->create();
-
-        //画像を生成する
-        Storage::fake('test_images');
-        $imageName = 'test.jpg';
-        $image = UploadedFile::fake()->image($imageName);
-    
-        //フォームリクエスト失敗時のリダイレクト先を実機と同じくcreateにするためにgetしておく
-        $response = $this->actingAs($adminUser)->get(route('create'));
-
-        //単価を文字列にする.cost.integerでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'cost' => 'AAA',
-            'image' => $image
-        ]);
-        $response->assertRedirect(route('create'))->assertStatus(302);
-        $response->assertValid(['name', 'image']);
-        $response->assertInvalid(['cost']);
-
-        //単価をnullにする.cost.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'image' => $image
-        ]);
-        $response->assertRedirect(route('create'))->assertStatus(302);
-        $response->assertValid(['name', 'image']);
-        $response->assertInvalid(['cost']);
-
-        //単価を最大値以上にする.cost.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'cost' => 10001,
-            'image' => $image
-        ]);
-        $response->assertRedirect(route('create'))->assertStatus(302);
-        $response->assertValid(['name', 'image']);
-        $response->assertInvalid(['cost']);
-
-        //単価を最小値以下にする.cost.minでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'cost' => 0,
-            'image' => $image
-        ]);
-        $response->assertRedirect(route('create'))->assertStatus(302);
-        $response->assertValid(['name', 'image']);
-        $response->assertInvalid(['cost']);
     }
 
     public function test_StoreRequest_cost_validate(): void
@@ -226,42 +256,12 @@ class ProductValidateTest extends TestCase
 
         //登録した画像ファイルを削除する
         //createConfirmのみなのでtmpフォルダ内を削除する
-        if ($this->checkFileExists(storage_path('app/test/tmp/') . $imageFileName)) {
-            unlink(storage_path('app/test/tmp/') . $imageFileName); // 画像を削除します
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $imageFileName)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder')) . $imageFileName); // 画像を削除します
         }
     }
 
-    public function test_StoreConfirmRequest_image_validate(): void
-    {
-        //管理者ユーザを作成
-        $adminUser = User::factory()->create();
-
-        //画像を生成する
-        Storage::fake('test_images');
-        $imageName = 'test.jpg';
-        $image = UploadedFile::fake()->image($imageName);
-    
-        //画像をnullにする.image.requiredでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'cost' => 2000,
-        ]);
-        $response->assertRedirect(route('index'))->assertStatus(302);
-        $response->assertValid(['name', 'cost']);
-        //$response->assertInvalid(['imageFileName']);
-
-        //画像ファイル以外を指定する.image.imageでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
-            'name' => 'testA',
-            'cost' => 2000,
-            'image' => 'test',
-        ]);
-        $response->assertRedirect(route('index'))->assertStatus(302);
-        $response->assertValid(['name', 'cost']);
-        //$response->assertInvalid(['imageFileName']);
-    }
-    
-    public function test_UpdateConfirmRequest_name_validate(): void
+    public function test_EditConfirmRequest_name_validate(): void
     {
         //管理者ユーザを作成
         $adminUser = User::factory()->create();
@@ -291,46 +291,8 @@ class ProductValidateTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
         }
     }
-/*
-    public function test_UpdateRequest_name_validate(): void
-    {
-        //管理者ユーザを作成
-        $adminUser = User::factory()->create();
 
-        //商品を作成
-        $product = Product::factory()->create();
-
-        //フォームリクエスト失敗時のリダイレクト先を実機と同じくcreateにするためにgetしておく
-        $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
-    
-        //商品名を数値のみにする.name.stringでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
-            'name' => 'AAA',
-            'cost' => 1000,
-        ]);
-        //商品名を数値のみにする.name.stringでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('update', ['id' => $product->id]), [
-            'name' => 10,
-            'cost' => 1000,
-        ]);
-        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
-        $response->assertInvalid(['name']);
-
-
-        //商品名を最大文字数以上にする.name.maxでエラーになること
-        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
-            'name' => '0123456789012345678901234567890',
-        ]);
-        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
-        $response->assertInvalid(['name']);
-
-        //商品画像を削除する
-        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
-            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
-        }
-    }
-*/
-    public function test_UpdateConfirmRequest_cost_validate(): void
+    public function test_EditConfirmRequest_cost_validate(): void
     {
         //管理者ユーザを作成
         $adminUser = User::factory()->create();
@@ -367,6 +329,115 @@ class ProductValidateTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
         }
     }
+
+    public function test_EditConfirmRequest_image_validate(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+
+        //商品を作成
+        $product = Product::factory()->create();
+
+        //フォームリクエスト失敗時のリダイレクト先を実機と同じくcreateにするためにgetしておく
+        $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
+
+        //画像を生成する
+        Storage::fake('test_images');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+
+        //画像ファイル以外を指定する.image.imageでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => 'test',
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertValid(['name', 'cost']);
+
+        //商品画像を削除する
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
+        }
+    }
+
+    public function test_UpdateRequest_name_validate(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+
+        //商品を作成
+        $product = Product::factory()->create();
+
+        //フォームリクエスト失敗時のリダイレクト先を実機と同じくeditにするためにgetしておく
+        $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
+/*
+        //商品名を数値のみにする.name.stringでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
+            'name' => 'AAA',
+            //'cost' => 1000,
+        ]);
+*/
+        //商品名を数値のみにする.name.stringでエラーになること
+        $response = $this->actingAs($adminUser)->put(route('update', ['id' => $product->id]), [
+            'name' => 10,
+            'cost' => 1000,
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertInvalid(['name']);
+
+
+        //商品名を最大文字数以上にする.name.maxでエラーになること
+        $response = $this->actingAs($adminUser)->post(route('editConfirm', ['id' => $product->id]), [
+            'name' => '0123456789012345678901234567890',
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertInvalid(['name']);
+
+        //商品画像を削除する
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
+        }
+    }
+
+    public function test_UpdateRequest_cost_validate(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+
+        //商品を作成
+        $product = Product::factory()->create();
+
+        //フォームリクエスト失敗時のリダイレクト先を実機と同じくeditにするためにgetしておく
+        $response = $this->actingAs($adminUser)->get(route('edit', ['id' => $product->id]));
+
+        //単価を文字列にする.cost.integerでエラーになること
+        $response = $this->actingAs($adminUser)->put(route('update', ['id' => $product->id]), [
+            'cost' => 'AAA',
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertInvalid(['cost']);
+
+        //単価を最大値以上にする.cost.maxでエラーになること
+        $response = $this->actingAs($adminUser)->put(route('update', ['id' => $product->id]), [
+            'cost' => 10001,
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertInvalid(['cost']);
+
+        //単価を最小値以下にする.cost.minでエラーになること
+        $response = $this->actingAs($adminUser)->put(route('update', ['id' => $product->id]), [
+            'cost' => 0,
+        ]);
+        $response->assertRedirect(route('edit', ['id' => $product->id]))->assertStatus(302);
+        $response->assertInvalid(['cost']);
+
+        //商品画像を削除する
+        if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
+            unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image); // 画像を削除します
+        }
+    }
+
 
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
