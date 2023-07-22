@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Event;
 use App\Events\ContactSended;
 use App\Listeners\SendConfirmMail;
 use App\Listeners\SendConfirmMail2;
+use App\Events\OrderCompleted   ;
+use App\Listeners\RegisterOrderDatabase;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         //イベントクラスとリスナークラスを関連づけ
+        //問合せフォーム処理
         ContactSended::class => [
             SendConfirmMail::class,
         ],
@@ -33,6 +36,11 @@ class EventServiceProvider extends ServiceProvider
             SendConfirmMail2::class,
         ],
         */
+        //注文処理
+        OrderCompleted::class => [
+            RegisterOrderDatabase::class,
+        ],
+
     ];
 
     /**

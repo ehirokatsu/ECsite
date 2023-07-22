@@ -11,6 +11,8 @@ use App\Models\OrderDetail;
 use App\Http\Requests\QuantityRequest;
 use App\Http\Requests\BuyerRequest;
 
+use App\Events\OrderCompleted;
+
 class CartController extends Controller
 {
     //
@@ -139,7 +141,8 @@ class CartController extends Controller
         //購入後の処理
         //cartsの中身をDBに保存する
         //購入者情報をDBに保存する
-
+        event(new OrderCompleted());
+        //\Log::info('こうにゅう');
         $request->session()->forget('carts');
 
         return view('cart.regComplete');
