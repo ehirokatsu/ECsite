@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('ordered_on')->nullable(false);
+            $table->datetime('ordered_on')->nullable(false);
             $table->unsignedBigInteger('user_id')->nullable(true);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->string('name')->nullable(false);
-            $table->string('email')->unique()->nullable(false);
+            $table->string('email')->nullable(false);
             $table->string('postal_code')->nullable(false);
             $table->string('address_1')->nullable(false);
             $table->string('address_2')->nullable(false);

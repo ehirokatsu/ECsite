@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
-use App\Models\Order;
-use App\Models\OrderDetail;
 
 use App\Http\Requests\QuantityRequest;
 use App\Http\Requests\BuyerRequest;
@@ -138,11 +136,27 @@ class CartController extends Controller
 
     public function regComplete (BuyerRequest $request)
     {
+        //現在のカート内容を取得
+        $carts = $request->session()->get('carts');
+
+        //ログイン情報を取得
+        $user = \Auth::user();
+
+        //購入者情報を格納
+        $userInfos = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'postalCode' => $user->postal_code,
+            'address1' => $user->address_1,
+            'address2' => $user->address_2,
+            'address3' => $user->address_3,
+            'phoneNumber' => $user->phone_number,
+        ];
         //購入後の処理
-        //cartsの中身をDBに保存する
-        //購入者情報をDBに保存する
-        event(new OrderCompleted());
-        //\Log::info('こうにゅう');
+        event(new OrderCompleted($carts, $userInfos));
+
+        //セッションのカートを削除する
         $request->session()->forget('carts');
 
         return view('cart.regComplete');
@@ -176,7 +190,21 @@ class CartController extends Controller
         if ( $action === 'submit') {
 
             //購入後の処理はここに書く
+            //現在のカート内容を取得
+            $carts = $request->session()->get('carts');
 
+            //購入者情報を格納
+            $userInfos = [
+                'name' => $inputs['name'],
+                'email' => $inputs['email'],
+                'postalCode' => $inputs['postalCode'],
+                'address1' => $inputs['address1'],
+                'address2' => $inputs['address2'],
+                'address3' => $inputs['address3'],
+                'phoneNumber' => $inputs['phoneNumber'],
+            ];
+            //購入後の処理
+            event(new OrderCompleted($carts, $userInfos));
 
             //カートを空にする
             $request->session()->forget('carts'); 

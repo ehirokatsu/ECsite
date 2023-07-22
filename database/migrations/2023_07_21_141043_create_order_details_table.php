@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
             $table->string('name')->nullable(false);
             $table->integer('cost')->nullable(false);
-            $table->integer('email')->nullable(false);
+            $table->integer('quantity')->nullable(false);
             $table->timestamps();
         });
     }
