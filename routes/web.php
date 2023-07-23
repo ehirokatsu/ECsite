@@ -98,6 +98,12 @@ Route::get('/no', function () {
     return view('no');
 })->name('no');
 
+//注文履歴画面
+Route::get('/orderHistory', 'App\Http\Controllers\OrderHistoryController@index')->name('orderHistory');
+
+//注文履歴詳細画面
+Route::get('/orderHistory/{id}', 'App\Http\Controllers\OrderHistoryController@show')->name('orderHistory.show')->where('id', '[0-9]+');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

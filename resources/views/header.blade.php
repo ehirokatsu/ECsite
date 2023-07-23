@@ -10,6 +10,7 @@
 <a href="/create" class="" >商品追加</a>
 <a href="/databaseManage" class="" >DBメンテ</a>
 @endcan
+<a href="{{ route('orderHistory') }}">注文履歴</a>
 <a href="{{ route('register') }}">登録</a>
 <a href="{{ route('login') }}">ログイン</a>
 <a href="{{ route('htmlTest') }}">HTMLテスト</a>
