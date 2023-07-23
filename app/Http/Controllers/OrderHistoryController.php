@@ -24,7 +24,7 @@ class OrderHistoryController extends Controller
     public function show(string $id)
     {
         //$orderDetails = Order::where('user_id', '=' ,1)->get();
-        $orderDetails = OrderDetail::with('order')->where('order_id', '=' ,$id)->get();
+        $orderDetails = OrderDetail::with('order')->with('product')->where('order_id', '=' ,$id)->get();
 
         //$orderDetails = OrderDetail::where('order_id', '=' ,$id)->get();
         //$orderDetails = OrderDetail::find($id);

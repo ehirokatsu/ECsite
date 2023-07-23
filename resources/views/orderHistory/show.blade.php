@@ -18,8 +18,9 @@
                         </div>
                         <div class="p-4 text-lg font-semibold text-slate-500">
                           <span>注文日 : </span>
-                          {{$orderDetail->order->email}}
-                          {{$orderDetail->order->name}}
+                          現在のユーザーメール：{{$orderDetail->order->user->email}}
+                          注文時のユーザーメール{{$orderDetail->order->email}}
+                          {{$orderDetail->product->image}}
                         </div>
                       </div>
                       <div class="">
