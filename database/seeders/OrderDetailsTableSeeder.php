@@ -7,7 +7,7 @@ use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Facades\DB;
 
-class ProductsTableSeeder extends Seeder
+class OrderDetailsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,17 +16,21 @@ class ProductsTableSeeder extends Seeder
     {
         //
         $param = [
+            'order_id' => 1,
+            'product_id' => 1,
             'name' => 'strawberry',
             'cost' => 100,
-            'image' => 'strawberry.jpg',
+            'quantity' => 1,
         ];
-        DB::table('products')->insert($param);
+        DB::table('order_details')->insert($param);
 
         $param = [
+            'order_id' => 1,
+            'product_id' => 2,
             'name' => 'carrot',
             'cost' => 200,
-            'image' => 'carrot.jpg',
+            'quantity' => 1,
         ];
-        DB::table('products')->insert($param);
+        DB::table('order_details')->insert($param);
     }
 }
