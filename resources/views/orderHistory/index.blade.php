@@ -22,9 +22,7 @@
                           <span>注文日 : </span>
                             {{ $order->ordered_on }}
                         </div>
-                      </div>
-                      <div class="">
-                        <div class="p-3">
+                        <div class="p-4 text-lg font-semibold text-slate-500">
                           <a href="{{ route('orderHistory.show', ['id' => $order->id]) }}" class="" >
                             注文詳細
                           </a>

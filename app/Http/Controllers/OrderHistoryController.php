@@ -25,11 +25,14 @@ class OrderHistoryController extends Controller
     {
         //$orderDetails = Order::where('user_id', '=' ,1)->get();
         $orderDetails = OrderDetail::with('order')->with('product')->where('order_id', '=' ,$id)->get();
-
+        $order = Order::where('id', '=' ,$id)->first();
         //$orderDetails = OrderDetail::where('order_id', '=' ,$id)->get();
         //$orderDetails = OrderDetail::find($id);
-        //dd($orderDetails);
-        $param = ['orderDetails' => $orderDetails];
+        //dd($order);
+        $param = [
+            'orderDetails' => $orderDetails,
+            'order' => $order,
+        ];
         return view('orderHistory.show', $param);
     }
 }
