@@ -16,6 +16,7 @@ class OrderDetail extends Model
     public function order(): BelongsTo
     {
         //こちらはOrder.phpと同じくOは大文字にする
+        //order_detailsテーブルにある外部キーをorder_idと判断する
         return $this->belongsTo(Order::class);
     }
 
