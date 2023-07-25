@@ -14,7 +14,7 @@ class OrderMail extends Mailable
     use Queueable, SerializesModels;
 
     //名前、メール、住所、電話番号、カートの中身
-    private $userInfo, $carts;
+    private $userInfos, $carts;
 
 
     /**
@@ -23,8 +23,10 @@ class OrderMail extends Mailable
     public function __construct($carts, $userInfos)
     {
         //
-        $this->userInfo = $userInfos;
+        $this->userInfos = $userInfos;
+        
         $this->carts = $carts;
+        //dd($this->carts);
     }
 
     /**
@@ -45,6 +47,10 @@ class OrderMail extends Mailable
     {
         return new Content(
             view: 'orderHistory.mail',
+            with: [
+                'userInfos' => $this->userInfos,
+                'carts' => $this->carts,
+            ],
         );
     }
 
