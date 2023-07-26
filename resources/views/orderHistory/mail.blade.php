@@ -21,6 +21,10 @@
   <span>電話番号 :</span>
   {{$userInfos['phoneNumber']}}
 </div>
+<div class="p-4">
+  <span>合計金額 :</span>
+  {{$totalAmount}}
+</div>
 <br>
 @foreach($carts as $cart)
 <div class="flex p-2 border rounded-md justify-center">

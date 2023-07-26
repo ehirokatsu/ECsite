@@ -153,13 +153,27 @@ class CartController extends Controller
             'address3' => $user->address_3,
             'phoneNumber' => $user->phone_number,
         ];
+
+        $totalAmount = $this->calculateTotalAmount($carts);
+
         //購入後の処理
-        event(new OrderCompleted($carts, $userInfos));
+        event(new OrderCompleted($carts, $userInfos, $totalAmount));
 
         //セッションのカートを削除する
         $request->session()->forget('carts');
 
         return view('cart.regComplete');
+    }
+
+    public function calculateTotalAmount($carts)
+    {
+        $totalAmount = 0;
+
+        foreach ($carts as $cart) {
+            $totalAmount = $totalAmount + (int)($cart['product']->cost) * (int)($cart['quantity']);
+        }
+
+        return $totalAmount;
     }
 
     public function buyer (Request $request)

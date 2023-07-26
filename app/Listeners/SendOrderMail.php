@@ -24,6 +24,6 @@ class SendOrderMail
     public function handle(OrderCompleted $event): void
     {
         //
-        \Mail::to($event->userInfos['email'])->send(new OrderMail($event->carts, $event->userInfos));
+        \Mail::to($event->userInfos['email'])->send(new OrderMail($event->carts, $event->userInfos, $event->totalAmount));
     }
 }

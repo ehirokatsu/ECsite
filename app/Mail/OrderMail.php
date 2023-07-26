@@ -14,18 +14,18 @@ class OrderMail extends Mailable
     use Queueable, SerializesModels;
 
     //名前、メール、住所、電話番号、カートの中身
-    private $userInfos, $carts;
+    private $userInfos, $carts, $totalAmount;
 
 
     /**
      * Create a new message instance.
      */
-    public function __construct($carts, $userInfos)
+    public function __construct($carts, $userInfos, $totalAmount)
     {
         //
         $this->userInfos = $userInfos;
-        
         $this->carts = $carts;
+        $this->totalAmount = $totalAmount;
         //dd($this->carts);
     }
 
@@ -50,6 +50,7 @@ class OrderMail extends Mailable
             with: [
                 'userInfos' => $this->userInfos,
                 'carts' => $this->carts,
+                'totalAmount' => $this->totalAmount,
             ],
         );
     }
