@@ -1,14 +1,30 @@
-お問い合わせ内容を受け付けました。
+<h1>注文内容を受け付けました。</h1>
 <div class="p-4">
-  <span>注文ID :</span>
+  <h2>注文者情報</h2>
+</div>
+<div class="p-4">
+  <span>名前 :</span>
   {{$userInfos['name']}}
 </div>
-
+<div class="p-4">
+  <span>メールアドレス :</span>
+  {{$userInfos['email']}}
+</div>
+<div class="p-4">
+  <span>住所:</span>
+  {{$userInfos['postalCode']}}
+  {{$userInfos['address1']}}
+  {{$userInfos['address2']}}
+  {{$userInfos['address3']}}
+</div>
+<div class="p-4">
+  <span>電話番号 :</span>
+  {{$userInfos['phoneNumber']}}
+</div>
+<br>
 @foreach($carts as $cart)
 <div class="flex p-2 border rounded-md justify-center">
-  <div class="h-60 w-60">
-    <img class="max-h-60 max-w-60" src="/storage/{{$cart['product']->image}}">
-  </div>
+
   <div class="">
     <div class="flex border-b">
       <div class="p-4">
