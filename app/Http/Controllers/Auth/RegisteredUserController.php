@@ -14,14 +14,22 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
+//Blade用
+use Illuminate\View\View;
+
 class RegisteredUserController extends Controller
 {
     /**
      * Display the registration view.
      */
-    public function create(): Response
+    public function create2(): Response
     {
         return Inertia::render('Auth/Register');
+    }
+    //Blade用
+    public function create(): View
+    {
+        return view('auth.register');
     }
 
     /**
