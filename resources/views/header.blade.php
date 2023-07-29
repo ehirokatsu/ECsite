@@ -12,4 +12,10 @@
 <a href="{{ route('orderHistory') }}">注文履歴</a>
 <a href="{{ route('register') }}">登録</a>
 <a href="{{ route('login') }}">ログイン</a>
+<div class="flex">
+  <form method="POST" action="{{ route('logout') }}">
+    @csrf
+    <input type="submit" value="ログアウト">
+  </form>
+</div>
 <a href="{{ route('htmlTest') }}">HTMLテスト</a>
