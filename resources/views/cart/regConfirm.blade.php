@@ -4,11 +4,12 @@
   </x-slot>
 
   <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+            <div class="p-2 text-gray-900">
+              <h2>購入者情報は以下でよろしいですか？</h2>
             </div>
-            購入者情報は以下でよろしいですか？
+            
             <form method="post" action="{{ route('cart.regComplete') }}">
               @csrf
               <!-- Name -->
