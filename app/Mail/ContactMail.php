@@ -70,10 +70,11 @@ class ContactMail extends Mailable
     public function attachments(): array
     {
         return [
+            //ファイル名を指定すると、そのファイルが存在しないとnew ContactMailしたソースでエラーが発生する。
             //フルパスを指定する
-            Attachment::fromPath('/Users/hiro/ECsite/storage/app/public/test.txt')->as('test.txt'), 
+            //Attachment::fromPath('/Users/hiro/ECsite/storage/app/public/test.txt')->as('test.txt'), 
             //storage/app配下のパスを指定する
-            Attachment::fromStorage('/attachment/test.txt')->as('test.txt'), 
+            //Attachment::fromStorage('/attachment/test.txt')->as('test.txt'), 
            
         ];
     }
