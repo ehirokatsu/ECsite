@@ -9,9 +9,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach($products as $product)
               <div class="border border-gray-300 p-4 rounded-md">
-                <a href="{{ route('show', ['id' => $product->id]) }}" class="" >
-                  <img alt="商品画像" class="w-50 h-50 mb-2 rounded-md" src="/storage/{{$product->image}}">
-                </a>
+                <div class="relative w-84 h-64 mb-3">
+                  <a href="{{ route('show', ['id' => $product->id]) }}" class="" >
+                    <img class="absolute inset-0 w-full h-full object-cover" src="/storage/{{$product->image}}" alt="">
+                  </a>
+                </div>
                 <div class="flex justify-between">
                   <div>
                     <h2 class="text-lg font-semibold mb-2">{{ $product->name }}</h2>
