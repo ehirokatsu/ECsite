@@ -23,8 +23,8 @@
                 </div>
                 @foreach($carts as $cart)
                   <div class="flex p-2 rounded-md justify-center">
-                    <div class="">
-                      <img src="/storage/{{$cart['product']->image}}"  class="w-40 h-auto">
+                    <div class="relative w-40 h-40 mb-3">
+                      <img class="absolute inset-0 w-full h-full object-cover" src="/storage/{{$cart['product']->image}}" alt="">
                     </div>
                     <div class="mr-20">
                       <div class="p-4">
