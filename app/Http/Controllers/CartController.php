@@ -195,6 +195,12 @@ class CartController extends Controller
 
     public function buyerComplete (BuyerRequest $request)
     {
+        //現在のカート内容を取得
+        $carts = $request->session()->get('carts');
+
+        $totalAmount = $this->calculateTotalAmount($carts);
+
+
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
         
@@ -218,7 +224,7 @@ class CartController extends Controller
                 'phoneNumber' => $inputs['phoneNumber'],
             ];
             //購入後の処理
-            event(new OrderCompleted($carts, $userInfos));
+            event(new OrderCompleted($carts, $userInfos, $totalAmount));
 
             //カートを空にする
             $request->session()->forget('carts'); 
