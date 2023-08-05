@@ -139,6 +139,11 @@ class CartController extends Controller
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
 
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($carts)) {
+            return view('no');
+        }
+
         //ログイン情報を取得
         $user = \Auth::user();
 
@@ -197,6 +202,11 @@ class CartController extends Controller
     {
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
+        
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($carts)) {
+            return view('no');
+        }
 
         $totalAmount = $this->calculateTotalAmount($carts);
 
