@@ -130,5 +130,9 @@ Route::get('/htmlTest', function () {
     return view('htmlTest');
 })->name('htmlTest');
 
+Route::get('/vueTest', function () {
+    return Inertia::render('test');
+})->name('vueTest');
+
 
 require __DIR__.'/auth.php';

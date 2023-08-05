@@ -22,6 +22,7 @@
       <x-a-href href="/databaseManage" class="" >DBメンテ</x-a-href>
     @endcan
     <x-a-href href="{{ route('htmlTest') }}" class="" >HTMLテスト</x-a-href>
+    <x-a-href href="{{ route('vueTest') }}" class="" >VUEテスト</x-a-href>
   </div>
   <div class="flex justify-end">
     @if(isset(Auth::user()->name))
