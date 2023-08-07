@@ -27,7 +27,8 @@ const PI = 3.14;
 const resultComputed = computed(
         (): number => {
             return radiusRef.value * radiusRef.value * PI;
-        //return radius * radius * PI;
+            //以下だと更新されない
+            //return radius * radius * PI;
     }
 );
 
@@ -44,7 +45,14 @@ setInterval(
 );
 
 
+const url = ref("https://www.amazon.co.jp/");
+const url2 = "https://www.amazon.co.jp/";
 
+const randValue = ref("未押下"); 
+const onButtonClick = (): void => {
+    const rand = Math.round(Math.random() * 10);
+    randValue.value = String(rand);
+}
 
 </script>
 
@@ -54,6 +62,9 @@ setInterval(
 <p>現在時刻：{{ timeStr }}</p>
 <p>現在時刻(Ref):{{ timeStrRef }}</p>
 <p>半径{{ radius }}の円の面積は円周率{{ PI }}で計算すると{{ result }}。{{ resultRef }}。{{ resultComputed }}</p>
+<p><a v-bind:href="url">サイト</a></p>
+<p><button v-on:click="onButtonClick">ボタン</button></p>
+<p>{{ randValue }}</p>
 </template>
 
 <style>
