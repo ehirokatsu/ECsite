@@ -134,5 +134,6 @@ Route::get('/vueTest', function () {
     return Inertia::render('test');
 })->name('vueTest');
 
+Route::resource('product', 'App\Http\Controllers\ApiProductController');
 
 require __DIR__.'/auth.php';
