@@ -13,11 +13,9 @@ axios.get("/product").then(response => { products.value = response.data });
 
 import { defineComponent } from 'vue'
 
-defineComponent({
-  props: {
+defineProps({
     test: Number,
-  },
-})
+});
 
 </script>
 
@@ -38,6 +36,7 @@ defineComponent({
                             :key="product.id"
                         >{{ product.name }}</li>
                     </ul>
+                    
                 </div>
             </div>
         </div>
