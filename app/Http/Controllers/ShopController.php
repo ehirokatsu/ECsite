@@ -23,12 +23,14 @@ class ShopController extends Controller
         //
         $products = Product::all();
         $param = ['products' => $products];
-        //return view('index', $param);
+        return view('index', $param);
 
+        /*
         $param2 = [
             'test' => 100,
         ];
         return Inertia::render('index', $param2);
+        */
 
     }
 

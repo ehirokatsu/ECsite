@@ -4,7 +4,7 @@ import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
 import { formToJSON } from 'axios';
 
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 import { useForm } from '@inertiajs/vue3';
 
@@ -19,31 +19,30 @@ import { defineComponent } from 'vue'
 defineProps({
     test: Number,
 });
-/*
-const form = useForm();
+
+const form = useForm({
+    
+});
+const csrfToken = ref('');
+
+//GETでCSRFトークン取得で、Blade経由なしで取得可能
+onMounted(async () => {
+    const response = await axios.get('/api/csrf-token');
+    csrfToken.value = response.data.token;
+    console.log(csrfToken.value);
+});
 
 function deleteButton(id: number): void {
-    form.delete(route('destroy', id));
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
+    axios.delete(route('destroy', id));
 }
-*/
-export const {
-  props: {
-    id: {
-      type: Number,
-      //required: true
-    }
-  },
-  methods: {
-    async deleteItem(id) {
-      try {
-        await axios.delete(route('destroy', id));
-        // 削除成功時の処理
-      } catch (error) {
-        // 削除失敗時の処理
-      }
-    }
-  }
-}
+
+//CSRFなしでも削除できた
+//indexにリダイレクトしても表示が更新されない
+const submit = (id: number) => {
+    ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
+    form.delete('/6');
+};
 
 </script>
 
@@ -65,6 +64,9 @@ export const {
                         >{{ product.name }}</li>
                     </ul>
                     <button @click="deleteButton(1)">削除</button>
+                    <form @submit.prevent="submit(1)">
+                        <button type="submit">削除2</button>
+                    </form>
                 </div>
             </div>
         </div>
