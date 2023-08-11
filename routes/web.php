@@ -31,7 +31,7 @@ Route::get('/', 'App\Http\Controllers\ShopController@index')->name('index');
 Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->name('show')->where('id', '[0-9]+');
 
 //管理者のみ可能
-//Route::middleware(['can:admin'])->group(function() {
+Route::middleware(['can:admin'])->group(function() {
 
     //商品追加画面
     Route::get('/create', 'App\Http\Controllers\ShopController@create')->name('create');
@@ -59,7 +59,7 @@ Route::get('/{id}', 'App\Http\Controllers\ShopController@show')->name('show')->w
 
     //商品削除処理
     Route::delete('/{id}', 'App\Http\Controllers\ShopController@destroy')->name('destroy')->where('id', '[0-9]+');
-//});
+});
 
 
 //カート一覧画面
