@@ -141,4 +141,11 @@ Route::get('/api/csrf-token', function () {
 });
 
 
+
+Route::get('/vue', 'App\Http\Controllers\VueController@index')->name('vue.index');
+Route::get('/vue/create', 'App\Http\Controllers\VueController@create')->name('vue.create');
+Route::post('/', 'App\Http\Controllers\VueController@store')->name('vue.store');
+
+
+
 require __DIR__.'/auth.php';

@@ -8,17 +8,17 @@ import { ref, onMounted } from "vue";
 
 import { useForm } from '@inertiajs/vue3';
 
-let products = ref([]);
-
-
-
-axios.get("/product").then(response => { products.value = response.data });
+//apiでproductを取得する方法
+//let products = ref([]);
+//axios.get("/product").then(response => { products.value = response.data });
 
 import { defineComponent } from 'vue'
 
+//Inertia::renderでproductsを受け取る
 defineProps({
-    test: Number,
+    products: Object,
 });
+
 
 const form = useForm({
     
@@ -41,8 +41,9 @@ function deleteButton(id: number): void {
 //indexにリダイレクトしても表示が更新されない
 const submit = (id: number) => {
     ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
-    form.delete('/6');
+    form.delete('/' + id);
 };
+
 
 </script>
 
@@ -55,18 +56,23 @@ const submit = (id: number) => {
             
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">You're logged in!</div>
-                    <p>{{ test }}</p>
-                    <ul>
-                        <li 
-                            v-for="product in products" 
-                            :key="product.id"
-                        >{{ product.name }}</li>
-                    </ul>
-                    <button @click="deleteButton(1)">削除</button>
-                    <form @submit.prevent="submit(1)">
-                        <button type="submit">削除2</button>
-                    </form>
+                    <a href="/vue/create">新規作成</a>
+                    <div 
+                        v-for="product in products" 
+                        :key="product.id"
+                    >
+                        <span>{{ product.name }}</span>
+                        <span>{{ product.cost }}</span>
+                        <!--文字列連結等の式を入れるにはbindが必要-->
+                        <a v-bind:href="product.id +'/edit/'" class="" >
+                            <button>編集</button>
+                        </a>
+                        <form @submit.prevent="submit(product.id)">
+                            <button type="submit">削除</button>
+                        </form>
+                    </div>
+                    
+
                 </div>
             </div>
         </div>
