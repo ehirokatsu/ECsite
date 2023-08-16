@@ -12,23 +12,30 @@ import { useForm } from '@inertiajs/vue3';
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
+const props = defineProps({
+    product: Object,
+});
 
 const imageValue = ref(null);
 
 const form = useForm({
-    name: null,
-    cost: null,
+    name: props.product.name,
+    cost: props.product.cost,
     image: null,
 });
 
+
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
-const submitForm = () => {
+const submitForm = (id: number) => {
 
     //formData.append('image', imageValue.value.files[0]);
     console.log(form.name);
+    console.log(form.cost);
     console.log(form.image);
-    form.post('/');
+
+    //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
+    form.post('/vue/' + id);
 
 
     //imageはハンドラで以下を呼び出してformにセットすればいける？
@@ -54,7 +61,7 @@ const handleImageChange = (event) => {
             
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <form @submit.prevent="submitForm()">
+                    <form @submit.prevent="submitForm(product.id)">
                         <div class="">
                             <div class="p-4">
                             <span>商品名:

@@ -61,10 +61,13 @@ const submit = (id: number) => {
                         v-for="product in products" 
                         :key="product.id"
                     >
+                        <div class="relative w-84 h-64 mb-3">
+                            <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="">
+                        </div>
                         <span>{{ product.name }}</span>
                         <span>{{ product.cost }}</span>
                         <!--文字列連結等の式を入れるにはbindが必要-->
-                        <a v-bind:href="product.id +'/edit/'" class="" >
+                        <a v-bind:href="'/vue/' + product.id +'/edit/'" class="" >
                             <button>編集</button>
                         </a>
                         <form @submit.prevent="submit(product.id)">
