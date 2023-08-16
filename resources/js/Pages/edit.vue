@@ -7,6 +7,7 @@ import { formToJSON } from 'axios';
 import { ref, onMounted } from "vue";
 
 import { useForm } from '@inertiajs/vue3';
+import { reactive } from 'vue';
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -16,7 +17,6 @@ const props = defineProps({
     product: Object,
 });
 
-const imageValue = ref(null);
 
 const form = useForm({
     name: props.product.name,
@@ -47,8 +47,30 @@ const handleImageChange = (event) => {
   console.log(form.image);
 };
 
+/*axiosでputしたが、500エラーでできなかった
+const formData = ref({
+    name: props.product.name,
+    cost: props.product.cost,
+    image: null,
+});
+console.log(props.product.cost);
+console.log(formData.value.cost);
 
+const submitForm = async (id: number) => {
 
+    axios.put('/vue/' + id, formData.value)
+    .then(response => {
+    console.log('Update successful:', response.data);
+  })
+  .catch(error => {
+    console.error('Update error:', error);
+  });;
+}
+const handleImageChange = (event) => {
+  formData.image = event.target.files[0];
+  console.log(formData.image);
+};
+*/
 
 </script>
 
