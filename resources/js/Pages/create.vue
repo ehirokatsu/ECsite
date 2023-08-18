@@ -28,7 +28,7 @@ const submitForm = () => {
     //formData.append('image', imageValue.value.files[0]);
     console.log(form.name);
     console.log(form.image);
-    form.post('/');
+    form.post(route('vue.store'));
 
 
     //imageはハンドラで以下を呼び出してformにセットすればいける？

@@ -35,7 +35,7 @@ const submitForm = (id: number) => {
     console.log(form.image);
 
     //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
-    form.post('/vue/' + id);
+    form.post(route('vue.update', {'id': id}));
 
 
     //imageはハンドラで以下を呼び出してformにセットすればいける？
