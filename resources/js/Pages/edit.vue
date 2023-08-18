@@ -1,22 +1,17 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import axios from 'axios';
-import { formToJSON } from 'axios';
-
-import { ref, onMounted } from "vue";
-
 import { useForm } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+
 
 //apiでproductを取得する方法
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
+//Inertia::renderでproductを受け取る
 const props = defineProps({
     product: Object,
 });
-
 
 const form = useForm({
     name: props.product.name,
@@ -29,22 +24,12 @@ const form = useForm({
 //indexにリダイレクトしても表示が更新されない
 const submitForm = (id: number) => {
 
-    //formData.append('image', imageValue.value.files[0]);
-    console.log(form.name);
-    console.log(form.cost);
-    console.log(form.image);
-
     //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
     form.post(route('vue.update', {'id': id}));
-
-
-    //imageはハンドラで以下を呼び出してformにセットすればいける？
-
 };
 
 const handleImageChange = (event) => {
   form.image = event.target.files[0];
-  console.log(form.image);
 };
 
 /*axiosでputしたが、500エラーでできなかった

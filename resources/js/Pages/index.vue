@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import axios from 'axios';
-import { ref, onMounted } from "vue";
+
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
@@ -13,12 +12,14 @@ import { useForm } from '@inertiajs/vue3';
 defineProps({
     products: Object,
 });
-
-
+//delete送信用ダミー
 const form = useForm({
     
 });
+
 /*
+import axios from 'axios';
+import { ref, onMounted } from "vue";
 const csrfToken = ref('');
 
 //GETでCSRFトークン取得で、Blade経由なしで取得可能

@@ -1,19 +1,11 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import axios from 'axios';
-import { formToJSON } from 'axios';
-
-import { ref, onMounted } from "vue";
-
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
-
-
-const imageValue = ref(null);
 
 const form = useForm({
     name: null,
@@ -24,24 +16,15 @@ const form = useForm({
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
 const submitForm = () => {
-
-    //formData.append('image', imageValue.value.files[0]);
-    console.log(form.name);
-    console.log(form.image);
+    //console.log(form.name);
     form.post(route('vue.store'));
-
-
-    //imageはハンドラで以下を呼び出してformにセットすればいける？
-
 };
 
+//imageはv-modelが使用できないのでイベントハンドラでformにセットする
 const handleImageChange = (event) => {
   form.image = event.target.files[0];
-  console.log(form.image);
+  //console.log(form.image);
 };
-
-
-
 
 </script>
 
