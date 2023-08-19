@@ -44,7 +44,17 @@ const submit = (id: number) => {
     form.delete(route('destroy', {'id': id}));
 };
 
+import {ref} from "vue";
+let tmp: string = "初期値";
+let tmpRef= ref(0);
 
+const onButton1 = () => {
+    tmpRef.value = tmpRef.value + 1;
+}
+
+const onButton2 = () => {
+    tmpRef.value = tmpRef.value - 1;
+}
 </script>
 
 <template>
@@ -56,6 +66,12 @@ const submit = (id: number) => {
             
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <input type="text" v-model="tmpRef">
+                    {{ tmpRef }}
+                    <button v-on:click="onButton1()">+++</button>
+                    <button v-on:click="onButton2()">---</button>
+                    <div v-if="$page.props.auth.user">ログイン済み</div>
+                    <div v-else>未ログイン</div>
                     <a v-bind:href="route('vue.create')">新規作成</a>
                     <div 
                         v-for="product in products" 
