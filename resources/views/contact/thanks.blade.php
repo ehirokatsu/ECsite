@@ -1,8 +1,15 @@
-@extends('contact.layout')
+<x-app-layout>
+  <x-slot name="header">
+    @include('header')
+  </x-slot>
 
-@section('title', '送信完了画面')
-
-@section('content')
-<h1>送信完了</h1>
-<a href="/" class="" >トップ</a>
-@endsection
+  <div class="py-12">
+      <div class="max-w-lg mx-auto sm:px-6 lg:px-8 ">
+          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+              <div class="p-6 text-gray-900  flex justify-center items-center">
+                <h1>お問合せ完了しました。</h1>
+              </div>
+          </div>
+      </div>
+  </div>
+</x-app-layout>

@@ -139,6 +139,11 @@ class CartController extends Controller
         //現在のカート内容を取得
         $carts = $request->session()->get('carts');
 
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($carts)) {
+            return view('no');
+        }
+
         //ログイン情報を取得
         $user = \Auth::user();
 
@@ -195,6 +200,17 @@ class CartController extends Controller
 
     public function buyerComplete (BuyerRequest $request)
     {
+        //現在のカート内容を取得
+        $carts = $request->session()->get('carts');
+        
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($carts)) {
+            return view('no');
+        }
+
+        $totalAmount = $this->calculateTotalAmount($carts);
+
+
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
         
@@ -218,7 +234,7 @@ class CartController extends Controller
                 'phoneNumber' => $inputs['phoneNumber'],
             ];
             //購入後の処理
-            event(new OrderCompleted($carts, $userInfos));
+            event(new OrderCompleted($carts, $userInfos, $totalAmount));
 
             //カートを空にする
             $request->session()->forget('carts'); 

@@ -16,10 +16,10 @@
                     <div class="">
                       <div class="flex border-b">
                         <div class="p-4">
-                          商品名 : <input type="text" name="name" value="{{ $product->name }}">
+                          商品名：<input type="text" name="name" value="{{ $product->name }}">
                         </div>
                         <div class="p-4 text-lg font-semibold text-slate-500">
-                          単価 : <input type="text" name="cost" value="{{ $product->cost }}">
+                          ¥<input type="text" name="cost" value="{{ $product->cost }}">
                         </div>
                       </div>
                       <div class="p-4 text-sm font-medium text-slate-700 mt-2">

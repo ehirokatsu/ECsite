@@ -11,6 +11,7 @@ use App\Http\Requests\Product\EditConfirmRequest;
 use App\Models\Product;
 use Gate;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 class ShopController extends Controller
 {
@@ -23,6 +24,14 @@ class ShopController extends Controller
         $products = Product::all();
         $param = ['products' => $products];
         return view('index', $param);
+
+        /*
+        $param2 = [
+            'test' => 100,
+        ];
+        return Inertia::render('index', $param2);
+        */
+
     }
 
     /**

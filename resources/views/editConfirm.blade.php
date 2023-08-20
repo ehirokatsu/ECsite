@@ -21,11 +21,11 @@
                     <div class="">
                       <div class="flex border-b">
                         <div class="p-4">
-                          商品名 : {{ $inputs['name'] }}
+                          {{ $inputs['name'] }}
                           <input type="hidden" name="name" value="{{ $inputs['name'] }}">
                         </div>
                         <div class="p-4 text-lg font-semibold text-slate-500">
-                          単価 : {{ $inputs['cost'] }}
+                          ¥{{ $inputs['cost'] }}
                           <input type="hidden" name="cost" value="{{ $inputs['cost'] }}">
                         </div>
                       </div>

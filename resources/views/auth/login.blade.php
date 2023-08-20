@@ -46,6 +46,19 @@
         </div>
         
     </form>
+    <br>
+    <form method="POST" action="{{ route('login') }}">
+      @csrf
+      <div class="flex justify-center items-center">
+        <x-text-input id="email" class="" type="hidden" name="email" value="test@test.com"/>
+        <x-text-input id="password" class="" type="hidden" name="password" value="testtest"/>
+        <p class="border-spacing-2">テストアカウントでログインします。</p>
+        <x-primary-button class="ml-3">
+          {{ __('簡単ログイン') }}
+        </x-primary-button>
+      </div>
+    </form>
+
     <!--カート画面からリダイレクトされてきた時だけ購入ボタンを表示する-->
     @if (strpos(Request::header('referer'), 'cart') !== false)
       <a href="{{ route('cart.buyer') }}">ログインせずに購入する</a>

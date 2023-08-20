@@ -165,7 +165,7 @@ class CartTest extends TestCase
         $response->assertStatus(302)->assertRedirect(route('cart.regConfirm'));
 
         //購入完了確定ボタンを押下
-        $response = $this->post(route('cart.regComplete'), [
+        $response = $this->actingAs($user)->post(route('cart.regComplete'), [
             'name' => $user->name,
             'email' => $user->email,
             'postalCode' => $user->postal_code,

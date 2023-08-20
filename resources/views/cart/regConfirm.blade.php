@@ -4,11 +4,12 @@
   </x-slot>
 
   <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div class="max-w-lg mx-auto sm:px-6 lg:px-8 bg-white">
           <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
+            <div class="p-2 text-gray-900">
+              <h2>購入者情報は以下でよろしいですか？</h2>
             </div>
-            購入者情報は以下でよろしいですか？
+            
             <form method="post" action="{{ route('cart.regComplete') }}">
               @csrf
               <!-- Name -->
@@ -60,8 +61,9 @@
                 <input type="hidden" name="phoneNumber" value="{{ Auth::user()->phone_number }}">
               </div>
 
-              <br>
-              <button type="submit" name="action" value="submit">注文を確定する</button>
+              <div class="p-2 flex justify-end mt-4">
+                <x-primary-button type="submit" name="action" value="submit">注文を確定する</x-primary-button>
+              </div>
 
 
             </form>
