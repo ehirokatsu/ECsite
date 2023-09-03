@@ -98,6 +98,33 @@ cocktailListInitMap.set(4412, "ブルーハワイ");
 cocktailListInitMap.set(6792, "ニューヨーク");
 const cocktailListMap = ref(cocktailListInitMap);
 
+interface Cocktail {
+    id: number;
+    name: string;
+    price: number;
+}
+
+const cocktailDataListInit: Cocktail[] = [
+    {id: 2345, name: "ホワイトレディ", price: 1200},
+    {id: 4412, name: "ブルーハワイ", price: 1500},
+    {id: 6792, name: "ニューヨーク", price: 1100},
+];
+const cocktailDataList = ref(cocktailDataListInit);
+
+const cocktail1500 = computed(
+    (): Map<number, Cocktail> => {
+        const newList = new Map<number, Cocktail>();
+        cocktailDataList.value.forEach(
+            (value: Cocktail, key: number): void => {
+                if (value.price == 1500) {
+                    newList.set(key, value);
+                }
+            }
+        );
+        return newList;
+    }
+);
+
 </script>
 
 <template>
@@ -206,7 +233,19 @@ const cocktailListMap = ref(cocktailListInitMap);
         </li>
     </ul>
 </section>
+<br>
 
+<section>
+    値段が1500円のカクテルリスト
+    <ul>
+        <li
+            v-for="[id, cocktailItem] in cocktail1500"
+            v-bind:key="'cocktail1500' + id">
+                {{ cocktailItem.name }}の値段は{{ cocktailItem.price }}円。
+
+        </li>
+    </ul>
+</section>
 </template>
 
 <style>
