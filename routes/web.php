@@ -148,6 +148,8 @@ Route::post('/', 'App\Http\Controllers\VueController@store')->name('vue.store');
 Route::get('/vue/{id}/edit', 'App\Http\Controllers\VueController@edit')->name('vue.edit');
 Route::post('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.update');
 
-
+Route::get('/vueQuiz', function () {
+    return Inertia::render('quiz');
+})->name('vueQuiz');
 
 require __DIR__.'/auth.php';
