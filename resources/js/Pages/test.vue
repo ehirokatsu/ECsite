@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
 import Index from "./index.vue";
+import { watchEffect } from "vue";
 
 const tmp = "123";
 const name = ref("test");
@@ -125,9 +126,31 @@ const cocktail1500 = computed(
     }
 );
 
+const input = ref(100);
+const output2 = ref();
+const output = computed(
+    (): number => {
+        return input.value *2;
+    }
+);
+watchEffect(
+    (): void => {
+        output2.value = calc(input.value);
+    }
+);
+
+function calc(input: number): number {
+    return input * 2;
+}
+
+
 </script>
 
 <template>
+<h1>{{ input }}</h1>
+<h1>{{ output }}</h1>
+<h1>{{ output2 }}</h1>
+<input type="text" v-model="input">
 <h1>{{ name }}</h1>
 <h2>{{ tmp }}</h2>
 <p>現在時刻：{{ timeStr }}</p>
