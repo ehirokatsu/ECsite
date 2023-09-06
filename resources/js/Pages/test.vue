@@ -133,16 +133,34 @@ const output = computed(
         return input.value *2;
     }
 );
-watchEffect(
-    (): void => {
-        output2.value = calc(input.value);
-    }
-);
 
+
+//関数
 function calc(input: number): number {
     return input * 2;
 }
 
+//アロー式
+const calc2 = (input: number): number => {
+    return input * 2;
+}
+
+//アロー式省略
+const calc3 = (input: number): number => input * 2;
+
+//無名関数
+const calc4 = function (input: number): number {
+    return input * 2;
+}
+
+const calc5 = calc4;
+const calc6 = calc;
+
+watchEffect(
+    (): void => {
+        output2.value = calc6(input.value);
+    }
+);
 
 </script>
 

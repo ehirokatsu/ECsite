@@ -152,4 +152,9 @@ Route::get('/vueQuiz', function () {
     return Inertia::render('quiz');
 })->name('vueQuiz');
 
+Route::get('/vueBoard', function () {
+    return Inertia::render('board');
+})->name('vueBoard');
+
+
 require __DIR__.'/auth.php';

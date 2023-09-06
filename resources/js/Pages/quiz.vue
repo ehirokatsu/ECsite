@@ -63,7 +63,7 @@ function isDiffArrays(arrayA: string[], arrayB: string[]) {
 <br>
 
 <section>
-    <p>問２：appleのスマートフォンは何？</p>
+    <p>問3：appleのスマートフォンは何？</p>
     <input type="text" v-model="item3">
 </section>
 
