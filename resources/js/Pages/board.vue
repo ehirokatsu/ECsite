@@ -2,6 +2,19 @@
 import {ref, computed} from "vue";
 import Index from "./index.vue";
 
+const id = ref(1); 
+const name = ref("testName");
+const text = ref("");
+
+interface board {
+    //id: number
+    name: string,
+    text: string,
+}
+
+const boardMap = new Map<number, board>();
+boardMap.set(1, {"name1", "text1"});
+
 
 </script>
 
