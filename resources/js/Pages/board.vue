@@ -11,9 +11,18 @@ interface board {
     name: string,
     text: string,
 }
+let idCount = 1;
+const boardMapList = new Map<number, board>();
+const boardMap = ref(boardMapList);
+boardMap.value.set(idCount++, {name: "name1", text: "text1"});
+boardMap.value.set(idCount++, {name: "name2", text: "text2"});
+boardMap.value.set(idCount++, {name: "name3", text: "text3"});
 
-const boardMap = new Map<number, board>();
-boardMap.set(1, {"name1", "text1"});
+
+const create = (): void => {
+    console.log("click");
+    boardMap.value.set(idCount++, {name: "name", text: text.value});
+};
 
 
 </script>
@@ -25,9 +34,18 @@ boardMap.set(1, {"name1", "text1"});
 <input type="text">
 <br>
 <p>一覧表示</p>
+<ul>
+    <li
+        v-for="[id, board] in boardMap"
+        v-bind:key="id">
+            id:{{ id }}.名前：{{ board.name }}。テキスト:{{ board.text }}
+    </li>
+</ul>
 <br>
 
 <p>新規作成</p>
+<input type="text" v-model="text">
+<button v-on:click="create">新規作成</button>
 <br>
 
 <p>変更</p>
