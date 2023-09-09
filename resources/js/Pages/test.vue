@@ -2,6 +2,7 @@
 import {ref, computed} from "vue";
 import Index from "./index.vue";
 import { watchEffect } from "vue";
+import oneSection from "./oneSection.vue";
 
 const tmp = "123";
 const name = ref("test");
@@ -162,6 +163,12 @@ watchEffect(
     }
 );
 
+const randValueInit = Math.round(Math.random() * 10);
+const random = ref(randValueInit);
+const onCreateNewRand = (): void => {
+    random.value =Math.round(Math.random() * 10);
+}
+
 </script>
 
 <template>
@@ -287,6 +294,14 @@ watchEffect(
         </li>
     </ul>
 </section>
+
+<section>
+    <p>親コンポーネントで乱数を表示：{{ random }}</p>
+    <oneSection
+    v-bind:rand="random"
+    v-on:createNewRand="onCreateNewRand"/>
+</section>
+
 </template>
 
 <style>
