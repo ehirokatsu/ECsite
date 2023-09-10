@@ -193,6 +193,13 @@ const totalPoints = computed(
     }
 );
 
+const onIncrementPoint = (id: number): void => {
+    const member = memberList.value.get(id);
+    if (member != undefined) {
+        member.points++
+    }
+}
+
 </script>
 
 <template>
@@ -318,6 +325,7 @@ const totalPoints = computed(
         </li>
     </ul>
 </section>
+<br>
 
 <section>
     <p>親コンポーネントで乱数を表示：{{ random }}</p>
@@ -325,6 +333,7 @@ const totalPoints = computed(
     v-bind:rand="random"
     v-on:createNewRand="onCreateNewRand"/>
 </section>
+<br>
 
 <section>
     <h1>会員リスト</h1>
@@ -336,7 +345,9 @@ const totalPoints = computed(
     v-bind:name="member.name"
     v-bind:email="member.email"
     v-bind:points="member.points"
-    v-bind:note="member.note"/>
+    v-bind:note="member.note"
+    v-on:incrementPoint="onIncrementPoint"
+    />
 </section>
 
 </template>

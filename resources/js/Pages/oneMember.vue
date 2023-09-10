@@ -8,17 +8,15 @@ interface Props {
     points: number;
     note?: string;
 }
-/*
-//createNewRandという型のevent変数に、onCreateNewRandが格納される。
+
 interface Emits {
-    (event: "createNewRand"): void;
+    (event: "incrementPoint", id: number): void;
 }
-*/
+
 const props = defineProps<Props>();
+const emit = defineEmits<Emits>();
 
-//const emit = defineEmits<Emits>();
-
-const localPoints = ref(props.points);
+//const localPoints = ref(props.points);
 
 const localNote = computed(
     (): string => {
@@ -31,7 +29,8 @@ const localNote = computed(
 );
 
 const pointUp = (): void => {
-    localPoints.value++;
+    emit("incrementPoint", props.id);
+    //localPoints.value++;
 }
 
 </script>
@@ -45,7 +44,7 @@ const pointUp = (): void => {
         <dt>メールアドレス</dt>
         <dd>{{ email }}</dd>
         <dt>保有ポイント</dt>
-        <dd>{{ localPoints }}</dd>
+        <dd>{{ points }}</dd>
         <dt>備考</dt>
         <dd>{{ localNote }}</dd>
     </dl>
