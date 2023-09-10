@@ -156,5 +156,8 @@ Route::get('/vueBoard', function () {
     return Inertia::render('board');
 })->name('vueBoard');
 
+Route::get('/vueCalender', function () {
+    return Inertia::render('calender');
+})->name('vueCalender');
 
 require __DIR__.'/auth.php';
