@@ -4,6 +4,7 @@ import Index from "./index.vue";
 import { watchEffect } from "vue";
 import oneSection from "./oneSection.vue";
 import oneMember from "./oneMember.vue";
+import oneMember2 from "./oneMember2.vue";
 
 const tmp = "123";
 const name = ref("test");
@@ -349,7 +350,21 @@ const onIncrementPoint = (id: number): void => {
     v-on:incrementPoint="onIncrementPoint"
     />
 </section>
+<br>
 
+<section>
+    <h1>会員リスト</h1>
+    <p>全会員のポイント合計：{{ totalPoints }}</p>
+    <oneMember2
+    v-for="[id, member] in memberList"
+    v-bind:key="id"
+    v-bind:id="id"
+    v-bind:name="member.name"
+    v-bind:email="member.email"
+    v-model:points="member.points"
+    v-bind:note="member.note"
+    />
+</section>
 </template>
 
 <style>
