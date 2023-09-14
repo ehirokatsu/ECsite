@@ -5,6 +5,7 @@ import { watchEffect } from "vue";
 import oneSection from "./oneSection.vue";
 import oneMember from "./oneMember.vue";
 import oneMember2 from "./oneMember2.vue";
+import myInputLabel from "./myInputLabel.vue";
 
 const tmp = "123";
 const name = ref("test");
@@ -364,6 +365,13 @@ const onIncrementPoint = (id: number): void => {
     v-model:points="member.points"
     v-bind:note="member.note"
     />
+</section>
+
+<section>
+    <!--propにない属性は、そのまま適用される。この例だとforはlabel要素の属性として生きる-->
+    <!--forがprop変数になっていれば、そっちが優先されてforの意味合いは無くなる-->
+    <myInputLabel value="test文字列" for="radio"/>
+    <input type="radio" id="radio">ラジオ
 </section>
 </template>
 
