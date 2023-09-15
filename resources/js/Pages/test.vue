@@ -202,6 +202,13 @@ const onIncrementPoint = (id: number): void => {
     }
 }
 
+const testLabel = ref("初期値");
+
+const inputLabel = (event: Event) => {
+    const element = event.target as HTMLInputElement;
+    testLabel.value = element.value;
+}
+
 </script>
 
 <template>
@@ -218,6 +225,15 @@ const onIncrementPoint = (id: number): void => {
 <p><button v-on:click="onButtonClick">ボタン</button></p>
 <p>{{ randValue }}</p>
 <h1 v-on:mouseenter="mouseEnter">マウスエンター</h1>
+
+<!--
+<input type="text" v-model="testLabel">
+-->
+<!--v-modelの実態。v-bindはテンプレート変数の初期表示に必要-->
+<input type="text" v-on:input="inputLabel" v-bind:value="testLabel">
+<label for="">{{ testLabel }}</label>
+<br>
+
 
 <!--v-modelの中身がテキスト部分に表示される-->
 <textarea v-model="inputTextarea" cols="30" rows="10"></textarea>
@@ -370,6 +386,7 @@ const onIncrementPoint = (id: number): void => {
 <section>
     <!--propにない属性は、そのまま適用される。この例だとforはlabel要素の属性として生きる-->
     <!--forがprop変数になっていれば、そっちが優先されてforの意味合いは無くなる-->
+    <!--ただし、myInputLabelではLabel要素だけにしないと、forは適用されない-->
     <myInputLabel value="test文字列" for="radio"/>
     <input type="radio" id="radio">ラジオ
 </section>
