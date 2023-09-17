@@ -160,4 +160,9 @@ Route::get('/vueCalender', function () {
     return Inertia::render('calender');
 })->name('vueCalender');
 
+Route::get('/vueThree', function () {
+    return Inertia::render('three');
+})->name('vueThree');
+
+
 require __DIR__.'/auth.php';
