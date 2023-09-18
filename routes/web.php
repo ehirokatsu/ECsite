@@ -164,5 +164,8 @@ Route::get('/vueThree', function () {
     return Inertia::render('three');
 })->name('vueThree');
 
+Route::get('/vueSnake', function () {
+    return Inertia::render('snake');
+})->name('vueSnake');
 
 require __DIR__.'/auth.php';
