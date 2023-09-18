@@ -12,14 +12,15 @@ const fields = computed(
 </script>
 
 <template>
-<div class="flex flex-wrap">
-    <div class="w-30 h-10 border" v-for="field in fields">
-        {{ field - 1 }}
-        <div v-if="field%10==0">
-            <br>
+<div class="w-80">
+    <div class="flex flex-wrap">
+        <div class="w-8 border bg-cyan-300" v-for="field in fields">
+            {{ field - 1 }}
+            <br v-if="field==10">
         </div>
     </div>
 </div>
+
 </template>
 
 <style>
