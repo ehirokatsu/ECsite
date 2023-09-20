@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed} from "vue";
+import {ref, computed, onMounted } from "vue";
 import Index from "./index.vue";
 
 const width = 10;
@@ -22,6 +22,8 @@ const snakeHead = computed(
 
 let speed: number = 1000;
 let direction: string = "→";
+let fruitPosition = 0;
+let fruitPositionRef = ref(fruitPosition);
 
 const forwardSnake = ():void => {
     switch (direction) {
@@ -34,14 +36,39 @@ const forwardSnake = ():void => {
         case "↓": headPositionRef.value.y++;
         break;
     }
-    console.log(snakeHead);
+    //console.log(snakeHead);
 }
 setInterval(
     (): void => {
         forwardSnake();
     },
-    1000
+    speed
 );
+
+const keydownEvent = (e: KeyboardEvent): void => {
+    //console.log(e.key);
+    switch (e.key) {
+        case "ArrowUp": direction = "↑";
+        break;
+        case "ArrowDown": direction = "↓";
+        break;
+        case "ArrowLeft": direction = "←";
+        break;
+        case "ArrowRight": direction = "→";
+        break;
+    }
+}
+
+onMounted(
+    () => {
+      window.addEventListener('keydown', keydownEvent);
+    }
+);
+
+const randomFruit = ():void => {
+    fruitPositionRef.value = Math.floor(Math.random() * fields.value);
+}
+
 
 </script>
 
@@ -49,7 +76,10 @@ setInterval(
 <div class="w-80">
     <div class="flex flex-wrap">
         <div class="w-8 border bg-cyan-300" v-for="field in fields"
-        v-bind:class="{background: snakeHead == field - 1}">
+        v-bind:class="{
+            background: snakeHead == field - 1,
+            fruit: fruitPositionRef == field - 1
+        }">
             {{ field - 1 }}
 
         </div>
@@ -61,6 +91,9 @@ setInterval(
 <style>
     .background{
         background-color:gold;
+    }
+    .fruit{
+        background-color: pink;
     }
 </style>
 
