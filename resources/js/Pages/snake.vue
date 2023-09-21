@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, computed, onMounted } from "vue";
+import {ref, computed, onMounted, watch } from "vue";
 import Index from "./index.vue";
 
 const width = 10;
@@ -14,18 +14,58 @@ let headPosition:{[key:string]:number} = {
 };
 let headPositionRef = ref(headPosition);
 
-const snakeHead = computed(
+const frameOutRef = computed(
+    () => {
+        const x = headPositionRef.value.x;
+        const y = headPositionRef.value.y;
+
+        return x < 0 || width <= x || y < 0 || width <= y;
+    }
+); 
+
+const collidedRef = computed(
+    () => {
+        return snakeBodyRef.value.includes(snakeHeadRef.value);
+    }
+);
+
+const gameOverRef = computed(
+    () => {
+        return collidedRef.value || frameOutRef.value
+    }
+);
+
+const snakeHeadRef = computed(
     (): number => {
+
+        if (frameOutRef.value) {
+            return -1;
+            //console.log("frameout");
+        }
+
         return headPositionRef.value.y * width + headPositionRef.value.x;
     }
 );
 
 let speed: number = 1000;
+let speedRef = ref(speed);
 let direction: string = "→";
-let fruitPosition = 0;
+let fruitPosition: number = 0;
 let fruitPositionRef = ref(fruitPosition);
+let snakeLength: number = 2;
+let snakeLengthRef = ref(snakeLength);
+let snakeBody: number[] = [];
+let snakeBodyRef = ref(snakeBody);//ref([])だと、includesでエラーが発生する
 
 const forwardSnake = ():void => {
+
+    if (snakeBodyRef.value.length < snakeLengthRef.value) {
+        snakeBodyRef.value.push(snakeHeadRef.value);
+    }
+    if (snakeBodyRef.value.length >= snakeLengthRef.value) {
+        snakeBodyRef.value.shift();
+    }
+
     switch (direction) {
         case "→": headPositionRef.value.x++;
         break;
@@ -37,12 +77,21 @@ const forwardSnake = ():void => {
         break;
     }
     //console.log(snakeHead);
+
+    if (snakeLengthRef.value == 3) {
+        speedRef.value = 500;
+    }
 }
 setInterval(
     (): void => {
+
+        if (gameOverRef.value) {
+            return;
+        }
+
         forwardSnake();
     },
-    speed
+    speedRef.value
 );
 
 const keydownEvent = (e: KeyboardEvent): void => {
@@ -69,6 +118,16 @@ const randomFruit = ():void => {
     fruitPositionRef.value = Math.floor(Math.random() * fields.value);
 }
 
+watch(snakeHeadRef,
+    ():void => {
+        if (snakeHeadRef.value == fruitPositionRef.value) {
+            randomFruit();
+            snakeLengthRef.value++;
+        }
+    }
+);
+
+
 
 </script>
 
@@ -77,8 +136,10 @@ const randomFruit = ():void => {
     <div class="flex flex-wrap">
         <div class="w-8 border bg-cyan-300" v-for="field in fields"
         v-bind:class="{
-            background: snakeHead == field - 1,
-            fruit: fruitPositionRef == field - 1
+            background: snakeHeadRef == field - 1,
+            fruit: fruitPositionRef == field - 1,
+            addBody: snakeBodyRef.includes(field - 1)
+
         }">
             {{ field - 1 }}
 
@@ -94,6 +155,9 @@ const randomFruit = ():void => {
     }
     .fruit{
         background-color: pink;
+    }
+    .addBody{
+        background-color: black;
     }
 </style>
 
