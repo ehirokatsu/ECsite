@@ -14,6 +14,17 @@ let headPosition:{[key:string]:number} = {
 };
 let headPositionRef = ref(headPosition);
 
+let speed: number = 1000;
+let direction: string = "→";
+let fruitPosition: number = 0;
+let fruitPositionRef = ref(fruitPosition);
+let snakeLength: number = 2;
+let snakeBody: number[] = [];
+let snakeBodyRef = ref(snakeBody);//ref([])だと、includesでエラーが発生する
+let gameState: boolean = false;
+let gameStateRef = ref(gameState);
+
+
 const frameOutRef = computed(
     () => {
         const x = headPositionRef.value.x;
@@ -31,6 +42,7 @@ const collidedRef = computed(
 
 const gameOverRef = computed(
     () => {
+        gameStateRef.value = false;
         return collidedRef.value || frameOutRef.value
     }
 );
@@ -47,22 +59,19 @@ const snakeHeadRef = computed(
     }
 );
 
-let speed: number = 1000;
-let speedRef = ref(speed);
-let direction: string = "→";
-let fruitPosition: number = 0;
-let fruitPositionRef = ref(fruitPosition);
-let snakeLength: number = 2;
-let snakeLengthRef = ref(snakeLength);
-let snakeBody: number[] = [];
-let snakeBodyRef = ref(snakeBody);//ref([])だと、includesでエラーが発生する
+
+const scoreRef = computed(
+    (): number => {
+        return snakeBodyRef.value.length - 1;
+    }
+);
 
 const forwardSnake = ():void => {
 
-    if (snakeBodyRef.value.length < snakeLengthRef.value) {
+    if (snakeBodyRef.value.length < snakeLength) {
         snakeBodyRef.value.push(snakeHeadRef.value);
     }
-    if (snakeBodyRef.value.length >= snakeLengthRef.value) {
+    if (snakeBodyRef.value.length >= snakeLength) {
         snakeBodyRef.value.shift();
     }
 
@@ -78,10 +87,11 @@ const forwardSnake = ():void => {
     }
     //console.log(snakeHead);
 
-    if (snakeLengthRef.value == 3) {
-        speedRef.value = 500;
+    if (snakeLength == 4) {
+        speed = 700;
     }
 }
+/*
 setInterval(
     (): void => {
 
@@ -91,8 +101,19 @@ setInterval(
 
         forwardSnake();
     },
-    speedRef.value
+    speed
 );
+*/
+function moveSnake() {
+    if (gameOverRef.value) {
+        return;
+    }
+
+    forwardSnake();
+    setTimeout(moveSnake, speed);
+}
+
+
 
 const keydownEvent = (e: KeyboardEvent): void => {
     //console.log(e.key);
@@ -111,6 +132,8 @@ const keydownEvent = (e: KeyboardEvent): void => {
 onMounted(
     () => {
       window.addEventListener('keydown', keydownEvent);
+      moveSnake();
+      randomFruit();
     }
 );
 
@@ -122,17 +145,30 @@ watch(snakeHeadRef,
     ():void => {
         if (snakeHeadRef.value == fruitPositionRef.value) {
             randomFruit();
-            snakeLengthRef.value++;
+            snakeLength++;
         }
     }
 );
 
+const init = (): void => {
+
+    headPositionRef.value.x = 3;
+    headPositionRef.value.y = 4;
+    snakeLength = 2;
+    snakeBodyRef.value = [];
+    speed = 1000;
+    direction = "→";
+    moveSnake();
+    randomFruit();
+
+}
 
 
 </script>
 
 <template>
 <div class="w-80">
+    <p class="flex justify-center">蛇が食べたフルーツの数は{{ scoreRef }}です。</p>
     <div class="flex flex-wrap">
         <div class="w-8 border bg-cyan-300" v-for="field in fields"
         v-bind:class="{
@@ -144,6 +180,10 @@ watch(snakeHeadRef,
             {{ field - 1 }}
 
         </div>
+    </div>
+    <div v-if="gameOverRef.valueOf">
+        <p>GAME OVER</p>
+        <button  v-if="gameOverRef.valueOf" v-on:click="init()">もう一度プレイする。</button>
     </div>
 </div>
 
@@ -159,5 +199,6 @@ watch(snakeHeadRef,
     .addBody{
         background-color: black;
     }
+
 </style>
 
