@@ -1,29 +1,25 @@
 <script setup lang="ts">
 import {ref, computed, onMounted, watch } from "vue";
-import Index from "./index.vue";
 
 const width = 10;
-const fields = computed(
+const headPosition:{[key:string]:number} = {
+    x: 4,
+    y: 3,
+};
+const headPositionRef = ref(headPosition);
+let speed: number = 1000;
+let direction: string = "→";
+const fruitPosition: number = 0;
+const fruitPositionRef = ref(fruitPosition);
+let snakeLength: number = 2;
+const snakeBody: number[] = [];
+const snakeBodyRef = ref(snakeBody);//ref([])だと、includesでエラーが発生する
+
+const fieldsRef = computed(
     (): number => {
         return width * width;
     }
 );
-let headPosition:{[key:string]:number} = {
-    x: 4,
-    y: 3,
-};
-let headPositionRef = ref(headPosition);
-
-let speed: number = 1000;
-let direction: string = "→";
-let fruitPosition: number = 0;
-let fruitPositionRef = ref(fruitPosition);
-let snakeLength: number = 2;
-let snakeBody: number[] = [];
-let snakeBodyRef = ref(snakeBody);//ref([])だと、includesでエラーが発生する
-let gameState: boolean = false;
-let gameStateRef = ref(gameState);
-
 
 const frameOutRef = computed(
     () => {
@@ -42,7 +38,6 @@ const collidedRef = computed(
 
 const gameOverRef = computed(
     () => {
-        gameStateRef.value = false;
         return collidedRef.value || frameOutRef.value
     }
 );
@@ -52,13 +47,11 @@ const snakeHeadRef = computed(
 
         if (frameOutRef.value) {
             return -1;
-            //console.log("frameout");
         }
 
         return headPositionRef.value.y * width + headPositionRef.value.x;
     }
 );
-
 
 const scoreRef = computed(
     (): number => {
@@ -91,20 +84,8 @@ const forwardSnake = ():void => {
         speed = 700;
     }
 }
-/*
-setInterval(
-    (): void => {
 
-        if (gameOverRef.value) {
-            return;
-        }
-
-        forwardSnake();
-    },
-    speed
-);
-*/
-function moveSnake() {
+const moveSnake = (): void => {
     if (gameOverRef.value) {
         return;
     }
@@ -112,7 +93,6 @@ function moveSnake() {
     forwardSnake();
     setTimeout(moveSnake, speed);
 }
-
 
 
 const keydownEvent = (e: KeyboardEvent): void => {
@@ -129,16 +109,19 @@ const keydownEvent = (e: KeyboardEvent): void => {
     }
 }
 
-onMounted(
-    () => {
-      window.addEventListener('keydown', keydownEvent);
-      moveSnake();
-      randomFruit();
-    }
-);
-
 const randomFruit = ():void => {
-    fruitPositionRef.value = Math.floor(Math.random() * fields.value);
+    fruitPositionRef.value = Math.floor(Math.random() * fieldsRef.value);
+}
+
+const init = (): void => {
+    headPositionRef.value.x = 3;
+    headPositionRef.value.y = 4;
+    snakeLength = 2;
+    snakeBodyRef.value = [];
+    speed = 1000;
+    direction = "→";
+    moveSnake();
+    randomFruit();
 }
 
 watch(snakeHeadRef,
@@ -150,19 +133,13 @@ watch(snakeHeadRef,
     }
 );
 
-const init = (): void => {
-
-    headPositionRef.value.x = 3;
-    headPositionRef.value.y = 4;
-    snakeLength = 2;
-    snakeBodyRef.value = [];
-    speed = 1000;
-    direction = "→";
-    moveSnake();
-    randomFruit();
-
-}
-
+onMounted(
+    () => {
+      window.addEventListener('keydown', keydownEvent);
+      moveSnake();
+      randomFruit();
+    }
+);
 
 </script>
 
@@ -170,7 +147,7 @@ const init = (): void => {
 <div class="w-80">
     <p class="flex justify-center">蛇が食べたフルーツの数は{{ scoreRef }}です。</p>
     <div class="flex flex-wrap">
-        <div class="w-8 border bg-cyan-300" v-for="field in fields"
+        <div class="w-8 border bg-cyan-300" v-for="field in fieldsRef"
         v-bind:class="{
             background: snakeHeadRef == field - 1,
             fruit: fruitPositionRef == field - 1,
@@ -181,9 +158,9 @@ const init = (): void => {
 
         </div>
     </div>
-    <div v-if="gameOverRef.valueOf">
+    <div v-if="gameOverRef" class="flex flex-col items-center">
         <p>GAME OVER</p>
-        <button  v-if="gameOverRef.valueOf" v-on:click="init()">もう一度プレイする。</button>
+        <button v-on:click="init()">もう一度プレイする。</button>
     </div>
 </div>
 
