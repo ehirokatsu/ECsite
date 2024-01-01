@@ -168,4 +168,8 @@ Route::get('/vueSnake', function () {
     return Inertia::render('snake');
 })->name('vueSnake');
 
+Route::get('/vueSlot', function () {
+    return Inertia::render('slot');
+})->name('vueSlot');
+
 require __DIR__.'/auth.php';
