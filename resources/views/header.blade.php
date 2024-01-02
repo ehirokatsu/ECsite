@@ -24,6 +24,9 @@
     <x-a-href href="{{ route('htmlTest') }}" class="" >HTMLテスト</x-a-href>
     <x-a-href href="{{ route('vueTest') }}" class="" >VUEテスト</x-a-href>
     <x-a-href href="{{ route('vue.index') }}" class="" >VUE CRUD</x-a-href>
+    <x-a-href href="{{ route('vueThree') }}" class="" >VUE ○×</x-a-href>
+    <x-a-href href="{{ route('vueSnake') }}" class="" >VUE Snake</x-a-href>
+    <x-a-href href="{{ route('vueSlot') }}" class="" >VUE Slot</x-a-href>
   </div>
   <div class="flex justify-end">
     @if(isset(Auth::user()->name))
