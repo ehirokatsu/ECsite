@@ -7,21 +7,31 @@ let images: string[] = [
     "/storage/images/bell.png",
     "/storage/images/cherry.png",
 ]
-let image: string = images[0]
+
+//スロットに表示する画像。HTMLで使用するのでリアクティブにする
+let image: string = images[0]//初期表示は「7」の画像。
 const imageRef = ref(image);
+
+//SPINボタンを押下済か判定するフラグ。HTMLで使用するのでリアクティブにする。
+let isRunning: boolean = false;
+const isRunningRef = ref(isRunning)
 
 const getRandomImage = (): void => {
     imageRef.value = images[Math.floor(Math.random() * images.length)]
 }
 
+
 const spin = (): void => {
+
+    //SPINボタンが押下されたのでボタンを半透明にするフラグを立てる
+    isRunningRef.value = true;
 
     setTimeout(() => {
         getRandomImage();
-        console.log(image);
         spin();
     }, 10);
 }
+
 </script>
 
 <template>
@@ -40,7 +50,8 @@ const spin = (): void => {
         <div class="stop">STOP</div>
     </section>
     </div>
-    <div class="spin" v-on:click="spin">SPIN</div>
+    <!--isRunningRefがtrueならinactiveクラスを付与する-->
+    <div class="spin" v-bind:class="{inactive: isRunningRef}" v-on:click="spin">SPIN</div>
 </template>
 
 <style>
