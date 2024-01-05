@@ -3,9 +3,14 @@ import Index from "./index.vue";
 import { ref } from "vue"
 
 let images: string[] = [
+    "/storage/images/ebi.png",
+    "/storage/images/pen.gif",
+    "/storage/images/siro.jpg",
+    /*
     "/storage/images/seven.png",
     "/storage/images/bell.png",
     "/storage/images/cherry.png",
+    */
 ]
 
 //スロットに表示する画像。HTMLで使用するのでリアクティブにする
