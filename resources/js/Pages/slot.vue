@@ -9,27 +9,54 @@ let images: string[] = [
 ]
 
 //スロットに表示する画像。HTMLで使用するのでリアクティブにする
-let image: string = images[0]//初期表示は「7」の画像。
-const imageRef = ref(image);
+let image1: string = images[0]//初期表示は「7」の画像。
+const imageRef1 = ref(image1);
+let image2: string = images[0]//初期表示は「7」の画像。
+const imageRef2 = ref(image2);
+let image3: string = images[0]//初期表示は「7」の画像。
+const imageRef3 = ref(image3);
 
 //SPINボタンを押下済か判定するフラグ。HTMLで使用するのでリアクティブにする。
 let isRunning: boolean = false;
 const isRunningRef = ref(isRunning)
 
-const getRandomImage = (): void => {
-    imageRef.value = images[Math.floor(Math.random() * images.length)]
+const getRandomImage1 = (): void => {
+    imageRef1.value = images[Math.floor(Math.random() * images.length)]
 }
-
+const getRandomImage2 = (): void => {
+    imageRef2.value = images[Math.floor(Math.random() * images.length)]
+}
+const getRandomImage3 = (): void => {
+    imageRef3.value = images[Math.floor(Math.random() * images.length)]
+}
+let timeoutId1 = 0;
+let timeoutId2 = 0;
+let timeoutId3 = 0;
 
 const spin = (): void => {
 
     //SPINボタンが押下されたのでボタンを半透明にするフラグを立てる
     isRunningRef.value = true;
 
-    setTimeout(() => {
-        getRandomImage();
-        spin();
+    timeoutId1 = setInterval(() => {
+        getRandomImage1();
     }, 10);
+    timeoutId2 = setInterval(() => {
+        getRandomImage2();
+    }, 10);
+    timeoutId3 = setInterval(() => {
+        getRandomImage3();
+    }, 10);
+}
+
+const stop1 = (): void => {
+    clearInterval(timeoutId1);
+}
+const stop2 = (): void => {
+    clearInterval(timeoutId2);
+}
+const stop3 = (): void => {
+    clearInterval(timeoutId3);
 }
 
 </script>
@@ -37,17 +64,17 @@ const spin = (): void => {
 <template>
 <div class="main">
     <section class="panel">
-        <img v-bind:src="imageRef">
-        <div class="stop">STOP</div>
+        <img v-bind:src="imageRef1">
+        <div class="stop" v-on:click="stop1">STOP</div>
     </section>
     <section class="panel">
-        <img v-bind:src="imageRef">
-        <div class="stop">STOP</div>
+        <img v-bind:src="imageRef2">
+        <div class="stop" v-on:click="stop2">STOP</div>
     </section>
 
     <section class="panel">
-        <img v-bind:src="imageRef">
-        <div class="stop">STOP</div>
+        <img v-bind:src="imageRef3">
+        <div class="stop" v-on:click="stop3">STOP</div>
     </section>
     </div>
     <!--isRunningRefがtrueならinactiveクラスを付与する-->
@@ -64,7 +91,7 @@ const spin = (): void => {
     }
 
     .main {
-        width: 300px;
+        width: 320px;
         background: #ecf0f1;
         padding: 20px;
         border: 4px solid #fff;
