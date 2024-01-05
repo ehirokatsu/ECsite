@@ -33,6 +33,13 @@ let timeoutId1 = 0;
 let timeoutId2 = 0;
 let timeoutId3 = 0;
 
+let isSelected1: boolean = false;
+const isSelected1Ref = ref(isSelected1);
+let isSelected2: boolean = false;
+const isSelected2Ref = ref(isSelected2);
+let isSelected3: boolean = false;
+const isSelected3Ref = ref(isSelected3);
+
 const spin = (): void => {
 
     //SPINボタンが押下されたのでボタンを半透明にするフラグを立てる
@@ -51,12 +58,15 @@ const spin = (): void => {
 
 const stop1 = (): void => {
     clearInterval(timeoutId1);
+    isSelected1Ref.value = true;
 }
 const stop2 = (): void => {
     clearInterval(timeoutId2);
+    isSelected2Ref.value = true;
 }
 const stop3 = (): void => {
     clearInterval(timeoutId3);
+    isSelected3Ref.value = true;
 }
 
 </script>
@@ -65,16 +75,16 @@ const stop3 = (): void => {
 <div class="main">
     <section class="panel">
         <img v-bind:src="imageRef1">
-        <div class="stop" v-on:click="stop1">STOP</div>
+        <div class="stop" v-bind:class="{inactive: isSelected1Ref}" v-on:click="stop1">STOP</div>
     </section>
     <section class="panel">
         <img v-bind:src="imageRef2">
-        <div class="stop" v-on:click="stop2">STOP</div>
+        <div class="stop" v-bind:class="{inactive: isSelected2Ref}" v-on:click="stop2">STOP</div>
     </section>
 
     <section class="panel">
         <img v-bind:src="imageRef3">
-        <div class="stop" v-on:click="stop3">STOP</div>
+        <div class="stop" v-bind:class="{inactive: isSelected3Ref}" v-on:click="stop3">STOP</div>
     </section>
     </div>
     <!--isRunningRefがtrueならinactiveクラスを付与する-->
