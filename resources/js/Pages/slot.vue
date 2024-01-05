@@ -42,6 +42,13 @@ const isStopSelected3Ref = ref(isStopSelected3);
 let isReplay: boolean = true;
 const isReplayRef = ref(isReplay);
 
+//絵柄が揃ったかの確認用
+let image1Selected = "";
+let image2Selected = "";
+let image3Selected = "";
+let isSuccess: boolean = false;
+const isSuccessRef = ref(isSuccess);
+
 //SPINボタン押下後に画像を取得する処理
 const getRandomImage1 = (): void => {
     imageRef1.value = images[Math.floor(Math.random() * images.length)]
@@ -71,13 +78,13 @@ const spin = (): void => {
 
     timeoutId1 = setInterval(() => {
         getRandomImage1();
-    }, 10);
+    }, 1000);
     timeoutId2 = setInterval(() => {
         getRandomImage2();
-    }, 10);
+    }, 1000);
     timeoutId3 = setInterval(() => {
         getRandomImage3();
-    }, 10);
+    }, 1000);
 }
 
 const stop1 = (): void => {
@@ -89,7 +96,9 @@ const stop1 = (): void => {
 
     clearInterval(timeoutId1);
     isStopSelected1Ref.value = true;
+    image1Selected = imageRef1.value;
     isComplete();
+    
 }
 const stop2 = (): void => {
 
@@ -100,6 +109,7 @@ const stop2 = (): void => {
 
     clearInterval(timeoutId2);
     isStopSelected2Ref.value = true;
+    image2Selected = imageRef2.value;
     isComplete();
 }
 const stop3 = (): void => {
@@ -111,11 +121,22 @@ const stop3 = (): void => {
 
     clearInterval(timeoutId3);
     isStopSelected3Ref.value = true;
+    image3Selected = imageRef3.value;
     isComplete();
 }
 
 //全てのSTOPボタンを押下したか判定する
 const isComplete = (): boolean => {
+
+    //絵柄が揃ったか確認する
+    if (image1Selected == image2Selected
+        && image2Selected == image3Selected
+        && image1Selected != ""
+        && image2Selected != ""
+        && image3Selected != "") {
+            isSuccessRef.value = true;
+
+    }
 
     if (isStopSelected1Ref.value == true
         && isStopSelected2Ref.value == true
@@ -125,6 +146,7 @@ const isComplete = (): boolean => {
             isReplayRef.value = false;
             return true;
     }
+
     return false;
 }
 
@@ -142,6 +164,17 @@ const replay = (): void => {
     isStopSelected2Ref.value = true;
     isStopSelected3Ref.value = true;
     isReplayRef.value = true;
+
+    //スロットの絵柄を初期表示にする
+    imageRef1.value = images[0];
+    imageRef2.value = images[0];
+    imageRef3.value = images[0];
+
+    //絵柄確認用の変数を初期化
+    isSuccessRef.value = false;
+    image1Selected = "";
+    image2Selected = "";
+    image3Selected = "";
 
 }
 
@@ -166,6 +199,9 @@ const replay = (): void => {
     <!--isRunningRefがtrueならinactiveクラスを付与する-->
     <div class="spin" v-bind:class="{inactive: isSpinRunningRef}" v-on:click="spin">SPIN</div>
     <div class="replay" v-bind:class="{inactive: isReplayRef}" v-on:click="replay">REPLAY</div>
+    <div class="result" v-if="isSuccessRef">
+        おめでとう！
+    </div>
 </template>
 
 <style>
@@ -239,5 +275,7 @@ const replay = (): void => {
     .inactive {
         opacity: 0.5;
     }
+    .result {
+        text-align: center;
+    }
 </style>
-
