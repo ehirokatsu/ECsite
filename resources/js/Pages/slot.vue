@@ -65,10 +65,10 @@ const spin = (): void => {
     //STOPボタンを押下可能にする
     isStopSelectedRefs.value.fill(false);
 
+    //images配列の数だけ繰り返し、かつ戻り値を得たいからこの書き方にしている
     spinIntervals = Array.from({ length: images.length }, (_, index) =>
         createInterval(() => updateImage(index, spinIntervals[index]), intervalValue)
     );
-    console.log(spinIntervals)
 
 }
 
@@ -92,6 +92,7 @@ const stop = (index: number): void => {
 
 const isComplete = (): void => {
     
+    //全ての絵柄が同じ
     if (
         imageSelectedRefs.value.every((selected) => selected === imageSelectedRefs.value[0] && selected !== "")
 
@@ -99,6 +100,7 @@ const isComplete = (): void => {
         isSuccessRef.value = true;
     }
 
+    //全てのSTOPボタンが押下済（true）ならREPLAYボタンを押下可能にする
     if (isStopSelectedRefs.value.every((selected) => selected)) {
         isReplayRef.value = false;
     }
@@ -117,8 +119,13 @@ const replay = (): void => {
     isStopSelectedRefs.value.fill(true);
     isReplayRef.value = true;
 
+    //絵柄を初期表示にする
     imageRefs.value.fill(images[0]);
+
+    //絵柄選択用配列を初期化
     imageSelectedRefs.value.fill("");
+
+    //絵柄が揃ったかの判定用を初期化
     isSuccessRef.value = false;
 }
 
