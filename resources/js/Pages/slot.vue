@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue"
 
+//スロット用の絵柄
 let images: string[] = [
     "/storage/images/ebi.png",
     "/storage/images/pen.gif",
@@ -12,53 +13,82 @@ let images: string[] = [
     */
 ]
 
+//スロットの回転速度（ミリ秒）
+const intervalValue: number = 1000;
+
+//絵柄をランダムに取得
 const getRandomImage = (): string => images[Math.floor(Math.random() * images.length)]
 
+//delayミリ秒毎にcallback関数を実行する
 const createInterval = (callback: () => void, delay: number): number => setInterval(callback, delay)
+
+//絵柄を止める
 const clearTimer = (timerId: number): void => clearInterval(timerId)
 
-
+//画面に表示する絵柄
 const imageRefs = ref(new Array(images.length).fill(images[0]))
+
+//STOPボタンを押下した時の絵柄（絵柄が揃ったかの確認用）
 const imageSelectedRefs = ref(new Array(images.length).fill(""));
 
-
+//SPINボタンを押下したか判定しボタンを半透明にする用
 const isSpinRunningRef = ref(false)
-const isStopSelectedRefs = ref([true, true, true])
+
+//STOPボタンを押下したか判定しボタンを半透明にする用
+const isStopSelectedRefs = ref(new Array(images.length).fill(true))
+
+//絵柄が揃ったか判定する用
 const isSuccessRef = ref(false)
+
+//REPLAYボタンを押下したか判定しボタンを半透明にする用
 const isReplayRef = ref(true)
 
+//各スロットのsetIntervalのID格納用。clearTimerで使用する
+let spinIntervals: number[] = new Array(images.length).fill(0);
 
-let spinIntervals: number[] = new Array(images.length).fill("");
-
-
+//
 const updateImage = (index: number, timerId: number): void => {
     imageRefs.value[index] = getRandomImage();
     if (index === images.length - 1) isComplete();
     if (isStopSelectedRefs.value[index]) clearTimer(timerId);
 };
 
+//SPINボタン押下時
 const spin = (): void => {
+
+    //既に押下済なら何もしない
     if (isSpinRunningRef.value) return;
 
+    //SPINボタンを半透明にする
     isSpinRunningRef.value = true;
-    isStopSelectedRefs.value = [false, false, false];
 
-    spinIntervals = Array.from({ length: 3 }, (_, index) =>
-        createInterval(() => updateImage(index, spinIntervals[index]), 1000)
+    //STOPボタンを押下可能にする
+    isStopSelectedRefs.value.fill(false);
+
+    spinIntervals = Array.from({ length: images.length }, (_, index) =>
+        createInterval(() => updateImage(index, spinIntervals[index]), intervalValue)
     );
+    console.log(spinIntervals)
 
 }
 
+//STOPボタン押下時
 const stop = (index: number): void => {
+
+    //既に押下済なら何もしない
     if (isStopSelectedRefs.value[index]) return;
 
-
+    //絵柄を止める
     clearTimer(spinIntervals[index]);
     
+    //STOPボタンを半透明にする
     isStopSelectedRefs.value[index] = true;
+
+    //現在の絵柄を判定用変数に格納する
     imageSelectedRefs.value[index] = imageRefs.value[index];
     isComplete();
 }
+
 
 const isComplete = (): void => {
     
@@ -74,15 +104,21 @@ const isComplete = (): void => {
     }
 }
 
+//REPLAYボタン押下時
 const replay = (): void => {
+
+    //既に押下済なら何もしない
     if (isReplayRef.value) return;
 
+    //SPINボタンを押下可能にする
     isSpinRunningRef.value = false;
-    isStopSelectedRefs.value = [true, true, true];
+
+    //STOPボタン、REPLAYボタンを半透明にする
+    isStopSelectedRefs.value.fill(true);
     isReplayRef.value = true;
 
-    imageRefs.value = images.map(() => images[0]);
-    imageSelectedRefs.value = images.map(() => "");
+    imageRefs.value.fill(images[0]);
+    imageSelectedRefs.value.fill("");
     isSuccessRef.value = false;
 }
 
