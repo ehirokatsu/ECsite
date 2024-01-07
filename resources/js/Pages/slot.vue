@@ -17,20 +17,23 @@ const getRandomImage = (): string => images[Math.floor(Math.random() * images.le
 const createInterval = (callback: () => void, delay: number): number => setInterval(callback, delay)
 const clearTimer = (timerId: number): void => clearInterval(timerId)
 
-const imageRefs = ref(images.map(() => images[0]))
-const imageSelectedRefs = ref(images.map(() => ""))
+
+const imageRefs = ref(new Array(images.length).fill(images[0]))
+const imageSelectedRefs = ref(new Array(images.length).fill(""));
+
+
 const isSpinRunningRef = ref(false)
 const isStopSelectedRefs = ref([true, true, true])
 const isSuccessRef = ref(false)
 const isReplayRef = ref(true)
 
-let spinInterval1: number = 0;
-let spinInterval2: number = 0;
-let spinInterval3: number = 0;
+
+let spinIntervals: number[] = new Array(images.length).fill("");
+
 
 const updateImage = (index: number, timerId: number): void => {
     imageRefs.value[index] = getRandomImage();
-    if (index === 2) isComplete();
+    if (index === images.length - 1) isComplete();
     if (isStopSelectedRefs.value[index]) clearTimer(timerId);
 };
 
@@ -40,16 +43,17 @@ const spin = (): void => {
     isSpinRunningRef.value = true;
     isStopSelectedRefs.value = [false, false, false];
 
-    spinInterval1 = createInterval(() => updateImage(0, spinInterval1), 1000);
-    spinInterval2 = createInterval(() => updateImage(1, spinInterval2), 1000);
-    spinInterval3 = createInterval(() => updateImage(2, spinInterval3), 1000);
+    spinIntervals = Array.from({ length: 3 }, (_, index) =>
+        createInterval(() => updateImage(index, spinIntervals[index]), 1000)
+    );
+
 }
 
 const stop = (index: number): void => {
     if (isStopSelectedRefs.value[index]) return;
 
-    const timerId = index === 0 ? spinInterval1 : index === 1 ? spinInterval2 : spinInterval3;
-    clearTimer(timerId);
+
+    clearTimer(spinIntervals[index]);
     
     isStopSelectedRefs.value[index] = true;
     imageSelectedRefs.value[index] = imageRefs.value[index];
@@ -57,13 +61,10 @@ const stop = (index: number): void => {
 }
 
 const isComplete = (): void => {
-    console.log(imageSelectedRefs.value);
+    
     if (
-        imageSelectedRefs.value[0] === imageSelectedRefs.value[1]
-        && imageSelectedRefs.value[1] === imageSelectedRefs.value[2]
-        && imageSelectedRefs.value[0] !== ""
-        && imageSelectedRefs.value[1] !== ""
-        && imageSelectedRefs.value[2] !== ""
+        imageSelectedRefs.value.every((selected) => selected === imageSelectedRefs.value[0] && selected !== "")
+
     ) {
         isSuccessRef.value = true;
     }
