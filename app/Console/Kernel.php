@@ -13,6 +13,11 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        /**
+          *  cronに下記を登録する。
+          * * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+         */
         $schedule->call(function () {
             \Log::info('cron test');
         })->everySecond();
