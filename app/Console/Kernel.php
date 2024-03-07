@@ -16,7 +16,13 @@ class Kernel extends ConsoleKernel
 
         /**
           *  cronに下記を登録する。
-          * * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+            # crontab -eに記載する内容。
+            # crontab -lで内容確認。
+            # crontab -rで削除。動作確認したら削除すること。
+            # /opt/homebrew/bin/phpは、which phpで探した
+            /opt/homebrew/bin/php ?
+            /Users/hiro/ECsite/artisan ?
+            * * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
          */
         $schedule->call(function () {
             \Log::info('cron test');
