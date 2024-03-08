@@ -19,14 +19,17 @@ class Kernel extends ConsoleKernel
             # crontab -eに記載する内容。
             # crontab -lで内容確認。
             # crontab -rで削除。動作確認したら削除すること。
-            # /opt/homebrew/bin/phpは、which phpで探した
-            /opt/homebrew/bin/php ?
-            /Users/hiro/ECsite/artisan ?
-            * * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1
+            
+            * * * * * php /Users/neko/ECsite/artisan schedule:run >> /dev/null 2>&1
+            →動作せず
+            * * * * * cd /Users/neko/ECsite && php artisan schedule:run >> /dev/null 2>&1
+            →動作せず
+            原因不明なので諦める。動作確認は、php artisan schedule:workで確認する。
          */
         $schedule->call(function () {
             \Log::info('cron test');
-        })->everySecond();
+        //})->everySecond();
+        })->everyMinute();
         
     }
 
