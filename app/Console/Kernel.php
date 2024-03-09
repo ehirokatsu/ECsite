@@ -26,11 +26,15 @@ class Kernel extends ConsoleKernel
             →動作せず
             原因不明なので諦める。動作確認は、php artisan schedule:workで確認する。
          */
+        /*
         $schedule->call(function () {
             \Log::info('cron test');
-        //})->everySecond();
         })->everyMinute();
-        
+        */
+
+        //タスクスケジュールで実行する処理はコマンド化するのが一般的。
+        $schedule->command('app:my-logger')
+        ->everyMinute();
     }
 
     /**
