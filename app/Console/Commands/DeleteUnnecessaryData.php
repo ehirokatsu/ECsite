@@ -18,13 +18,26 @@ class DeleteUnnecessaryData extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'delete unnecessary data';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        //
+
+        //ファイルを削除
+        $directoryPath = storage_path('app/' . \Config::get('filepath.imageTmpSaveFolder'));
+        $files = \File::allFiles($directoryPath);
+        foreach ($files as $file) {
+            \File::delete($file->getPathname());
+        }
+
+        // ディレクトリ内の全てのサブフォルダを削除
+        $directories = \File::directories($directoryPath);
+        foreach ($directories as $dir) {
+            \File::deleteDirectory($dir);
+        }
+
     }
 }
