@@ -33,8 +33,8 @@ class Kernel extends ConsoleKernel
         */
 
         //タスクスケジュールで実行する処理はコマンド化するのが一般的。
-        $schedule->command('app:my-logger')
-        ->everyMinute();
+        $schedule->command('app:delete-unnecessary-data')
+        ->dailyAt('2:00');
     }
 
     /**
