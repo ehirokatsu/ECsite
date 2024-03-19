@@ -64,11 +64,11 @@ const submit = (id: number) => {
                     :key="product.id"
                 >
                     <div class="border border-gray-300 p-4 rounded-md">
-                        <!--商品画像-->>
+                        <!--商品画像-->
                         <div class="relative w-84 h-64 mb-3">
                             <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="">
                         </div>
-                        <!--説明箇所-->>
+                        <!--説明箇所-->
                         <div class="flex justify-between">
                             <div>
                                 <h2 class="text-lg font-semibold mb-2">{{ product.name }}</h2>
