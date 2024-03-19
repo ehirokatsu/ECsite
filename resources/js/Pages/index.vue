@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import Header from './Header.vue';
 import { Head } from '@inertiajs/vue3';
 
 import { useForm } from '@inertiajs/vue3';
@@ -44,35 +45,20 @@ const submit = (id: number) => {
     form.delete(route('destroy', {'id': id}));
 };
 
-import {ref} from "vue";
-let tmp: string = "初期値";
-let tmpRef= ref(0);
-
-const onButton1 = () => {
-    tmpRef.value = tmpRef.value + 1;
-}
-
-const onButton2 = () => {
-    tmpRef.value = tmpRef.value - 1;
-}
 </script>
 
 <template>
     <Head title="Dashboard" />
 
+    <Header></Header>
+<!--
     <GuestLayout>
+    -->
 
-        <div class="py-12">
-            
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <input type="text" v-model="tmpRef">
-                    {{ tmpRef }}
-                    <button v-on:click="onButton1()">+++</button>
-                    <button v-on:click="onButton2()">---</button>
-                    <div v-if="$page.props.auth.user">ログイン済み</div>
-                    <div v-else>未ログイン</div>
-                    <a v-bind:href="route('vue.create')">新規作成</a>
+    <div class="py-12">
+      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div 
                         v-for="product in products" 
                         :key="product.id"
@@ -93,8 +79,11 @@ const onButton2 = () => {
                     </div>
                     
 
-                </div>
             </div>
-        </div>
+          </div>
+      </div>
+    </div>
+        <!--
     </GuestLayout>
+-->
 </template>
