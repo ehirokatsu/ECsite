@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 import Header from './Header.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import DangerButton from '@/Components/DangerButton.vue';
+import { Link } from '@inertiajs/vue3';
+
 import { Head } from '@inertiajs/vue3';
 
 import { useForm } from '@inertiajs/vue3';
@@ -54,34 +58,44 @@ const submit = (id: number) => {
 <!--
     <GuestLayout>
     -->
-
     <div class="py-12">
-      <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div 
                         v-for="product in products" 
                         :key="product.id"
                     >
-                        <div class="relative w-84 h-64 mb-3">
-                            <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="">
+                        <div class="border border-gray-300 p-4 rounded-md">
+                            <div class="relative w-84 h-64 mb-3">
+                                <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="">
+                            </div>
+                            <div>
+                                <h2 class="text-lg font-semibold mb-2">{{ product.name }}</h2>
+                                <p class="text-gray-600 mb-2">¥{{ product.cost }}</p>
+                            </div>
+                            <div class="">
+                                カートに入れる
+                            </div>
+                            <div class="flex p-2">
+                                <div class="p-1">
+                                    <!--文字列連結等の式を入れるにはbindが必要-->
+                                    <Link v-bind:href="route('vue.edit', {'id': product.id})">
+                                    <!--<a v-bind:href="'/vue/' + product.id +'/edit/'" class="" >-->
+                                        <PrimaryButton>編集</PrimaryButton>
+                                    </Link>
+                                </div>
+                                <div class="p-1">
+                                    <form @submit.prevent="submit(product.id)">
+                                        <DangerButton type="submit">削除</DangerButton>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <span>{{ product.name }}</span>
-                        <span>{{ product.cost }}</span>
-                        <!--文字列連結等の式を入れるにはbindが必要-->
-                        <a v-bind:href="route('vue.edit', {'id': product.id})">
-                        <!--<a v-bind:href="'/vue/' + product.id +'/edit/'" class="" >-->
-                            <button>編集</button>
-                        </a>
-                        <form @submit.prevent="submit(product.id)">
-                            <button type="submit">削除</button>
-                        </form>
                     </div>
-                    
-
+                </div>
             </div>
-          </div>
-      </div>
+        </div>
     </div>
         <!--
     </GuestLayout>
