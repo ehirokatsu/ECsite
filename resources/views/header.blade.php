@@ -10,16 +10,16 @@
 </div>
 <div class="flex justify-between">
   <div class="flex">
-    <x-a-href href="/" class="">トップ</x-a-href>
-    <x-a-href href="/cart" class="" >カート</x-a-href>
-    <x-a-href href="/contact" class="" >問合せ</x-a-href>
+    <x-a-href href="{{ route('index') }}" class="">トップ</x-a-href>
+    <x-a-href href="{{ route('cart.index') }}" class="" >カート</x-a-href>
+    <x-a-href href="{{ route('contact.index') }}" class="" >問合せ</x-a-href>
     @if(isset(Auth::user()->name))
       <x-a-href href="{{ route('orderHistory') }}" class="" >注文履歴</x-a-href>
-      <x-a-href href="/profile" class="" >アカウント編集</x-a-href>
+      <x-a-href href="{{ route('profile.edit') }}" class="" >アカウント編集</x-a-href>
     @endif
     @can('admin')
-      <x-a-href href="/create" class="" >商品追加</x-a-href>
-      <x-a-href href="/databaseManage" class="" >DBメンテ</x-a-href>
+      <x-a-href href="{{ route('create') }}" class="" >商品追加</x-a-href>
+      <x-a-href href="{{ route('databaseManage.index') }}" class="" >DBメンテ</x-a-href>
     @endcan
     <x-a-href href="{{ route('htmlTest') }}" class="" >HTMLテスト</x-a-href>
 
