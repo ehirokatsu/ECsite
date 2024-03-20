@@ -1,6 +1,10 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+
+import Header from './Header.vue';
 import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
 import { Head } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
@@ -8,16 +12,16 @@ import { useForm } from '@inertiajs/vue3';
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
+//TextInputでv-modelを使用する場合、NULLだとエラーになるので空文字にする
 const form = useForm({
     name: "",
-    cost: null,
+    cost: "",
     image: null,
 });
-const inputValue = ref('');
+
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
 const submitForm = () => {
-    //console.log(form.name);
     form.post(route('vue.store'));
 };
 
@@ -32,37 +36,34 @@ const handleImageChange = (event) => {
 <template>
     <Head title="Dashboard" />
 
-    <GuestLayout>
+    <Header />
 
-        <div class="py-12">
-            
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <form @submit.prevent="submitForm()">
-                        <div class="">
-                            <div class="p-4">
-                            <span>商品名:
-                            </span>
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 text-gray-900">
+                <form @submit.prevent="submitForm()">
+                    <div class="">
+                        <div class="p-4">
+                            <InputLabel>商品名:</InputLabel>
                             <TextInput v-model="form.name" />
-                            </div>
-                            <div class="p-4">
-                            <span>単価:</span>
-                            <input type="text" v-model="form.cost">
-                            </div>
-                            <div class="p-4">
-                                
-                            <span>商品画像</span>
-                            <input type="file"  @change="handleImageChange">
-                            
-                            </div>
-                            <button type="submit" class="">
-                            確認する
-                            </button>
+                            <InputError v-bind:message="$page.props.errors.name" />
                         </div>
+                        <div class="p-4">
+                            <InputLabel>単価:</InputLabel>
+                            <TextInput v-model="form.cost" />
+                            <InputError v-bind:message="$page.props.errors.cost" />
+                        </div>
+                        <div class="p-4">
+                            <InputLabel>商品画像</InputLabel>
+                            <input type="file"  @change="handleImageChange">
+                            <InputError v-bind:message="$page.props.errors.image" />
+                        </div>
+                        <PrimaryButton type="submit" class="">
+                        確認する
+                        </PrimaryButton>
+                    </div>
                 </form>
-
-                </div>
             </div>
         </div>
-    </GuestLayout>
+    </div>
 </template>

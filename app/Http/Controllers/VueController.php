@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\Http\Requests\Product\CreateConfirmRequest;
 use App\Models\Product;
 use Carbon\Carbon;
 use Inertia\Inertia;
@@ -26,7 +26,7 @@ class VueController extends Controller
         return Inertia::render('create');
     }
 
-    public function store(Request $request)
+    public function store(CreateConfirmRequest $request)
     {
         //空の商品モデルを生成
         $product = new Product;
