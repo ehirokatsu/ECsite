@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import Header from './Header.vue';
+import Layout from './Layout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Link } from '@inertiajs/vue3';
-
-import { Head } from '@inertiajs/vue3';
-
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
@@ -52,9 +48,7 @@ const submit = (id: number) => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
-
-    <Header></Header>
+    <Layout title="商品一覧"/>
 
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

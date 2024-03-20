@@ -1,11 +1,10 @@
 <script setup lang="ts">
 
-import Header from './Header.vue';
+import Layout from './Layout.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
-import { Head } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
@@ -34,9 +33,8 @@ const handleImageChange = (event) => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
 
-    <Header />
+    <Layout title="商品追加"/>
 
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
