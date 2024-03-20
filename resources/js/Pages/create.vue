@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import GuestLayout from '@/Layouts/GuestLayout.vue';
+import TextInput from '@/Components/TextInput.vue';
 import { Head } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
@@ -8,11 +9,11 @@ import { useForm } from '@inertiajs/vue3';
 //axios.get("/product").then(response => { products.value = response.data });
 
 const form = useForm({
-    name: null,
+    name: "",
     cost: null,
     image: null,
 });
-
+const inputValue = ref('');
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
 const submitForm = () => {
@@ -42,7 +43,7 @@ const handleImageChange = (event) => {
                             <div class="p-4">
                             <span>商品名:
                             </span>
-                            <input type="text" v-model="form.name">
+                            <TextInput v-model="form.name" />
                             </div>
                             <div class="p-4">
                             <span>単価:</span>
