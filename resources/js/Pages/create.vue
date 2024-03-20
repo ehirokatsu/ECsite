@@ -11,11 +11,13 @@ import { useForm } from '@inertiajs/vue3';
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
-//TextInputでv-modelを使用する場合、NULLだとエラーになるので空文字にする
+//name,costはTextInputでv-modelを使用する場合、NULLだとエラーになるので空文字にする
+//imageは、null as File だけだとnullをFile型にキャストしようとしてエラーになる
+// | nullを付けることでnullをFile型またはnull型のどちらかにキャストすることになる。
 const form = useForm({
     name: "",
     cost: "",
-    image: null,
+    image: null as File | null,
 });
 
 //CSRFなしでも削除できた
@@ -25,8 +27,16 @@ const submitForm = () => {
 };
 
 //imageはv-modelが使用できないのでイベントハンドラでformにセットする
-const handleImageChange = (event) => {
-  form.image = event.target.files[0];
+const handleImageChange = (event: Event) => {
+    //form.image = event.target.files[0];
+
+    //event.targetはnullの可能性があるのでif文判定をする
+    const target = event.target as HTMLInputElement;
+    if (target && target.files) {
+        //右辺はFile型なので、form.imageの初期値をnullにするとエラーになる。
+        form.image = target.files[0];
+    }
+    
   //console.log(form.image);
 };
 
