@@ -25,7 +25,7 @@ const form = useForm({
 const submitForm = (id: number) => {
 
     //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
-    form.post(route('vue.update', {'id': id}));
+    form.put(route('vue.update', {'id': id}));
 };
 
 const handleImageChange = (event) => {
