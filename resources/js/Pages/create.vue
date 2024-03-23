@@ -5,12 +5,23 @@ import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
+import { Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
+
+/*
+const tmp = {
+    name: "",
+    cost: "",
+    image: null as File | null,
+};
+*/
+
+//useFormを使用する方法
 //name,costはTextInputでv-modelを使用する場合、NULLだとエラーになるので空文字にする
 //imageは、null as File だけだとnullをFile型にキャストしようとしてエラーになる
 // | nullを付けることでnullをFile型またはnull型のどちらかにキャストすることになる。
@@ -19,12 +30,11 @@ const form = useForm({
     cost: "",
     image: null as File | null,
 });
-
 //CSRFなしでも削除できた
-//indexにリダイレクトしても表示が更新されない
 const submitForm = () => {
     form.post(route('vue.store'));
 };
+
 
 //imageはv-modelが使用できないのでイベントハンドラでformにセットする
 const handleImageChange = (event: Event) => {
@@ -35,6 +45,7 @@ const handleImageChange = (event: Event) => {
     if (target && target.files) {
         //右辺はFile型なので、form.imageの初期値をnullにするとエラーになる。
         form.image = target.files[0];
+        //tmp.image = target.files[0];
     }
     
   //console.log(form.image);
@@ -66,9 +77,13 @@ const handleImageChange = (event: Event) => {
                             <input type="file"  @change="handleImageChange">
                             <InputError v-bind:message="$page.props.errors.image" />
                         </div>
+                        <!--
+                        <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
+                        -->
                         <PrimaryButton type="submit" class="">
                         確認する
                         </PrimaryButton>
+                        
                     </div>
                 </form>
             </div>
