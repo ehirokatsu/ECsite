@@ -3,7 +3,7 @@ import Layout from './Layout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
 import { Link } from '@inertiajs/vue3';
-import { useForm } from '@inertiajs/vue3';
+
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -13,12 +13,9 @@ import { useForm } from '@inertiajs/vue3';
 defineProps({
     products: Object,
 });
-//delete送信用ダミー
-const form = useForm({
-    
-});
 
 /*
+//axiosを使用する場合
 import axios from 'axios';
 import { ref, onMounted } from "vue";
 const csrfToken = ref('');
@@ -35,8 +32,15 @@ function deleteButton(id: number): void {
     axios.delete(route('destroy', id));
 }
 */
+
+/*
+//deleteメソッドをフォームで使用する場合
+//delete送信用ダミー
+import { useForm } from '@inertiajs/vue3';
+const form = useForm({
+    
+});
 //CSRFなしでも削除できた
-//indexにリダイレクトしても表示が更新されない
 const submit = (id: number) => {
     ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
     //form.delete('/' + id);
@@ -44,6 +48,8 @@ const submit = (id: number) => {
     //form.delete(route('destroy', ['id', id]));
     form.delete(route('vue.destroy', {'id': id}));
 };
+*/
+
 
 </script>
 
@@ -79,9 +85,16 @@ const submit = (id: number) => {
                                         </Link>
                                     </div>
                                     <div class="p-1">
+                                        <!--ユーザが入力するデータは無いのでLinkを使用-->
+                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" method="delete">
+                                            <DangerButton type="submit">削除</DangerButton>
+                                        </Link>
+                                            
+                                        <!--フォームを使用する場合
                                         <form @submit.prevent="submit(product.id)">
                                             <DangerButton type="submit">削除</DangerButton>
                                         </form>
+                                        -->
                                     </div>
                                 </div>
                             </div>
