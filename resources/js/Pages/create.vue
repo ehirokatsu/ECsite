@@ -5,7 +5,6 @@ import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
-import { Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
@@ -14,6 +13,8 @@ import { useForm } from '@inertiajs/vue3';
 
 
 /*
+//Linkでフォーム送信する場合
+import { Link } from '@inertiajs/vue3';
 const tmp = {
     name: "",
     cost: "",
@@ -30,7 +31,6 @@ const form = useForm({
     cost: "",
     image: null as File | null,
 });
-//CSRFなしでも削除できた
 const submitForm = () => {
     form.post(route('vue.store'));
 };
@@ -57,36 +57,32 @@ const handleImageChange = (event: Event) => {
 
     <Layout title="商品追加"/>
 
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="p-6 text-gray-900">
-                <form @submit.prevent="submitForm()">
-                    <div class="">
-                        <div class="p-4">
-                            <InputLabel>商品名:</InputLabel>
-                            <TextInput v-model="form.name" />
-                            <InputError v-bind:message="$page.props.errors.name" />
-                        </div>
-                        <div class="p-4">
-                            <InputLabel>単価:</InputLabel>
-                            <TextInput v-model="form.cost" />
-                            <InputError v-bind:message="$page.props.errors.cost" />
-                        </div>
-                        <div class="p-4">
-                            <InputLabel>商品画像</InputLabel>
-                            <input type="file"  @change="handleImageChange">
-                            <InputError v-bind:message="$page.props.errors.image" />
-                        </div>
-                        <!--
-                        <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
-                        -->
-                        <PrimaryButton type="submit" class="">
-                        確認する
-                        </PrimaryButton>
-                        
-                    </div>
-                </form>
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
+        <form @submit.prevent="submitForm()">
+            <div class="">
+                <div class="p-4">
+                    <InputLabel>商品名:</InputLabel>
+                    <TextInput v-model="form.name" />
+                    <InputError v-bind:message="$page.props.errors.name" />
+                </div>
+                <div class="p-4">
+                    <InputLabel>単価:</InputLabel>
+                    <TextInput v-model="form.cost" />
+                    <InputError v-bind:message="$page.props.errors.cost" />
+                </div>
+                <div class="p-4">
+                    <InputLabel>商品画像</InputLabel>
+                    <input type="file"  @change="handleImageChange">
+                    <InputError v-bind:message="$page.props.errors.image" />
+                </div>
+                <!--Linkでフォーム送信する場合
+                <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
+                -->
+                <PrimaryButton type="submit" class="">
+                確認する
+                </PrimaryButton>
+                
             </div>
-        </div>
+        </form>
     </div>
 </template>

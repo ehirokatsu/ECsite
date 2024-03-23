@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import Layout from './Layout.vue';
+import TextInput from '@/Components/TextInput.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
-
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -14,22 +16,27 @@ const props = defineProps({
 });
 
 const form = useForm({
-    name: props.product.name,
-    cost: props.product.cost,
-    image: null,
+    id: props.product?.id || "",//submitFormでidを使用するためのダミー。これが無いと警告になる
+    name: props.product?.name || "",
+    cost: props.product?.cost || "",
+    image: null as File | null,
 });
-
 
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
 const submitForm = (id: number) => {
-
     //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
     form.put(route('vue.update', {'id': id}));
 };
 
-const handleImageChange = (event) => {
-  form.image = event.target.files[0];
+const handleImageChange = (event: Event) => {
+
+    //event.targetはnullの可能性があるのでif文判定をする
+    const target = event.target as HTMLInputElement;
+    if (target && target.files) {
+        //右辺はFile型なので、form.imageの初期値をnullにするとエラーになる。
+        form.image = target.files[0];
+    }
 };
 
 /*axiosでputしたが、500エラーでできなかった
@@ -60,39 +67,30 @@ const handleImageChange = (event) => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Layout title="商品編集"/>
 
-    <GuestLayout>
-
-        <div class="py-12">
-            
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <form @submit.prevent="submitForm(product.id)">
-                        <div class="">
-                            <div class="p-4">
-                            <span>商品名:
-                            </span>
-                            <input type="text" v-model="form.name">
-                            </div>
-                            <div class="p-4">
-                            <span>単価:</span>
-                            <input type="text" v-model="form.cost">
-                            </div>
-                            <div class="p-4">
-                                
-                            <span>商品画像</span>
-                            <input type="file"  @change="handleImageChange">
-                            
-                            </div>
-                            <button type="submit" class="">
-                            確認する
-                            </button>
-                        </div>
-                </form>
-
+    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+        <form @submit.prevent="submitForm(form.id)">
+            <div class="">
+                <div class="p-4">
+                    <InputLabel>商品名:</InputLabel>
+                    <TextInput v-model="form.name" />
+                    <InputError v-bind:message="$page.props.errors.name" />
                 </div>
+                <div class="p-4">
+                    <InputLabel>単価:</InputLabel>
+                    <TextInput v-model="form.cost" />
+                    <InputError v-bind:message="$page.props.errors.cost" />
+                </div>
+                <div class="p-4">
+                    <InputLabel>商品画像</InputLabel>
+                    <input type="file"  @change="handleImageChange">
+                    <InputError v-bind:message="$page.props.errors.image" />
+                </div>
+                <PrimaryButton type="submit" class="">
+                確認する
+                </PrimaryButton>
             </div>
-        </div>
-    </GuestLayout>
+        </form>
+    </div>
 </template>
