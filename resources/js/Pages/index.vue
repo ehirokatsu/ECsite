@@ -42,7 +42,7 @@ const submit = (id: number) => {
     //form.delete('/' + id);
     //下記だと、URLが/id?id=となってしまう
     //form.delete(route('destroy', ['id', id]));
-    form.delete(route('destroy', {'id': id}));
+    form.delete(route('vue.destroy', {'id': id}));
 };
 
 </script>

@@ -98,6 +98,32 @@ class VueController extends Controller
         return redirect('/vue');
 
     }
+
+    public function destroy(string $id) {
+
+        //削除対象のレコードを取得する
+        $product = product::findOrFail($id);
+
+        //商品画像のフルパスを取得する
+        $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
+        
+        //商品画像を削除する
+        if ($this->checkFileExists($imageFullPath)) {
+
+            unlink($imageFullPath);
+
+        } else {
+
+            //エラーメッセージをViewに渡して表示出来るようにしたい
+            //return redirect()->route('no');
+        }
+
+        //商品レコードを削除する
+        $product->delete();
+
+        return redirect()->route('vue.index', $parameters = [], $status = 303, $headers = []);
+    }
+
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;
