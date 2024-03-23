@@ -41,6 +41,7 @@ const logout = (): void => {
                     <div class="flex justify-end">
                     </div>
                     <div v-if="$page.props.auth.user">
+                        <NavLink v-bind:href="route('logout')" method="post">ログアウト</NavLink>
                         <button v-on:click="logout">ログアウト</button>
                     </div>
                     <div v-else>
