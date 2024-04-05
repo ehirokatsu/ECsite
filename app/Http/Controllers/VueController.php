@@ -8,23 +8,24 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\UseCases\Image\SaveImage;
-
+use App\UseCases\Image\MakeImageFileName;
 
 class VueController extends Controller
 {
     
     //
-    public function __construct(SaveImage $saveImage)//use必須
+    public function __construct(SaveImage $saveImage, MakeImageFileName $makeImageFileName)//use必須
     {
         $this->saveImage = $saveImage;
+        $this->makeImageFileName = $makeImageFileName;
     }
     
     //
     public function index()
     {
         //コンストラクタインジェクションの場合、__inovkeを呼び出すには以下にように記載。
-        ($this->saveImage)();
-        $this->saveImage->__invoke();
+        //($this->saveImage)();
+        //$this->saveImage->__invoke();
         //メソッドインジェクションなら以下だけで良い
         //$saveImage();
 
@@ -45,14 +46,18 @@ class VueController extends Controller
         //空の商品モデルを生成
         $product = new Product;
 
+        /*
         //現在日時を取得
         $now = Carbon::now()->format('Y_m_d_H_i_s');
 
         //商品画像を保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
         $imageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
-
+        */
+        $imageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
+    
         //画像を保存する
-        $request->image->storeAs(\Config::get('filepath.imageSaveFolder'), $imageFileName);
+        //$request->image->storeAs(\Config::get('filepath.imageSaveFolder'), $imageFileName);
+        ($this->saveImage)($request->image, \Config::get('filepath.imageSaveFolder'), $imageFileName);
 
         //フォームからDBへセット
         $product->name = $request->name;

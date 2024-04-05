@@ -10,10 +10,11 @@ class SaveImage
         $this->helloService = $helloService;
     }
 */
-    public function __invoke(): void
+    public function __invoke($image, $fullPath, $imageFileName): void
     //public function test(): void
     {
         //
-        \Log::info('SaveImage test');
+        //\Log::info('SaveImage test');
+        $image->storeAs($fullPath, $imageFileName);
     }
 }
