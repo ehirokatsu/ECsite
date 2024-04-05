@@ -7,13 +7,27 @@ use App\Http\Requests\Product\CreateConfirmRequest;
 use App\Models\Product;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use App\UseCases\Image\SaveImage;
 
 
 class VueController extends Controller
 {
+    
+    //
+    public function __construct(SaveImage $saveImage)//use必須
+    {
+        $this->saveImage = $saveImage;
+    }
+    
     //
     public function index()
     {
+        //コンストラクタインジェクションの場合、__inovkeを呼び出すには以下にように記載。
+        ($this->saveImage)();
+        $this->saveImage->__invoke();
+        //メソッドインジェクションなら以下だけで良い
+        //$saveImage();
+
         $products = Product::all();
 
         return Inertia::render('index', [
