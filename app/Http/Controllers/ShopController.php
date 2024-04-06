@@ -10,23 +10,29 @@ use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Requests\Product\EditConfirmRequest;
 use App\Models\Product;
 use Gate;
-use Carbon\Carbon;
 use Inertia\Inertia;
 use App\UseCases\Image\SaveImage;
 use App\UseCases\Image\MakeImageFileName;
 use App\UseCases\Product\StoreAction;
+use App\UseCases\Product\UpdateAction;
+use App\UseCases\Product\GetImageNameFromId;
+
 
 class ShopController extends Controller
 {
     public function __construct(
         SaveImage $saveImage,
         MakeImageFileName $makeImageFileName,
-        StoreAction $storeAction
+        StoreAction $storeAction,
+        UpdateAction $updateAction,
+        GetImageNameFromId $getImageNameFromId
         )//use必須
     {
         $this->saveImage = $saveImage;
         $this->makeImageFileName = $makeImageFileName;
         $this->storeAction = $storeAction;
+        $this->updateAction = $updateAction;
+        $this->getImageNameFromId = $getImageNameFromId;
     }
 
     /**
@@ -169,15 +175,12 @@ class ShopController extends Controller
         //画像を更新する場合
         if (!empty($request->image)) {
             
-            //現在日時を取得
-            $now = Carbon::now()->format('Y_m_d_H_i_s');
-
             //商品画像を一時保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-            $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
+            $tmpImageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
 
             //一時保存フォルダに画像を保存する
-            $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
-            
+            ($this->saveImage)($request->image, \Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
+
             //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
             $request->session()->put('tmpImageFileName', $tmpImageFileName);
 
@@ -215,17 +218,14 @@ class ShopController extends Controller
     public function update(UpdateRequest $request, string $id)
     {
         //戻る処理でも使用するのでif文前で取得する
-        $product = product::findOrFail($id);
+        //$product = product::findOrFail($id);
         //$inputs = $request->except('action');
         
         //確定ボタン押下
         if ($request->action === 'submit') {
 
-            //nameを更新する場合
-            $product->name = $request->name;
-
-            //costを更新する場合
-            $product->cost = $request->cost;
+            //nullだとupdateAction関数を呼び出す時にエラーになる
+            $srcImageFileName = "";
 
             //画像を更新する場合
             if (!empty($request->session()->get('tmpImageFileName'))) {
@@ -239,16 +239,15 @@ class ShopController extends Controller
                 //保存する画像のフルパス
                 $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $srcImageFileName;
 
+                $imageName = ($this->getImageNameFromId)($id);
+
                 //更新前の画像のフルパス
-                $oldImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
+                $oldImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $imageName;
 
                 //更新前の画像を削除する
                 if ($this->checkFileExists($oldImageFullPath)) {
                     unlink($oldImageFullPath);
                 }
-
-                //DBの画像ファイル名を更新する
-                $product->image = $srcImageFileName;
 
                 //セッションに保存した画像ファイル名が不要になるので削除する
                 $request->session()->forget('tmpImageFileName');
@@ -258,8 +257,8 @@ class ShopController extends Controller
                     \File::move($srcImageFullPath, $dstImageFullPath);
                 }
             }
-
-            $product->save();
+            //DBを更新する
+            ($this->updateAction)($id, $request->name, $request->cost, $srcImageFileName);
 
             return redirect("/");
 
@@ -285,7 +284,9 @@ class ShopController extends Controller
             //$request->session()->flashInput($inputs);
     
             //前画面に戻る。リダイレクト先でold関数を使ってリクエストの入力値を取得する
-            return redirect()->route('edit', ['id' => $product->id])->withInput();
+            //return redirect()->route('edit', ['id' => $product->id])->withInput();
+            return redirect()->route('edit', ['id' => $id])->withInput();
+
         } 
     }
 
