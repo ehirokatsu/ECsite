@@ -54,14 +54,8 @@ class VueController extends Controller
 
     public function store(CreateConfirmRequest $request)
     {
-        //商品画像を保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-        $imageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
-    
-        //画像を保存する
-        ($this->saveImage)($request->image, \Config::get('filepath.imageSaveFolder'), $imageFileName);
-
-        //フォームからDBへセット
-        ($this->storeAction)($request->name, $request->cost, $imageFileName);
+        //保存処理を行う
+        ($this->storeAction)($request);
 
         return redirect('/vue');
     }
