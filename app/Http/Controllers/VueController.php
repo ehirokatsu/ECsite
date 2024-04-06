@@ -5,19 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\Product\CreateConfirmRequest;
 use App\Models\Product;
-use Carbon\Carbon;
+//use Carbon\Carbon;
 use Inertia\Inertia;
 use App\UseCases\Image\SaveImage;
 use App\UseCases\Image\MakeImageFileName;
+use App\UseCases\Product\StoreAction;
+use App\UseCases\Product\UpdateAction;
 
 class VueController extends Controller
 {
     
     //
-    public function __construct(SaveImage $saveImage, MakeImageFileName $makeImageFileName)//use必須
+    public function __construct(
+        SaveImage $saveImage,
+        MakeImageFileName $makeImageFileName,
+        StoreAction $storeAction,
+        UpdateAction $updateAction
+        )//use必須
     {
         $this->saveImage = $saveImage;
         $this->makeImageFileName = $makeImageFileName;
+        $this->storeAction = $storeAction;
     }
     
     //
@@ -43,29 +51,14 @@ class VueController extends Controller
 
     public function store(CreateConfirmRequest $request)
     {
-        //空の商品モデルを生成
-        $product = new Product;
-
-        /*
-        //現在日時を取得
-        $now = Carbon::now()->format('Y_m_d_H_i_s');
-
         //商品画像を保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-        $imageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
-        */
         $imageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
     
         //画像を保存する
-        //$request->image->storeAs(\Config::get('filepath.imageSaveFolder'), $imageFileName);
         ($this->saveImage)($request->image, \Config::get('filepath.imageSaveFolder'), $imageFileName);
 
         //フォームからDBへセット
-        $product->name = $request->name;
-        $product->cost = $request->cost;
-        $product->image = $imageFileName;
-        $product->save();
-
-        //$products = Product::all();
+        ($this->storeAction)($request->name, $request->cost, $imageFileName);
 
         return redirect('/vue');
     }
@@ -90,6 +83,7 @@ class VueController extends Controller
         //costを更新する場合
         $product->cost = $request->cost;
 
+        //画像を更新する場合
         if (!empty($request->image)) {
 
             //更新前の画像のフルパス
@@ -100,14 +94,11 @@ class VueController extends Controller
                 unlink($oldImageFullPath);
             }
 
-            //現在日時を取得
-            $now = Carbon::now()->format('Y_m_d_H_i_s');
+            //商品画像を保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
+            $imageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
 
-            //商品画像を一時保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-            $imageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
-
-            //一時保存フォルダに画像を保存する
-            $request->image->storeAs(\Config::get('filepath.imageSaveFolder'), $imageFileName);
+            //画像を保存する
+            ($this->saveImage)($request->image, \Config::get('filepath.imageSaveFolder'), $imageFileName);
 
             //DBの画像ファイル名を更新する
             $product->image = $imageFileName;

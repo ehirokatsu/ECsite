@@ -12,9 +12,23 @@ use App\Models\Product;
 use Gate;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use App\UseCases\Image\SaveImage;
+use App\UseCases\Image\MakeImageFileName;
+use App\UseCases\Product\StoreAction;
 
 class ShopController extends Controller
 {
+    public function __construct(
+        SaveImage $saveImage,
+        MakeImageFileName $makeImageFileName,
+        StoreAction $storeAction
+        )//use必須
+    {
+        $this->saveImage = $saveImage;
+        $this->makeImageFileName = $makeImageFileName;
+        $this->storeAction = $storeAction;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -48,15 +62,11 @@ class ShopController extends Controller
         //フォーム内容を取得する
         $inputs = $request->all();
 
-        //現在日時を取得
-        $now = Carbon::now()->format('Y_m_d_H_i_s');
-
         //商品画像を一時保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-        $tmpImageFileName = $now . '_' . \Str::random(5) . '_' . $request->image->getClientOriginalName();
-        //dd($imageFileName);
-
+        $tmpImageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
+    
         //一時保存フォルダに画像を保存する
-        $request->image->storeAs(\Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
+        ($this->saveImage)($request->image, \Config::get('filepath.imageTmpSaveFolder'), $tmpImageFileName);
 
         //画像ファイル名をセッションに保存する（テストコードで取得可能にする為）
         $request->session()->put('tmpImageFileName', $tmpImageFileName);
@@ -74,9 +84,6 @@ class ShopController extends Controller
     //フォームリクエストを入れると、エラー時リダイレクトはcreateConfirmにGETでアクセスするがrouteにないのでエラーになる
     public function store(StoreRequest $request)
     {
-        //空の商品モデルを生成
-        $product = new Product;
-
         //修正する場合にViewに渡すフォーム値
         $inputs = $request->except('action');
 
@@ -89,22 +96,14 @@ class ShopController extends Controller
         //登録する場合
         if ($request->action === 'submit') {
 
-            //フォームからDBへセット
-            $product->name = $request->name;
-            $product->cost = $request->cost;
-
             //保存する画像ファイル名
-            //$dstImageFileName = $product->id . '.' . pathinfo($srcImageFullPath, PATHINFO_EXTENSION);
             $dstImageFileName = $srcImageFileName;
 
             //保存する画像ファイルパス 
             $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $dstImageFileName;
 
-            //画像ファイル名をDBにセットする
-            $product->image = $dstImageFileName;
-
             //商品レコードを保存する
-            $product->save();
+            ($this->storeAction)($request->name, $request->cost, $dstImageFileName);
 
             //一時保存した画像を移動する
             if ($this->checkFileExists($srcImageFullPath)) {//このバリデーションも別だし？
