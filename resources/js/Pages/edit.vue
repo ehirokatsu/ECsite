@@ -22,11 +22,51 @@ const form = useForm({
     image: null as File | null,
 });
 
+
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
 const submitForm = (id: number) => {
+
     //putだと、画像を選択すると、nameとcostがサーバではnullになってしまう
-    form.put(route('vue.update', {'id': id}));
+    //form.put(route('vue.update', {'id': id}));
+
+    //_methodでPUTを指定してpost送信すればよいが、以下だとエラーになる
+    //form._method = 'PUT';
+    //form.post(route('vue.update', {'id': id}));
+
+    //useFormではmethodを指定できないので、formDataに詰め替える 
+    form.transform((data) => {
+        const formData = new FormData();
+        // 既存のフォームデータをFormDataに追加
+        
+        for (const key in data) {
+
+            //data2[key]で警告が出るので、オブジェクトの型定義にインデックスシグネチャを付与する
+            interface FormDataIndexable {
+                [key: string]: any;
+            }
+            const data2: FormDataIndexable = form; // useFormから返されるformオブジェクトをFormDataIndexable型にキャスト
+
+            // nullでないデータのみ追加。imageを更新しない場合、imageはnullにするため
+            if (data2[key] !== null) { 
+                formData.append(key, data2[key]);
+            }
+        }
+        // ファイルがある場合はFormDataに追加
+        if (data.image instanceof File) {
+            formData.append('image', data.image, data.image.name);
+        }
+        // PUTリクエストを示すために_methodフィールドを追加
+        formData.append('_method', 'PUT');
+        return formData;
+    });
+
+    // POSTメソッドを使用してFormDataを送信
+    form.post(route('vue.update', {'id': id}), {
+        // Inertiaはtransformで返されたFormDataを使用します
+        forceFormData: true,
+    });
+
 };
 
 const handleImageChange = (event: Event) => {
@@ -85,7 +125,7 @@ const handleImageChange = (event) => {
                 <div class="p-4">
                     <InputLabel>商品画像</InputLabel>
                     <input type="file"  @change="handleImageChange">
-                    <InputError v-bind:message="$page.props.errors.image" />
+                    <InputError v-bind:message="$page.props.errors.imxage" />
                 </div>
                 <PrimaryButton type="submit" class="">
                 確認する
