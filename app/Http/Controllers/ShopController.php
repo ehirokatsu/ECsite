@@ -16,7 +16,7 @@ use App\UseCases\Image\MakeImageFileName;
 use App\UseCases\Product\StoreAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\GetImageNameFromId;
-
+use App\UseCases\Product\SaveProduct;
 
 class ShopController extends Controller
 {
@@ -25,7 +25,8 @@ class ShopController extends Controller
         MakeImageFileName $makeImageFileName,
         StoreAction $storeAction,
         UpdateAction $updateAction,
-        GetImageNameFromId $getImageNameFromId
+        GetImageNameFromId $getImageNameFromId,
+        SaveProduct $saveProduct
         )//use必須
     {
         $this->saveImage = $saveImage;
@@ -33,6 +34,7 @@ class ShopController extends Controller
         $this->storeAction = $storeAction;
         $this->updateAction = $updateAction;
         $this->getImageNameFromId = $getImageNameFromId;
+        $this->saveProduct = $saveProduct;
     }
 
     /**
@@ -109,7 +111,7 @@ class ShopController extends Controller
             $dstImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $dstImageFileName;
 
             //商品レコードを保存する
-            ($this->storeAction)($request->name, $request->cost, $dstImageFileName);
+            ($this->saveProduct)($request->name, $request->cost, $dstImageFileName);
 
             //一時保存した画像を移動する
             if ($this->checkFileExists($srcImageFullPath)) {//このバリデーションも別だし？
