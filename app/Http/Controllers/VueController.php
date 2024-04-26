@@ -11,6 +11,7 @@ use App\UseCases\Image\MakeImageFileName;
 use App\UseCases\Product\StoreAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\GetImageNameFromId;
+use App\UseCases\Product\IndexAction;
 
 class VueController extends Controller
 {
@@ -21,7 +22,8 @@ class VueController extends Controller
         MakeImageFileName $makeImageFileName,
         StoreAction $storeAction,
         UpdateAction $updateAction,
-        GetImageNameFromId $getImageNameFromId
+        GetImageNameFromId $getImageNameFromId,
+        IndexAction $indexAction,
         )//use必須
     {
         $this->saveImage = $saveImage;
@@ -29,6 +31,7 @@ class VueController extends Controller
         $this->storeAction = $storeAction;
         $this->updateAction = $updateAction;
         $this->getImageNameFromId = $getImageNameFromId;
+        $this->indexAction = $indexAction;
     }
     
     //
@@ -40,7 +43,7 @@ class VueController extends Controller
         //メソッドインジェクションなら以下だけで良い
         //$saveImage();
 
-        $products = Product::all();
+        $products = ($this->indexAction)();
 
         return Inertia::render('index', [
             'products' => $products,
