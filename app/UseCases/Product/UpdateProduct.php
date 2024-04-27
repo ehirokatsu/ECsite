@@ -4,7 +4,7 @@ namespace App\UseCases\Product;
 
 use App\Models\Product;
 
-class UpdateAction
+class UpdateProduct
 {
     public function __invoke(String $id, String $name, String $cost, String $image): void
     {

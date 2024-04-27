@@ -9,7 +9,7 @@ use Inertia\Inertia;
 use App\UseCases\Image\SaveImage;
 use App\UseCases\Image\MakeImageFileName;
 use App\UseCases\Product\StoreAction;
-use App\UseCases\Product\UpdateAction;
+use App\UseCases\Product\UpdateProduct;
 use App\UseCases\Product\GetImageNameFromId;
 use App\UseCases\Product\IndexAction;
 use App\UseCases\Product\EditAction;
@@ -22,7 +22,7 @@ class VueController extends Controller
         SaveImage $saveImage,
         MakeImageFileName $makeImageFileName,
         StoreAction $storeAction,
-        UpdateAction $updateAction,
+        UpdateProduct $updateProduct,
         GetImageNameFromId $getImageNameFromId,
         IndexAction $indexAction,
         EditAction $editAction,
@@ -31,7 +31,7 @@ class VueController extends Controller
         $this->saveImage = $saveImage;
         $this->makeImageFileName = $makeImageFileName;
         $this->storeAction = $storeAction;
-        $this->updateAction = $updateAction;
+        $this->updateProduct = $updateProduct;
         $this->getImageNameFromId = $getImageNameFromId;
         $this->indexAction = $indexAction;
         $this->editAction = $editAction;
@@ -101,7 +101,7 @@ class VueController extends Controller
         }
         
         //DBを更新する
-        ($this->updateAction)($id, $request->name, $request->cost, $imageFileName);
+        ($this->updateProduct)($id, $request->name, $request->cost, $imageFileName);
 
 
         return redirect('/vue');
