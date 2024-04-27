@@ -10,6 +10,7 @@ use App\UseCases\Product\StoreAction;
 use App\UseCases\Product\IndexAction;
 use App\UseCases\Product\EditAction;
 use App\UseCases\Product\UpdateAction;
+use App\UseCases\Product\DeleteAction;
 
 class VueController extends Controller
 {
@@ -20,6 +21,7 @@ class VueController extends Controller
         IndexAction $indexAction,
         EditAction $editAction,
         UpdateAction $updateAction,
+        DeleteAction $deleteAction,
         )//use必須
     {
 
@@ -27,6 +29,7 @@ class VueController extends Controller
         $this->indexAction = $indexAction;
         $this->editAction = $editAction;
         $this->updateAction = $updateAction;
+        $this->deleteAction = $deleteAction;
     }
     
     //
@@ -77,34 +80,8 @@ class VueController extends Controller
 
     public function destroy(string $id) {
 
-        //削除対象のレコードを取得する
-        $product = product::findOrFail($id);
-
-        //商品画像のフルパスを取得する
-        $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
-        
-        //商品画像を削除する
-        if ($this->checkFileExists($imageFullPath)) {
-
-            unlink($imageFullPath);
-
-        } else {
-
-            //エラーメッセージをViewに渡して表示出来るようにしたい
-            //return redirect()->route('no');
-        }
-
-        //商品レコードを削除する
-        $product->delete();
-
+        ($this->deleteAction)($id);
         return redirect()->route('vue.index', $parameters = [], $status = 303, $headers = []);
     }
 
-    public function checkFileExists($path) {
-        if (\File::exists($path) && !is_dir($path)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
