@@ -6,35 +6,27 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Product\CreateConfirmRequest;
 use App\Models\Product;
 use Inertia\Inertia;
-use App\UseCases\Image\SaveImage;
-use App\UseCases\Image\MakeImageFileName;
 use App\UseCases\Product\StoreAction;
-use App\UseCases\Product\UpdateProduct;
-use App\UseCases\Product\GetImageNameFromId;
 use App\UseCases\Product\IndexAction;
 use App\UseCases\Product\EditAction;
+use App\UseCases\Product\UpdateAction;
 
 class VueController extends Controller
 {
     
     //
     public function __construct(
-        SaveImage $saveImage,
-        MakeImageFileName $makeImageFileName,
         StoreAction $storeAction,
-        UpdateProduct $updateProduct,
-        GetImageNameFromId $getImageNameFromId,
         IndexAction $indexAction,
         EditAction $editAction,
+        UpdateAction $updateAction,
         )//use必須
     {
-        $this->saveImage = $saveImage;
-        $this->makeImageFileName = $makeImageFileName;
+
         $this->storeAction = $storeAction;
-        $this->updateProduct = $updateProduct;
-        $this->getImageNameFromId = $getImageNameFromId;
         $this->indexAction = $indexAction;
         $this->editAction = $editAction;
+        $this->updateAction = $updateAction;
     }
     
     //
@@ -77,33 +69,8 @@ class VueController extends Controller
 
     public function update(Request $request, string $id)
     {
-        //nullだとupdateAction関数を呼び出す時にエラーになる
-        $imageFileName = "";
 
-        //画像を更新する場合
-        if (!empty($request->image)) {
-
-            $imageName = ($this->getImageNameFromId)($id);
-
-            //更新前の画像のフルパス
-            $oldImageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $imageName;
-
-            //更新前の画像を削除する
-            if ($this->checkFileExists($oldImageFullPath)) {
-                unlink($oldImageFullPath);
-            }
-
-            //商品画像を保存する時のファイル名を作成する。ファイル名の衝突対策でランダム文字列を付加する
-            $imageFileName = ($this->makeImageFileName)($request->image->getClientOriginalName());
-
-            //画像を保存する
-            ($this->saveImage)($request->image, \Config::get('filepath.imageSaveFolder'), $imageFileName);
-        }
-        
-        //DBを更新する
-        ($this->updateProduct)($id, $request->name, $request->cost, $imageFileName);
-
-
+        ($this->updateAction)($request, $id);
         return redirect('/vue');
 
     }
