@@ -12,6 +12,7 @@ use App\UseCases\Product\StoreAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\GetImageNameFromId;
 use App\UseCases\Product\IndexAction;
+use App\UseCases\Product\EditAction;
 
 class VueController extends Controller
 {
@@ -24,6 +25,7 @@ class VueController extends Controller
         UpdateAction $updateAction,
         GetImageNameFromId $getImageNameFromId,
         IndexAction $indexAction,
+        EditAction $editAction,
         )//use必須
     {
         $this->saveImage = $saveImage;
@@ -32,6 +34,7 @@ class VueController extends Controller
         $this->updateAction = $updateAction;
         $this->getImageNameFromId = $getImageNameFromId;
         $this->indexAction = $indexAction;
+        $this->editAction = $editAction;
     }
     
     //
@@ -66,7 +69,7 @@ class VueController extends Controller
 
     public function edit(string $id)
     {
-        $product = product::findOrFail($id);
+        $product = ($this->editAction)($id);
         return Inertia::render('edit', [
             'product' => $product
         ]);
