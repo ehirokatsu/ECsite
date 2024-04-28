@@ -295,7 +295,7 @@ class ShopController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request, string $id)
     {
         //削除対象のレコードを取得する
         $product = product::findOrFail($id);
@@ -316,6 +316,8 @@ class ShopController extends Controller
 
         //商品レコードを削除する
         $product->delete();
+
+        $request->session()->flash('status', '削除しました');
 
         return redirect("/");
     }
