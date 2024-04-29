@@ -59,11 +59,11 @@ const submit = (id: number) => {
 
 import { usePage } from '@inertiajs/vue3'
 // ページプロパティの取得
-const { props } = usePage()
+const page = usePage()
 
 // フラッシュメッセージの取得
-const message = props.flash?.message
-console.log(message)
+//const message = page.props.flash?.message
+//console.log(message)
 
 
 
@@ -72,8 +72,8 @@ console.log(message)
 <template>
     <Layout title="商品一覧"/>
 
-    <div v-if="props.flash?.message" class="bg-green-200 p-2 m-1">
-                {{ props.flash.message }}
+    <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
+                {{ $page.props.flash.message }}
 
     </div>
 
@@ -107,8 +107,9 @@ console.log(message)
                                     </div>
                                     <div class="p-1">
                                         <!--ユーザが入力するデータは無いのでLinkを使用
-                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" as="button" method="delete">
-                                            削除<DangerButton type="submit">削除</DangerButton>
+                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" as="button" method="delete" preserve-scroll>
+                                            削除
+                                            <DangerButton type="submit">削除</DangerButton>
                                         </Link>
                                         -->
                                         <!--フォームを使用する場合-->
