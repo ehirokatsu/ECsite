@@ -57,10 +57,10 @@ class VueController extends Controller
     {
         //保存処理を行う
         ($this->storeAction)($request);
+        //session()->flash('status', 'Task was successful!');
 
-        return redirect('/vue');
+        return redirect('/vue')->with('message', '追加しました');
     }
-
 
     public function edit(string $id)
     {
@@ -74,14 +74,16 @@ class VueController extends Controller
     {
 
         ($this->updateAction)($request, $id);
-        return redirect('/vue');
+        return redirect('/vue')->with('message', '更新しました');
 
     }
 
     public function destroy(string $id) {
 
         ($this->deleteAction)($id);
-        return redirect()->route('vue.index', $parameters = [], $status = 303, $headers = []);
+        //session()->flash('message', 'Task was successful!');
+        //return redirect('/vue')->with('message', '削除しました');
+        return redirect()->route('vue.index')->with('message', '削除しました');
     }
 
 }

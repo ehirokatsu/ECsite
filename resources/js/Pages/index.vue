@@ -33,13 +33,14 @@ function deleteButton(id: number): void {
 }
 */
 
-/*
+
 //deleteメソッドをフォームで使用する場合
 //delete送信用ダミー
 import { useForm } from '@inertiajs/vue3';
 const form = useForm({
     
 });
+/*
 //CSRFなしでも削除できた
 const submit = (id: number) => {
     ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
@@ -49,12 +50,32 @@ const submit = (id: number) => {
     form.delete(route('vue.destroy', {'id': id}));
 };
 */
+const submit = (id: number) => {
+    if (window.confirm('本当にこの商品を削除しますか？')) {
+        // 削除を実行するロジックをここに追加する
+        form.delete(route('vue.destroy', {'id': id}));
+    }
+}
+
+import { usePage } from '@inertiajs/vue3'
+// ページプロパティの取得
+const { props } = usePage()
+
+// フラッシュメッセージの取得
+const message = props.flash?.message
+console.log(message)
+
 
 
 </script>
 
 <template>
     <Layout title="商品一覧"/>
+
+    <div v-if="props.flash?.message" class="bg-green-200 p-2 m-1">
+                {{ props.flash.message }}
+
+    </div>
 
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -85,16 +106,16 @@ const submit = (id: number) => {
                                         </Link>
                                     </div>
                                     <div class="p-1">
-                                        <!--ユーザが入力するデータは無いのでLinkを使用-->
-                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" method="delete">
-                                            <DangerButton type="submit">削除</DangerButton>
+                                        <!--ユーザが入力するデータは無いのでLinkを使用
+                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" as="button" method="delete">
+                                            削除<DangerButton type="submit">削除</DangerButton>
                                         </Link>
-                                            
-                                        <!--フォームを使用する場合
+                                        -->
+                                        <!--フォームを使用する場合-->
                                         <form @submit.prevent="submit(product.id)">
                                             <DangerButton type="submit">削除</DangerButton>
                                         </form>
-                                        -->
+                                        
                                     </div>
                                 </div>
                             </div>
