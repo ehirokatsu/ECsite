@@ -5,12 +5,13 @@ import NavLink from '@/Components/NavLink.vue';
 
 defineProps({ title: String })
 
+/*
 //ログアウトはPOSTメソッドを使用する
 const form = useForm({});
 const logout = (): void => {
     form.post(route('logout'));
 }
-
+*/
 </script>
 
 <template>
@@ -41,8 +42,8 @@ const logout = (): void => {
                     <div class="flex justify-end">
                     </div>
                     <div v-if="$page.props.auth.user">
-                        <NavLink v-bind:href="route('logout')" method="post">ログアウト</NavLink>
-                        <button v-on:click="logout">ログアウト</button>
+                        <NavLink v-bind:href="route('logout')" method="post" as="button">ログアウト</NavLink>
+                        <!--<button v-on:click="logout">ログアウト</button>-->
                     </div>
                     <div v-else>
                         <NavLink v-bind:href="route('register')">登録</NavLink>
