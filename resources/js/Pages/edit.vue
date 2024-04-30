@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -69,6 +70,9 @@ const submitForm = (id: number) => {
 
 };
 
+// プレビュー画像のURLを保持するためのリアクティブな参照を作成
+const imageUrl = ref("");
+
 const handleImageChange = (event: Event) => {
 
     //event.targetはnullの可能性があるのでif文判定をする
@@ -76,6 +80,9 @@ const handleImageChange = (event: Event) => {
     if (target && target.files) {
         //右辺はFile型なので、form.imageの初期値をnullにするとエラーになる。
         form.image = target.files[0];
+
+        // 選択された画像のURLを生成
+        imageUrl.value = URL.createObjectURL(target.files[0]);
     }
 };
 
@@ -127,8 +134,12 @@ const handleImageChange = (event) => {
                     <input type="file"  @change="handleImageChange">
                     <InputError v-bind:message="$page.props.errors.imxage" />
                 </div>
+                <!-- プレビュー画像を表示 -->
+                <div v-if="imageUrl">
+                    <img :src="imageUrl" alt="Image preview" style="width: 200px;">
+                </div>
                 <PrimaryButton type="submit" class="">
-                確認する
+                更新する
                 </PrimaryButton>
             </div>
         </form>

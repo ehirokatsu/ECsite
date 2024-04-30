@@ -6,6 +6,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
+import { ref } from 'vue';
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -35,6 +36,8 @@ const submitForm = () => {
     form.post(route('vue.store'));
 };
 
+// プレビュー画像のURLを保持するためのリアクティブな参照を作成
+const imageUrl = ref("");
 
 //imageはv-modelが使用できないのでイベントハンドラでformにセットする
 const handleImageChange = (event: Event) => {
@@ -46,6 +49,9 @@ const handleImageChange = (event: Event) => {
         //右辺はFile型なので、form.imageの初期値をnullにするとエラーになる。
         form.image = target.files[0];
         //tmp.image = target.files[0];
+
+        // 選択された画像のURLを生成
+        imageUrl.value = URL.createObjectURL(target.files[0]);
     }
     
   //console.log(form.image);
@@ -75,11 +81,15 @@ const handleImageChange = (event: Event) => {
                     <input type="file"  @change="handleImageChange">
                     <InputError v-bind:message="$page.props.errors.image" />
                 </div>
+                <!-- プレビュー画像を表示 -->
+                <div v-if="imageUrl">
+                    <img :src="imageUrl" alt="Image preview" style="width: 200px;">
+                </div>
                 <!--Linkでフォーム送信する場合
                 <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
                 -->
                 <PrimaryButton type="submit" class="">
-                確認する
+                登録する
                 </PrimaryButton>
                 
             </div>
