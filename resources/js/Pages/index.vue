@@ -56,15 +56,12 @@ const submit = (id: number) => {
         form.delete(route('vue.destroy', {'id': id}));
     }
 }
-
+/*
 import { usePage } from '@inertiajs/vue3'
 // ページプロパティの取得
 const page = usePage()
-
-// フラッシュメッセージの取得
-//const message = page.props.flash?.message
-//console.log(message)
-
+//console.log(page.props.flash?.message)
+*/
 
 
 </script>
@@ -72,9 +69,9 @@ const page = usePage()
 <template>
     <Layout title="商品一覧"/>
 
+    <!--フラッシュメッセージ表示-->
     <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
-                {{ $page.props.flash.message }}
-
+        {{ $page.props.flash.message }}
     </div>
 
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
