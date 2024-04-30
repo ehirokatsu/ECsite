@@ -13,8 +13,7 @@ use Gate;
 use Inertia\Inertia;
 use App\UseCases\Image\SaveImage;
 use App\UseCases\Image\MakeImageFileName;
-use App\UseCases\Product\StoreAction;
-use App\UseCases\Product\UpdateAction;
+use App\UseCases\Product\UpdateProduct;
 use App\UseCases\Product\GetImageNameFromId;
 use App\UseCases\Product\SaveProduct;
 
@@ -23,16 +22,14 @@ class ShopController extends Controller
     public function __construct(
         SaveImage $saveImage,
         MakeImageFileName $makeImageFileName,
-        StoreAction $storeAction,
-        UpdateAction $updateAction,
+        UpdateProduct $updateProduct,
         GetImageNameFromId $getImageNameFromId,
         SaveProduct $saveProduct
         )//use必須
     {
         $this->saveImage = $saveImage;
         $this->makeImageFileName = $makeImageFileName;
-        $this->storeAction = $storeAction;
-        $this->updateAction = $updateAction;
+        $this->updateProduct = $updateProduct;
         $this->getImageNameFromId = $getImageNameFromId;
         $this->saveProduct = $saveProduct;
     }
@@ -260,7 +257,7 @@ class ShopController extends Controller
                 }
             }
             //DBを更新する
-            ($this->updateAction)($id, $request->name, $request->cost, $srcImageFileName);
+            ($this->updateProduct)($id, $request->name, $request->cost, $srcImageFileName);
 
             return redirect("/");
 
