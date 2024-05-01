@@ -3,10 +3,13 @@
 import Layout from './Layout.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
+
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -88,11 +91,14 @@ const handleImageChange = (event: Event) => {
                 <!--Linkでフォーム送信する場合
                 <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
                 -->
-                <PrimaryButton type="submit" class="">
+                <PrimaryButton type="submit" class="p-4">
                 登録する
                 </PrimaryButton>
-                
+                <Link as="button" class="p-4" v-bind:href="route('vue.index')">
+                    <SecondaryButton>戻る</SecondaryButton>
+                </Link>
             </div>
         </form>
+
     </div>
 </template>

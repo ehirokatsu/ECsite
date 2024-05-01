@@ -2,10 +2,12 @@
 import Layout from './Layout.vue';
 import TextInput from '@/Components/TextInput.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
+import SecondaryButton from '@/Components/SecondaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { Link } from '@inertiajs/vue3';
 
 //apiでproductを取得する方法
 //let products = ref([]);
@@ -138,9 +140,12 @@ const handleImageChange = (event) => {
                 <div v-if="imageUrl">
                     <img :src="imageUrl" alt="Image preview" style="width: 200px;">
                 </div>
-                <PrimaryButton type="submit" class="">
+                <PrimaryButton type="submit" class="p-4">
                 更新する
                 </PrimaryButton>
+                <Link as="button" class="p-4" v-bind:href="route('vue.index')">
+                    <SecondaryButton>戻る</SecondaryButton>
+                </Link>
             </div>
         </form>
     </div>
