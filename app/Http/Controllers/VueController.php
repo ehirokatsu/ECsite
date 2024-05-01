@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\Product\CreateConfirmRequest;
+use App\Http\Requests\Product\EditConfirmRequest;
 use App\Models\Product;
 use Inertia\Inertia;
 use App\UseCases\Product\StoreAction;
@@ -70,7 +71,7 @@ class VueController extends Controller
         ]);
     }
 
-    public function update(Request $request, string $id)
+    public function update(EditConfirmRequest $request, string $id)
     {
 
         ($this->updateAction)($request, $id);
