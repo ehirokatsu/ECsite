@@ -67,13 +67,12 @@ const page = usePage()
 </script>
 
 <template>
-    <Layout title="商品一覧"/>
+    <Layout title="商品一覧">
 
     <!--フラッシュメッセージ表示-->
     <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
         {{ $page.props.flash.message }}
     </div>
-
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -123,5 +122,7 @@ const page = usePage()
             </div>
         </div>
     </div>
+
+    </Layout>
 
 </template>
