@@ -55,10 +55,10 @@ const logout = (): void => {
     <main>
         <slot />  
     </main>
-    <footer>
-
+    <footer class="flex justify-center">
+        <small>&copy; 2024 EC Site</small>
     </footer>
-    
+
 </template>
 
 <style>
