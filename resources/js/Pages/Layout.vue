@@ -20,17 +20,17 @@ const logout = (): void => {
     <header>
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-between">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                <h1 class="font-semibold text-xl text-gray-800 leading-tight">
                     MyECサイト
-                </h2>
+                </h1>
                 <div v-if="$page.props.auth.user">
                     ようこそ {{ $page.props.auth.user.name }} さま
                 </div>
                 <div v-else>
-                    <h2>ようこそ ゲスト さま</h2>
+                    ようこそ ゲスト さま
                 </div>
             </div>
-            <div class="flex justify-between">
+            <nav class="flex justify-between">
                 <div class="flex">
                     <NavLink v-bind:href="route('vue.index')">トップ</NavLink>
                     <NavLink v-bind:href="route('cart.index')">カート</NavLink>
@@ -49,7 +49,7 @@ const logout = (): void => {
                     <NavLink v-bind:href="route('register')">登録</NavLink>
                     <NavLink v-bind:href="route('login')">ログイン</NavLink>
                 </div>
-            </div>
+            </nav>
         </div>
     </header>
     <main>

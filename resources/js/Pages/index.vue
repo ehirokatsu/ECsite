@@ -65,10 +65,11 @@ const page = usePage()
 
 
 </script>
-
+s
 <template>
     <Layout title="商品一覧">
 
+    <h2>商品の一覧です。</h2>
     <!--フラッシュメッセージ表示-->
     <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
         {{ $page.props.flash.message }}
