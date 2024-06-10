@@ -64,7 +64,7 @@ const handleImageChange = (event: Event) => {
 
 <template>
 
-    <Layout title="商品追加"/>
+    <Layout title="商品追加">
 
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 text-gray-900">
         <form @submit.prevent="submitForm()">
@@ -101,4 +101,5 @@ const handleImageChange = (event: Event) => {
         </form>
 
     </div>
+    </Layout>
 </template>

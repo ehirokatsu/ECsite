@@ -65,7 +65,7 @@ const page = usePage()
 
 
 </script>
-s
+
 <template>
     <Layout title="商品一覧">
 
