@@ -84,7 +84,7 @@ const page = usePage()
                     <div class="border border-gray-300 p-4 rounded-md">
                         <!--商品画像-->
                         <div class="relative w-84 h-64 mb-3">
-                            <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="">
+                            <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + product.image" alt="Product Image">
                         </div>
                         <!--説明箇所-->
                         <div class="flex justify-between">
