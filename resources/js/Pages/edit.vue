@@ -22,7 +22,7 @@ const form = useForm({
     id: props.product?.id || "",//submitFormでidを使用するためのダミー。これが無いと警告になる
     name: props.product?.name || "",
     cost: props.product?.cost || "",
-    image: null as File | null,
+    image: props.product?.image || null,
 });
 
 
@@ -73,7 +73,8 @@ const submitForm = (id: number) => {
 };
 
 // プレビュー画像のURLを保持するためのリアクティブな参照を作成
-const imageUrl = ref("");
+// 初期値は、現在の商品画像
+const imageUrl = ref("/storage/" + form.image);
 
 const handleImageChange = (event: Event) => {
 
