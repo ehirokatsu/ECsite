@@ -2,6 +2,9 @@
 import Layout from './Layout.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import DangerButton from '@/Components/DangerButton.vue';
+import InputLabel from '@/Components/InputLabel.vue';
+import InputError from '@/Components/InputError.vue';
+import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
 
 
@@ -63,6 +66,13 @@ const page = usePage()
 //console.log(page.props.flash?.message)
 */
 
+//検索キーワード
+const searchWord = "";
+
+//入力する毎に実行する
+const ExecSearch = () => {
+    console.log("test search");
+}
 
 </script>
 
@@ -73,6 +83,11 @@ const page = usePage()
     <!--フラッシュメッセージ表示-->
     <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
         {{ $page.props.flash.message }}
+    </div>
+    <!--検索-->
+    <div>   
+        <InputLabel>検索</InputLabel>
+        <TextInput v-model="searchWord" v-on:input="ExecSearch"></TextInput>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
