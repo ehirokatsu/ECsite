@@ -12,6 +12,7 @@ use App\UseCases\Product\IndexAction;
 use App\UseCases\Product\EditAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\DeleteAction;
+use App\UseCases\Product\SearchAction;
 
 class VueController extends Controller
 {
@@ -23,6 +24,7 @@ class VueController extends Controller
         EditAction $editAction,
         UpdateAction $updateAction,
         DeleteAction $deleteAction,
+        SearchAction $searchAction,
         )//use必須
     {
 
@@ -31,6 +33,7 @@ class VueController extends Controller
         $this->editAction = $editAction;
         $this->updateAction = $updateAction;
         $this->deleteAction = $deleteAction;
+        $this->searchAction = $searchAction;
     }
     
     //
@@ -83,6 +86,16 @@ class VueController extends Controller
 
         ($this->deleteAction)($id);
         return redirect()->route('vue.index')->with('message', '削除しました');
+    }
+
+    public function search(Request $request) {
+
+        $products = ($this->searchAction)();
+
+        return Inertia::render('index', [
+            'products' => $products,
+        ]);
+
     }
 
 }

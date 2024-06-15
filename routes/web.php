@@ -148,6 +148,7 @@ Route::post('/vue', 'App\Http\Controllers\VueController@store')->name('vue.store
 Route::get('/vue/{id}/edit', 'App\Http\Controllers\VueController@edit')->name('vue.edit');
 Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.update');
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
+Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
 
 Route::get('/vueQuiz', function () {
     return Inertia::render('quiz');

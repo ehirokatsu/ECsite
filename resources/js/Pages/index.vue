@@ -13,7 +13,7 @@ import { Link } from '@inertiajs/vue3';
 //axios.get("/product").then(response => { products.value = response.data });
 
 //Inertia::renderでproductsを受け取る
-defineProps({
+const props = defineProps({
     products: Object,
 });
 
@@ -40,6 +40,7 @@ function deleteButton(id: number): void {
 //deleteメソッドをフォームで使用する場合
 //delete送信用ダミー
 import { useForm } from '@inertiajs/vue3';
+import ForgotPassword from './Auth/ForgotPassword.vue';
 const form = useForm({
     
 });
@@ -67,12 +68,32 @@ const page = usePage()
 */
 
 //検索キーワード
-const searchWord = "";
+const searchWord = ref("");
 
+/*
 //入力する毎に実行する
 const ExecSearch = () => {
-    console.log("test search");
+    //console.log("test search");
+    form.get(route('vue.search'));
 }
+*/
+
+import axios from 'axios';
+import { ref, watch } from "vue";
+const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
+
+const ExecSearch = async () => {
+    try {
+        const response = await axios.get(route('vue.search'), {
+            params: {
+                query: searchWord.value
+            }
+        });
+        searchResults.value = response.data;
+    } catch (error) {
+        console.error("Search failed:", error);
+    }
+};
 
 </script>
 
@@ -112,7 +133,11 @@ const ExecSearch = () => {
                                 <div class="flex p-2">
                                     <div class="p-1">
                                         <!--文字列連結等の式を入れるにはbindが必要-->
+                                        
                                         <Link v-bind:href="route('vue.edit', {'id': product.id})">
+                                        <!--
+                                        <Link v-bind:href="route('vue.index')">
+                                            -->
                                         <!--<a v-bind:href="'/vue/' + product.id +'/edit/'" class="" >-->
                                             <PrimaryButton>編集</PrimaryButton>
                                         </Link>
