@@ -90,11 +90,17 @@ class VueController extends Controller
 
     public function search(Request $request) {
 
-        $products = ($this->searchAction)();
-
+        
+        $query = $request->input('query');
+        //\Log::info($query);
+        $products = ($this->searchAction)($query);
+        //\Log::info($products);
+        return response()->json($products);
+        /*
         return Inertia::render('index', [
             'products' => $products,
         ]);
+        */
 
     }
 

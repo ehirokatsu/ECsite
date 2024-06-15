@@ -11,10 +11,10 @@ class SearchAction
 
     }
 
-    public function __invoke()
+    public function __invoke($query)
     {
         //
-        return $products = Product::all();
+        return $products = Product::where('name', 'like', '%' . $query . '%')->get();
 
     }
 }

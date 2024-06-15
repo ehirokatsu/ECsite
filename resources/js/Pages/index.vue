@@ -90,6 +90,7 @@ const ExecSearch = async () => {
             }
         });
         searchResults.value = response.data;
+        //console.log(searchResults);
     } catch (error) {
         console.error("Search failed:", error);
     }
@@ -114,7 +115,7 @@ const ExecSearch = async () => {
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div 
-                    v-for="product in products" 
+                    v-for="product in searchResults" 
                     :key="product.id"
                 >
                     <div class="border border-gray-300 p-4 rounded-md">
