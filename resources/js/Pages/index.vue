@@ -6,17 +6,19 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
-
+import axios from 'axios';
+import { ref, watch } from "vue";
 
 //apiでproductを取得する方法
 //let products = ref([]);
 //axios.get("/product").then(response => { products.value = response.data });
 
 //Inertia::renderでproductsを受け取る
+/*
 const props = defineProps({
     products: Object,
 });
-
+*/
 /*
 //axiosを使用する場合
 import axios from 'axios';
@@ -67,21 +69,12 @@ const page = usePage()
 //console.log(page.props.flash?.message)
 */
 
-//検索キーワード
-const searchWord = ref("");
 
+
+//検索機能 axiosで実装
+//const searchWord = ref("");
+//const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
 /*
-//入力する毎に実行する
-const ExecSearch = () => {
-    //console.log("test search");
-    form.get(route('vue.search'));
-}
-*/
-
-import axios from 'axios';
-import { ref, watch } from "vue";
-const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
-
 const ExecSearch = async () => {
     try {
         const response = await axios.get(route('vue.search'), {
@@ -95,7 +88,38 @@ const ExecSearch = async () => {
         console.error("Search failed:", error);
     }
 };
+*/
 
+//検索機能 useFormで実装。
+const searchForm = useForm({
+    search: ''
+});
+interface Product {
+    id: number;
+    name: string;
+    cost: number;
+    image: string;
+}
+
+const props = defineProps<{
+    products: Product[];
+}>();
+
+const searchWord = ref('');
+const searchResults = ref<Product[]>([...props.products]);
+
+watch(searchWord, () => {
+    searchForm.get(route('vue.search', { query: searchWord.value }), {
+        preserveState: true,
+        //戻り値はJSONではなくページ。indexと同様にpropsでproductを受け取る。
+        onSuccess: (page) => {
+            searchResults.value = (page.props.products as Product[]);
+        },
+        onError: (errors) => {
+            console.error(errors);
+        }
+    });
+});
 </script>
 
 <template>
@@ -109,7 +133,7 @@ const ExecSearch = async () => {
     <!--検索-->
     <div>   
         <InputLabel>検索</InputLabel>
-        <TextInput v-model="searchWord" v-on:input="ExecSearch"></TextInput>
+        <TextInput v-model="searchWord"></TextInput>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">

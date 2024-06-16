@@ -95,12 +95,15 @@ class VueController extends Controller
         //\Log::info($query);
         $products = ($this->searchAction)($query);
         //\Log::info($products);
-        return response()->json($products);
-        /*
+
+        //axiosでAjaxを実現する時の戻りはJSONにする
+        //return response()->json($products);
+        
+        //useFormでAjaxを実現する時の戻りは通常と同じ。
         return Inertia::render('index', [
             'products' => $products,
         ]);
-        */
+        
 
     }
 
