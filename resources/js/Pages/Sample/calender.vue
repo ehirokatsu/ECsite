@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
-import Index from "./index.vue";
 
 const now = new Date();
 //const nowRef = ref(now);

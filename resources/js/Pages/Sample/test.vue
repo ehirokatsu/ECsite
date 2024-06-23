@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
-import Index from "./index.vue";
 import { watchEffect } from "vue";
-import oneSection from "./oneSection.vue";
-import oneMember from "./oneMember.vue";
-import oneMember2 from "./oneMember2.vue";
-import myInputLabel from "./myInputLabel.vue";
+import oneSection from "../Sample/oneSection.vue";
+import oneMember from "../Sample/oneMember.vue";
+import oneMember2 from "../Sample/oneMember2.vue";
+import myInputLabel from "../Sample/myInputLabel.vue";
 
 const tmp = "123";
 const name = ref("test");

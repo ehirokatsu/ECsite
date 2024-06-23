@@ -131,7 +131,7 @@ Route::get('/htmlTest', function () {
 })->name('htmlTest');
 
 Route::get('/vueTest', function () {
-    return Inertia::render('test');
+    return Inertia::render('Sample/test');
 })->name('vueTest');
 
 Route::resource('product', 'App\Http\Controllers\ApiProductController');
@@ -151,27 +151,27 @@ Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
 
 Route::get('/vueQuiz', function () {
-    return Inertia::render('quiz');
+    return Inertia::render('Game/quiz');
 })->name('vueQuiz');
 
 Route::get('/vueBoard', function () {
-    return Inertia::render('board');
+    return Inertia::render('Sample/board');
 })->name('vueBoard');
 
 Route::get('/vueCalender', function () {
-    return Inertia::render('calender');
+    return Inertia::render('Sample/calender');
 })->name('vueCalender');
 
 Route::get('/vueThree', function () {
-    return Inertia::render('three');
+    return Inertia::render('Game/three');
 })->name('vueThree');
 
 Route::get('/vueSnake', function () {
-    return Inertia::render('snake');
+    return Inertia::render('Game/snake');
 })->name('vueSnake');
 
 Route::get('/vueSlot', function () {
-    return Inertia::render('slot');
+    return Inertia::render('Game/slot');
 })->name('vueSlot');
 
 require __DIR__.'/auth.php';
