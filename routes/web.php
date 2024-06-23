@@ -130,9 +130,9 @@ Route::get('/htmlTest', function () {
     return view('htmlTest');
 })->name('htmlTest');
 
-Route::get('/vueTest', function () {
+Route::get('/vue/sample/test', function () {
     return Inertia::render('Sample/test');
-})->name('vueTest');
+})->name('vue.sample.test');
 
 Route::resource('product', 'App\Http\Controllers\ApiProductController');
 
@@ -150,28 +150,28 @@ Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
 
-Route::get('/vueQuiz', function () {
+Route::get('/vue/game/quiz', function () {
     return Inertia::render('Game/quiz');
-})->name('vueQuiz');
+})->name('vue.game.quiz');
 
-Route::get('/vueBoard', function () {
+Route::get('/vue/sample/board', function () {
     return Inertia::render('Sample/board');
-})->name('vueBoard');
+})->name('vue.sample.board');
 
-Route::get('/vueCalender', function () {
+Route::get('/vue/sample/calender', function () {
     return Inertia::render('Sample/calender');
-})->name('vueCalender');
+})->name('vue.sample.calender');
 
-Route::get('/vueThree', function () {
+Route::get('/vue/game/three', function () {
     return Inertia::render('Game/three');
-})->name('vueThree');
+})->name('vue.game.three');
 
-Route::get('/vueSnake', function () {
+Route::get('/vue/game/snake', function () {
     return Inertia::render('Game/snake');
-})->name('vueSnake');
+})->name('vue.game.snake');
 
-Route::get('/vueSlot', function () {
+Route::get('/vue/game/slot', function () {
     return Inertia::render('Game/slot');
-})->name('vueSlot');
+})->name('vue.game.slot');
 
 require __DIR__.'/auth.php';
