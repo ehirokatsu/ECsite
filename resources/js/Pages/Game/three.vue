@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import {ref, computed} from "vue";
-import Index from "./index.vue";
 
 //数値型二次元配列の初期化。-1：未選択、1：⚪︎プレイヤー、2：×プレイヤー
 let states: number[][] = [

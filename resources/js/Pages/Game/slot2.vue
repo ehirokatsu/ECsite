@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Index from "./index.vue";
 import { ref } from "vue"
 
 let images: string[] = [
@@ -25,9 +24,9 @@ const imageRef3 = ref(image3);
 let isSpinRunning: boolean = false;
 const isSpinRunningRef = ref(isSpinRunning)
 
-let timeoutId1 = 0;
-let timeoutId2 = 0;
-let timeoutId3 = 0;
+let timeoutId1;
+let timeoutId2;
+let timeoutId3;
 
 //STOPボタンを押下済か判定するフラグ。HTMLで使用するのでリアクティブにする。
 let isStopSelected1: boolean = true;
