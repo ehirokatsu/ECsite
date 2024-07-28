@@ -14,11 +14,11 @@ import { ref, watch } from "vue";
 //axios.get("/product").then(response => { products.value = response.data });
 
 //Inertia::renderでproductsを受け取る
-/*
+
 const props = defineProps({
     products: Object,
 });
-*/
+
 /*
 //axiosを使用する場合
 import axios from 'axios';
@@ -72,9 +72,9 @@ const page = usePage()
 
 
 //検索機能 axiosで実装
-//const searchWord = ref("");
-//const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
-/*
+const searchWord = ref("");
+const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
+
 const ExecSearch = async () => {
     try {
         const response = await axios.get(route('vue.search'), {
@@ -88,8 +88,8 @@ const ExecSearch = async () => {
         console.error("Search failed:", error);
     }
 };
-*/
 
+/*
 //検索機能 useFormで実装。
 const searchForm = useForm({
     search: ''
@@ -120,6 +120,7 @@ watch(searchWord, () => {
         }
     });
 });
+*/
 </script>
 
 <template>
@@ -133,7 +134,7 @@ watch(searchWord, () => {
     <!--検索-->
     <div>   
         <InputLabel>検索</InputLabel>
-        <TextInput v-model="searchWord"></TextInput>
+        <TextInput v-model="searchWord" v-on="ExecSearch"></TextInput>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
