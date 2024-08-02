@@ -149,10 +149,12 @@ Route::get('/vue/{id}/edit', 'App\Http\Controllers\VueController@edit')->name('v
 Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.update');
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
-
-Route::get('/vue/ajax', function () {
-    return Inertia::render('Ajax/index');
-})->name('vue.ajax.index');
+/*
+Route::get('/vue/ajaxlink', function () {
+    return Inertia::render('AjaxLink/index');
+})->name('vue.ajaxlink.index');
+*/
+Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');
 
 Route::get('/vue/game/quiz', function () {
     return Inertia::render('Game/quiz');
