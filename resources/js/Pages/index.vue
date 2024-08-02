@@ -107,7 +107,7 @@ const props = defineProps<{
 
 const searchWord = ref('');
 const searchResults = ref<Product[]>([...props.products]);
-
+/* watchでリアルタイムに検索を行う
 watch(searchWord, () => {
     searchForm.get(route('vue.search', { query: searchWord.value }), {
         preserveState: true,
@@ -120,6 +120,7 @@ watch(searchWord, () => {
         }
     });
 });
+*/
 </script>
 
 <template>
@@ -134,6 +135,8 @@ watch(searchWord, () => {
     <div>   
         <InputLabel>検索</InputLabel>
         <TextInput v-model="searchWord"></TextInput>
+        <!--Linkでボタン押下でGetリクエストを送信する-->
+        <Link v-bind:href="route('vue.search', {query: searchWord})">検索</Link>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
