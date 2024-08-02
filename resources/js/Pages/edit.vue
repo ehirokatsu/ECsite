@@ -18,13 +18,17 @@ const props = defineProps({
     product: Object,
 });
 
+//imageはNullにする。画像を選択していない場合、image名称だけ格納されて画像情報無しでサーバに送信されてエラーになる。
 const form = useForm({
     id: props.product?.id || "",//submitFormでidを使用するためのダミー。これが無いと警告になる
     name: props.product?.name || "",
     cost: props.product?.cost || "",
-    image: props.product?.image || null,
+    image: null as File | null,
+    //image: props.product?.image || null,
 });
 
+//現在の商品画像の表示用
+const imageName = props.product?.image || null;
 
 //CSRFなしでも削除できた
 //indexにリダイレクトしても表示が更新されない
@@ -74,7 +78,7 @@ const submitForm = (id: number) => {
 
 // プレビュー画像のURLを保持するためのリアクティブな参照を作成
 // 初期値は、現在の商品画像
-const imageUrl = ref("/storage/" + form.image);
+const imageUrl = ref("/storage/" + imageName);
 
 const handleImageChange = (event: Event) => {
 
@@ -135,7 +139,7 @@ const handleImageChange = (event) => {
                 <div class="p-4">
                     <InputLabel>商品画像</InputLabel>
                     <input type="file"  @change="handleImageChange">
-                    <InputError v-bind:message="$page.props.errors.imxage" />
+                    <InputError v-bind:message="$page.props.errors.image" />
                 </div>
                 <!-- プレビュー画像を表示 -->
                 <div v-if="imageUrl">

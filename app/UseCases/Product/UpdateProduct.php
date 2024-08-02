@@ -6,7 +6,8 @@ use App\Models\Product;
 
 class UpdateProduct
 {
-    public function __invoke(String $id, String $name, String $cost, String $image): void
+    //nameなどは更新しない場合もあるので、デフォルトnullにする
+    public function __invoke(String $id, String $name=null, String $cost=null, String $image=null): void
     {
         //
         $product = product::findOrFail($id);
