@@ -77,7 +77,7 @@ const submitForm = (id: number) => {
     });
 
     // POSTメソッドを使用してFormDataを送信
-    form.post(route('vue.update', {'id': id}), {
+    form.post(route('vue.ajaxlink.update', {'id': id}), {
         // Inertiaはtransformで返されたFormDataを使用します
         forceFormData: true,
     });
@@ -136,12 +136,12 @@ const handleImageChange = (event) => {
             <div class="">
                 <div class="p-4">
                     <InputLabel>商品名:</InputLabel>
-                    <TextInput v-model="tmp.name" />
+                    <TextInput v-model="form.name" />
                     <InputError v-bind:message="$page.props.errors.name" />
                 </div>
                 <div class="p-4">
                     <InputLabel>単価:</InputLabel>
-                    <TextInput v-model="tmp.cost" />
+                    <TextInput v-model="form.cost" />
                     <InputError v-bind:message="$page.props.errors.cost" />
                 </div>
                 <div class="p-4">
@@ -153,13 +153,13 @@ const handleImageChange = (event) => {
                 <div v-if="imageUrl">
                     <img :src="imageUrl" alt="Image preview" style="width: 200px;">
                 </div>
-                
-                <Link v-bind:href="route('vue.update', {'id': tmp.id})" method="put" v-bind:data="tmp">更新</Link>
-                
+                <!--
+                <Link v-bind:href="route('vue.ajaxlink.update', {'id': tmp.id})" method="put" v-bind:data="tmp">更新</Link>
+                -->
                 <PrimaryButton type="submit" class="p-4">
                 更新する
                 </PrimaryButton>
-                <Link as="button" class="p-4" v-bind:href="route('vue.index')">
+                <Link as="button" class="p-4" v-bind:href="route('vue.ajaxlink.index')">
                     <SecondaryButton>戻る</SecondaryButton>
                 </Link>
             </div>

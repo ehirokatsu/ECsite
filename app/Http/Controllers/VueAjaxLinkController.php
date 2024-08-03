@@ -54,7 +54,7 @@ class VueAjaxLinkController extends Controller
 
     public function create()
     {
-        return Inertia::render('create');
+        return Inertia::render('AjaxLink/create');
     }
 
     public function store(CreateConfirmRequest $request)
@@ -63,13 +63,13 @@ class VueAjaxLinkController extends Controller
         ($this->storeAction)($request);
         //session()->flash('status', 'Task was successful!');
 
-        return redirect()->route('vue.index')->with('message', '追加しました');
+        return redirect()->route('vue.ajaxlink.index')->with('message', '追加しました');
     }
 
     public function edit(string $id)
     {
         $product = ($this->editAction)($id);
-        return Inertia::render('edit', [
+        return Inertia::render('AjaxLink/edit', [
             'product' => $product
         ]);
     }
@@ -79,14 +79,14 @@ class VueAjaxLinkController extends Controller
     {
 
         ($this->updateAction)($request, $id);
-        return redirect()->route('vue.index')->with('message', '更新しました');
+        return redirect()->route('vue.ajaxlink.index')->with('message', '更新しました');
 
     }
 
     public function destroy(string $id) {
 
         ($this->deleteAction)($id);
-        return redirect()->route('vue.index')->with('message', '削除しました');
+        return redirect()->route('vue.ajaxlink.index')->with('message', '削除しました');
     }
 
     public function search(Request $request) {
@@ -101,7 +101,7 @@ class VueAjaxLinkController extends Controller
         //return response()->json($products);
         
         //useFormでAjaxを実現する時の戻りは通常と同じ。
-        return Inertia::render('index', [
+        return Inertia::render('AjaxLink/index', [
             'products' => $products,
         ]);
         

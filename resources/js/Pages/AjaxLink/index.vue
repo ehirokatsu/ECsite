@@ -56,12 +56,7 @@ const submit = (id: number) => {
     form.delete(route('vue.destroy', {'id': id}));
 };
 */
-const submit = (id: number) => {
-    if (window.confirm('本当にこの商品を削除しますか？')) {
-        // 削除を実行するロジックをここに追加する
-        form.delete(route('vue.destroy', {'id': id}));
-    }
-}
+
 /*
 import { usePage } from '@inertiajs/vue3'
 // ページプロパティの取得
@@ -77,7 +72,7 @@ const searchResults = ref(props.products); // 商品のリアクティブなコ�
 
 const ExecSearch = async () => {
     try {
-        const response = await axios.get(route('vue.search'), {
+        const response = await axios.get(route('vue.ajaxlink.search'), {
             params: {
                 query: searchWord.value
             }
@@ -134,7 +129,9 @@ watch(searchWord, () => {
     <!--検索-->
     <div>   
         <InputLabel>検索</InputLabel>
-        <TextInput v-model="searchWord" v-on="ExecSearch"></TextInput>
+        <TextInput v-model="searchWord"></TextInput>
+        <!--Linkでボタン押下でGetリクエストを送信する-->
+        <Link v-bind:href="route('vue.search', {query: searchWord})">検索</Link>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -160,7 +157,7 @@ watch(searchWord, () => {
                                     <div class="p-1">
                                         <!--文字列連結等の式を入れるにはbindが必要-->
                                         
-                                        <Link v-bind:href="route('vue.edit', {'id': product.id})">
+                                        <Link v-bind:href="route('vue.ajaxlink.edit', {'id': product.id})">
                                         <!--
                                         <Link v-bind:href="route('vue.index')">
                                             -->
@@ -169,17 +166,11 @@ watch(searchWord, () => {
                                         </Link>
                                     </div>
                                     <div class="p-1">
-                                        <!--ユーザが入力するデータは無いのでLinkを使用
+                                        <!--ユーザが入力するデータは無いのでLinkを使用-->
+                                        <!--Link使用時の確認ダイアログの表示方法は不明-->
                                         <Link v-bind:href="route('vue.destroy', {'id': product.id})" as="button" method="delete" preserve-scroll>
-                                            削除
                                             <DangerButton type="submit">削除</DangerButton>
                                         </Link>
-                                        -->
-                                        <!--フォームを使用する場合-->
-                                        <form @submit.prevent="submit(product.id)">
-                                            <DangerButton type="submit">削除</DangerButton>
-                                        </form>
-                                        
                                     </div>
                                 </div>
                             </div>

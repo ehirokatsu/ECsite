@@ -149,12 +149,16 @@ Route::get('/vue/{id}/edit', 'App\Http\Controllers\VueController@edit')->name('v
 Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.update');
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
-/*
-Route::get('/vue/ajaxlink', function () {
-    return Inertia::render('AjaxLink/index');
-})->name('vue.ajaxlink.index');
-*/
+
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');
+Route::get('/vue/ajaxlink/create', 'App\Http\Controllers\VueAjaxLinkController@create')->name('vue.ajaxlink.create');
+Route::post('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@store')->name('vue.ajaxlink.store');
+Route::get('/vue/ajaxlink/{id}/edit', 'App\Http\Controllers\VueAjaxLinkController@edit')->name('vue.ajaxlink.edit');
+Route::put('/vue/ajaxlink/{id}', 'App\Http\Controllers\VueAjaxLinkController@update')->name('vue.ajaxlink.update');
+Route::delete('/vue/ajaxlink/{id}', 'App\Http\Controllers\VueAjaxLinkController@destroy')->name('vue.ajaxlink.destroy');
+Route::get('/vue/ajaxlink/search', 'App\Http\Controllers\VueAjaxLinkController@search')->name('vue.ajaxlink.search');
+
+
 
 Route::get('/vue/game/quiz', function () {
     return Inertia::render('Game/quiz');
