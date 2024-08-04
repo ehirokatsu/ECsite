@@ -11,9 +11,12 @@ class UpdateProduct
     {
         //
         $product = product::findOrFail($id);
-        $product->name = $name;
-        $product->cost = $cost;
-
+        if (!empty($name)) {
+            $product->name = $name;
+        }
+        if (!empty($cost)) {
+            $product->cost = $cost;
+        }
         if ($image != "") {
             $product->image = $image;
         }
