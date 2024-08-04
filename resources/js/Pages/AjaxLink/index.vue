@@ -63,7 +63,7 @@ const searchWord = ref("");
                                     <div class="p-1">
                                         <!--ユーザが入力するデータは無いのでLinkを使用-->
                                         <!--Link使用時の確認ダイアログの表示方法は不明-->
-                                        <Link v-bind:href="route('vue.destroy', {'id': product.id})" as="button" method="delete" preserve-scroll>
+                                        <Link v-bind:href="route('vue.ajaxlink.destroy', {'id': product.id})" as="button" method="delete" preserve-scroll>
                                             <DangerButton type="submit">削除</DangerButton>
                                         </Link>
                                     </div>
