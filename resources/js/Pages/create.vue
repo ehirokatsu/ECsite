@@ -10,22 +10,6 @@ import { useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 
-
-//apiでproductを取得する方法
-//let products = ref([]);
-//axios.get("/product").then(response => { products.value = response.data });
-
-
-/*
-//Linkでフォーム送信する場合
-import { Link } from '@inertiajs/vue3';
-const tmp = {
-    name: "",
-    cost: "",
-    image: null as File | null,
-};
-*/
-
 //useFormを使用する方法
 //name,costはTextInputでv-modelを使用する場合、NULLだとエラーになるので空文字にする
 //imageは、null as File だけだとnullをFile型にキャストしようとしてエラーになる
@@ -88,9 +72,6 @@ const handleImageChange = (event: Event) => {
                 <div v-if="imageUrl">
                     <img :src="imageUrl" alt="Image preview" style="width: 200px;">
                 </div>
-                <!--Linkでフォーム送信する場合
-                <Link v-bind:href="route('vue.store')" method="post" v-bind:data="tmp">確認</Link>
-                -->
                 <PrimaryButton type="submit" class="p-4">
                 登録する
                 </PrimaryButton>
