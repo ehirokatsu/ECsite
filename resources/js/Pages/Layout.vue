@@ -42,7 +42,8 @@ const logout = (): void => {
                 <div class="flex justify-end">
                     <NavLink v-bind:href="route('index')">Bladeトップ</NavLink>
                     <NavLink v-bind:href="route('vue.index')">Vueトップ</NavLink>
-                    <NavLink v-bind:href="route('vue.ajaxlink.index')">VueAjaxトップ</NavLink>
+                    <NavLink v-bind:href="route('vue.ajaxlink.index')">VueLinkトップ</NavLink>
+                    <NavLink v-bind:href="route('vue.ajaxlink.create')">VueLink追加</NavLink>
                 </div>
                 <div v-if="$page.props.auth.user">
                     <NavLink v-bind:href="route('logout')" method="post" as="button">ログアウト</NavLink>
