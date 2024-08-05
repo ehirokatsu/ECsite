@@ -134,14 +134,19 @@ Route::get('/vue/sample/test', function () {
     return Inertia::render('Sample/test');
 })->name('vue.sample.test');
 
-Route::resource('product', 'App\Http\Controllers\ApiProductController');
+//Product系のAPI
+//Route::resource('product', 'App\Http\Controllers\ApiProductController');
+Route::get('product', 'App\Http\Controllers\ApiProductController@index')->name('api.index');
+Route::get('product/search', 'App\Http\Controllers\ApiProductController@search')->name('api.search');
+
+
 
 Route::get('/api/csrf-token', function () {
     return response()->json(['token' => csrf_token()]);
 });
 
 
-
+//Vue
 Route::get('/vue', 'App\Http\Controllers\VueController@index')->name('vue.index');
 Route::get('/vue/create', 'App\Http\Controllers\VueController@create')->name('vue.create');
 Route::post('/vue', 'App\Http\Controllers\VueController@store')->name('vue.store');
@@ -150,6 +155,7 @@ Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
 
+//Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');
 Route::get('/vue/ajaxlink/create', 'App\Http\Controllers\VueAjaxLinkController@create')->name('vue.ajaxlink.create');
 Route::post('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@store')->name('vue.ajaxlink.store');
@@ -158,7 +164,10 @@ Route::put('/vue/ajaxlink/{id}', 'App\Http\Controllers\VueAjaxLinkController@upd
 Route::delete('/vue/ajaxlink/{id}', 'App\Http\Controllers\VueAjaxLinkController@destroy')->name('vue.ajaxlink.destroy');
 Route::get('/vue/ajaxlink/search', 'App\Http\Controllers\VueAjaxLinkController@search')->name('vue.ajaxlink.search');
 
-
+//axios
+Route::get('/vue/ajaxaxios', function () {
+    return Inertia::render('AjaxAxios/index');
+})->name('vue.ajaxaxios.index');
 
 Route::get('/vue/game/quiz', function () {
     return Inertia::render('Game/quiz');

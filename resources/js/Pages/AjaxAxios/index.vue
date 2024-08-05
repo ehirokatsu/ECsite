@@ -9,36 +9,41 @@ import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
 import { ref, watch } from "vue";
 
-//apiでproductを取得する方法
+
+interface Product {
+    id: number;
+    name: string;
+    cost: number;
+    image: string;
+}
 //let products = ref([]);
-//axios.get("/product").then(response => { products.value = response.data });
+//Product型を明示する必要あり
+const products = ref<Product[]>([]);
 
-//Inertia::renderでproductsを受け取る
 
-const props = defineProps({
-    products: Object,
-});
+//apiでproductを取得する方法
+axios.get(route('api.index')).then(response => { products.value = response.data });
 
-/*
+
+
 //axiosを使用する場合
-import axios from 'axios';
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 const csrfToken = ref('');
 
 //GETでCSRFトークン取得で、Blade経由なしで取得可能
 onMounted(async () => {
     const response = await axios.get('/api/csrf-token');
     csrfToken.value = response.data.token;
-    console.log(csrfToken.value);
+    console.log("Token = " + csrfToken.value);
 });
 
 function deleteButton(id: number): void {
     axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
     axios.delete(route('destroy', id));
 }
-*/
 
 
+/*
 //deleteメソッドをフォームで使用する場合
 //delete送信用ダミー
 import { useForm } from '@inertiajs/vue3';
@@ -46,7 +51,7 @@ import { useForm } from '@inertiajs/vue3';
 const form = useForm({
     
 });
-/*
+
 //CSRFなしでも削除できた
 const submit = (id: number) => {
     ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
@@ -55,72 +60,27 @@ const submit = (id: number) => {
     //form.delete(route('destroy', ['id', id]));
     form.delete(route('vue.destroy', {'id': id}));
 };
-*/
-const submit = (id: number) => {
-    if (window.confirm('本当にこの商品を削除しますか？')) {
-        // 削除を実行するロジックをここに追加する
-        form.delete(route('vue.destroy', {'id': id}));
-    }
-}
-/*
-import { usePage } from '@inertiajs/vue3'
-// ページプロパティの取得
-const page = usePage()
-//console.log(page.props.flash?.message)
-*/
 
 
+*/
 
 //検索機能 axiosで実装
 const searchWord = ref("");
-const searchResults = ref(props.products); // 商品のリアクティブなコピーを作成
-
 const ExecSearch = async () => {
+    //console.log("ExecSearch");
     try {
-        const response = await axios.get(route('vue.search'), {
+        const response = await axios.get(route('api.search'), {
             params: {
                 query: searchWord.value
             }
         });
-        searchResults.value = response.data;
-        //console.log(searchResults);
+        products.value = response.data;
+        //console.log(products);
     } catch (error) {
         console.error("Search failed:", error);
     }
 };
 
-/*
-//検索機能 useFormで実装。
-const searchForm = useForm({
-    search: ''
-});
-interface Product {
-    id: number;
-    name: string;
-    cost: number;
-    image: string;
-}
-
-const props = defineProps<{
-    products: Product[];
-}>();
-
-const searchWord = ref('');
-const searchResults = ref<Product[]>([...props.products]);
-
-watch(searchWord, () => {
-    searchForm.get(route('vue.search', { query: searchWord.value }), {
-        preserveState: true,
-        //戻り値はJSONではなくページ。indexと同様にpropsでproductを受け取る。
-        onSuccess: (page) => {
-            searchResults.value = (page.props.products as Product[]);
-        },
-        onError: (errors) => {
-            console.error(errors);
-        }
-    });
-});
-*/
 </script>
 
 <template>
@@ -134,13 +94,14 @@ watch(searchWord, () => {
     <!--検索-->
     <div>   
         <InputLabel>検索</InputLabel>
-        <TextInput v-model="searchWord" v-on="ExecSearch"></TextInput>
+        <TextInput v-model="searchWord"></TextInput>
+        <button v-on:click="ExecSearch()">実行</button>
     </div>
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div 
-                    v-for="product in searchResults" 
+                    v-for="product in products" 
                     :key="product.id"
                 >
                     <div class="border border-gray-300 p-4 rounded-md">
@@ -176,7 +137,7 @@ watch(searchWord, () => {
                                         </Link>
                                         -->
                                         <!--フォームを使用する場合-->
-                                        <form @submit.prevent="submit(product.id)">
+                                        <form @submit.prevent="deleteButton(product.id)">
                                             <DangerButton type="submit">削除</DangerButton>
                                         </form>
                                         
