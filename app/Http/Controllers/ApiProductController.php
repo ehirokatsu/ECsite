@@ -4,17 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\UseCases\Product\SearchAction;
-
+use App\UseCases\Product\DeleteAction;
 use App\Models\Product;
 
 class ApiProductController extends Controller
 {
     //
     public function __construct(
-
+        DeleteAction $deleteAction,
         SearchAction $searchAction,
         )//use必須
     {
+        $this->deleteAction = $deleteAction;
         $this->searchAction = $searchAction;
     }
     /**
@@ -57,6 +58,8 @@ class ApiProductController extends Controller
     public function destroy(string $id)
     {
         //
+        ($this->deleteAction)($id);
+        return response()->json(['message' => 'Product deleted successfully']);
     }
     public function search(Request $request) {
 

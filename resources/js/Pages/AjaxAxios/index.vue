@@ -7,7 +7,7 @@ import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
 import axios from 'axios';
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
 
 interface Product {
@@ -20,11 +20,8 @@ interface Product {
 //Product型を明示する必要あり
 const products = ref<Product[]>([]);
 
-
 //apiでproductを取得する方法
 axios.get(route('api.index')).then(response => { products.value = response.data });
-
-
 
 //axiosを使用する場合
 import { onMounted } from "vue";
@@ -38,31 +35,20 @@ onMounted(async () => {
 });
 
 function deleteButton(id: number): void {
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
-    axios.delete(route('destroy', id));
+    if (window.confirm('本当にこの商品を削除しますか？')) {
+        //セッションでcsrfトークンをセットしている様子
+        //axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
+        axios.delete(route('api.delete', id))
+            .then(() => {
+                //console.log("Delete");
+                // 削除成功時の処理
+                products.value = products.value.filter(product => product.id !== id);
+            })
+            .catch(error => {
+                console.error("Delete failed:", error);
+            });
+    }
 }
-
-
-/*
-//deleteメソッドをフォームで使用する場合
-//delete送信用ダミー
-import { useForm } from '@inertiajs/vue3';
-
-const form = useForm({
-    
-});
-
-//CSRFなしでも削除できた
-const submit = (id: number) => {
-    ///axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value; // CSRFトークンをヘッダーにセット
-    //form.delete('/' + id);
-    //下記だと、URLが/id?id=となってしまう
-    //form.delete(route('destroy', ['id', id]));
-    form.delete(route('vue.destroy', {'id': id}));
-};
-
-
-*/
 
 //検索機能 axiosで実装
 const searchWord = ref("");

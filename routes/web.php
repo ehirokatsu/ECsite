@@ -138,6 +138,7 @@ Route::get('/vue/sample/test', function () {
 //Route::resource('product', 'App\Http\Controllers\ApiProductController');
 Route::get('product', 'App\Http\Controllers\ApiProductController@index')->name('api.index');
 Route::get('product/search', 'App\Http\Controllers\ApiProductController@search')->name('api.search');
+Route::delete('product/{id}', 'App\Http\Controllers\ApiProductController@destroy')->name('api.delete');
 
 
 
