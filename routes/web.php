@@ -139,8 +139,7 @@ Route::get('/vue/sample/test', function () {
 Route::get('product', 'App\Http\Controllers\ApiProductController@index')->name('api.index');
 Route::get('product/search', 'App\Http\Controllers\ApiProductController@search')->name('api.search');
 Route::delete('product/{id}', 'App\Http\Controllers\ApiProductController@destroy')->name('api.delete');
-
-
+Route::post('/product', 'App\Http\Controllers\ApiProductController@store')->name('api.store');
 
 Route::get('/api/csrf-token', function () {
     return response()->json(['token' => csrf_token()]);
@@ -169,6 +168,11 @@ Route::get('/vue/ajaxlink/search', 'App\Http\Controllers\VueAjaxLinkController@s
 Route::get('/vue/ajaxaxios', function () {
     return Inertia::render('AjaxAxios/index');
 })->name('vue.ajaxaxios.index');
+
+Route::get('/vue/ajaxaxios/create', function () {
+    return Inertia::render('AjaxAxios/create');
+})->name('vue.ajaxaxios.create');
+
 
 Route::get('/vue/game/quiz', function () {
     return Inertia::render('Game/quiz');

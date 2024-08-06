@@ -5,16 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\UseCases\Product\SearchAction;
 use App\UseCases\Product\DeleteAction;
+use App\Http\Requests\Product\CreateConfirmRequest;
+use App\UseCases\Product\StoreAction;
 use App\Models\Product;
+use Illuminate\Http\JsonResponse; 
 
 class ApiProductController extends Controller
 {
     //
     public function __construct(
+        StoreAction $storeAction,
         DeleteAction $deleteAction,
         SearchAction $searchAction,
         )//use必須
     {
+        $this->storeAction = $storeAction;
         $this->deleteAction = $deleteAction;
         $this->searchAction = $searchAction;
     }
@@ -31,9 +36,18 @@ class ApiProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateConfirmRequest $request)
     {
-        //
+        try {
+            // 保存処理を行う
+            ($this->storeAction)($request);
+    
+            // 成功時のレスポンス
+            return new JsonResponse(['message' => '商品が正常に追加されました。'], 200);
+        } catch (\Exception $e) {
+            // エラーレスポンス
+            return new JsonResponse(['error' => '商品の追加に失敗しました。'], 500);
+        }
     }
 
     /**
