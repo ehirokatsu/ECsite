@@ -74,7 +74,7 @@ const submitForm = async () => {
     }
 
     try {
-        
+
         await axios.post(route('api.store'), formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -157,7 +157,7 @@ const handleImageChange = (event: Event) => {
                 <PrimaryButton type="submit" class="p-4">
                 登録する
                 </PrimaryButton>
-                <Link as="button" class="p-4" v-bind:href="route('vue.index')">
+                <Link as="button" class="p-4" v-bind:href="route('vue.ajaxaxios.index')">
                     <SecondaryButton>戻る</SecondaryButton>
                 </Link>
             </div>

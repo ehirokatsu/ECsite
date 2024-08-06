@@ -116,7 +116,7 @@ const ExecSearch = async () => {
                                     カートに入れる
                                     <div class="flex p-2">
                                         <div class="p-1">
-                                            <Link v-bind:href="route('vue.edit', {'id': product.id})">
+                                            <Link v-bind:href="route('vue.ajaxaxios.edit', {'id': product.id})">
                                                 <PrimaryButton>編集</PrimaryButton>
                                             </Link>
                                         </div>
