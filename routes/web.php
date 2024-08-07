@@ -140,6 +140,8 @@ Route::get('product', 'App\Http\Controllers\ApiProductController@index')->name('
 Route::get('product/search', 'App\Http\Controllers\ApiProductController@search')->name('api.search');
 Route::delete('product/{id}', 'App\Http\Controllers\ApiProductController@destroy')->name('api.delete');
 Route::post('/product', 'App\Http\Controllers\ApiProductController@store')->name('api.store');
+Route::put('product/{id}', 'App\Http\Controllers\ApiProductController@update')->name('api.update');
+
 
 Route::get('/api/csrf-token', function () {
     return response()->json(['token' => csrf_token()]);
@@ -172,6 +174,13 @@ Route::get('/vue/ajaxaxios', function () {
 Route::get('/vue/ajaxaxios/create', function () {
     return Inertia::render('AjaxAxios/create');
 })->name('vue.ajaxaxios.create');
+
+/*
+Route::get('/vue/ajaxaxios/edit', function () {
+    return Inertia::render('AjaxAxios/edit');
+})->name('vue.ajaxaxios.edit');
+*/
+Route::get('/vue/ajaxaxios/{id}/edit', 'App\Http\Controllers\ApiProductController@edit')->name('vue.ajaxaxios.edit');
 
 
 Route::get('/vue/game/quiz', function () {

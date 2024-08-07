@@ -32,12 +32,12 @@ const fetchProducts = async () => {
     }
 };
 
-// CSRFトークンの取得。無くてもstoreできた。（セッションに保存されているから？）
+// CSRFトークンの取得。無くてもできる時、できない時がある。
 const fetchCsrfToken = async () => {
     try {
         const response = await axios.get('/api/csrf-token');
         csrfToken.value = response.data.token;
-        //axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value;
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.value;
     } catch (error) {
         console.error("Failed to fetch CSRF token:", error);
         errorMessage.value = "CSRFトークンの取得に失敗しました。";

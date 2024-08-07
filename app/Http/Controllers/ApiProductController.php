@@ -9,6 +9,10 @@ use App\Http\Requests\Product\CreateConfirmRequest;
 use App\UseCases\Product\StoreAction;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse; 
+use App\UseCases\Product\EditAction;
+use Inertia\Inertia;
+use App\UseCases\Product\UpdateAction;
+use App\Http\Requests\Product\UpdateRequest;
 
 class ApiProductController extends Controller
 {
@@ -17,11 +21,15 @@ class ApiProductController extends Controller
         StoreAction $storeAction,
         DeleteAction $deleteAction,
         SearchAction $searchAction,
+        EditAction $editAction,
+        UpdateAction $updateAction,
         )//use必須
     {
         $this->storeAction = $storeAction;
         $this->deleteAction = $deleteAction;
         $this->searchAction = $searchAction;
+        $this->editAction = $editAction;
+        $this->updateAction = $updateAction;
     }
     /**
      * Display a listing of the resource.
@@ -58,12 +66,33 @@ class ApiProductController extends Controller
         //
     }
 
+    //edit画面だけInertiaでレンダリングする
+    public function edit(string $id)
+    {
+        //
+        $product = ($this->editAction)($id);
+        return Inertia::render('AjaxAxios/edit', [
+            'product' => $product
+        ]);
+    }
+
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateRequest $request, string $id)
     {
         //
+
+        try {
+            // 更新処理を行う
+            ($this->updateAction)($request, $id);
+    
+            // 成功時のレスポンス
+            return new JsonResponse(['message' => '商品が正常に更新されました。'], 200);
+        } catch (\Exception $e) {
+            // エラーレスポンス
+            return new JsonResponse(['error' => '商品の更新に失敗しました。'], 500);
+        }
     }
 
     /**
