@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\Product\CreateConfirmRequest;
-use App\Http\Requests\Product\UpdateRequest;
+use App\Http\Requests\Product\EditConfirmRequest;
 use App\Models\Product;
 use Inertia\Inertia;
 use App\UseCases\Product\StoreAction;
@@ -74,8 +74,7 @@ class VueAjaxLinkController extends Controller
         ]);
     }
 
-    //画像の選択は任意なのでUpdateRequestにする
-    public function update(UpdateRequest $request, string $id)
+    public function update(EditConfirmRequest $request, string $id)
     {
 
         ($this->updateAction)($request, $id);
