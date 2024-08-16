@@ -68,6 +68,11 @@ const submitForm = (id: number) => {
     form.post(route('vue.update', {'id': id}), {
         // Inertiaはtransformで返されたFormDataを使用します
         forceFormData: true,
+        /* 無くても良い？
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+            */
     });
 
 };
