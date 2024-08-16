@@ -126,15 +126,18 @@ class ProductValidateTest extends TestCase
         Storage::fake('test_images');
         $imageName = 'test.jpg';
         $image = UploadedFile::fake()->image($imageName);
-    
+
+        //フォームリクエスト失敗時のリダイレクト先を実機と同じくcreateにするためにgetしておく
+        $response = $this->actingAs($adminUser)->get(route('create'));
+        
         //画像をnullにする.image.requiredでエラーになること
         $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
             'name' => 'testA',
             'cost' => 2000,
         ]);
-        $response->assertRedirect(route('index'))->assertStatus(302);
+        $response->assertRedirect(route('create'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        //$response->assertInvalid(['imageFileName']);
+        $response->assertInvalid(['image']);
 
         //画像ファイル以外を指定する.image.imageでエラーになること
         $response = $this->actingAs($adminUser)->post(route('createConfirm'), [
@@ -142,9 +145,9 @@ class ProductValidateTest extends TestCase
             'cost' => 2000,
             'image' => 'test',
         ]);
-        $response->assertRedirect(route('index'))->assertStatus(302);
+        $response->assertRedirect(route('create'))->assertStatus(302);
         $response->assertValid(['name', 'cost']);
-        //$response->assertInvalid(['imageFileName']);
+        $response->assertInvalid(['image']);
     }
 
     public function test_StoreRequest_name_validate(): void
