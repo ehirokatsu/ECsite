@@ -23,7 +23,13 @@ class SendOrderMail
      */
     public function handle(OrderCompleted $event): void
     {
+
+        $totalAmount = 0;
+
+        foreach ($event->carts as $cart) {
+            $totalAmount = $totalAmount + (int)($cart['product']->cost) * (int)($cart['quantity']);
+        }
         //
-        \Mail::to($event->userInfos['email'])->send(new OrderMail($event->carts, $event->userInfos, $event->totalAmount));
+        \Mail::to($event->userInfos['email'])->send(new OrderMail($event->carts, $event->userInfos, $totalAmount));
     }
 }

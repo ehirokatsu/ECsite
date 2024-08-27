@@ -15,17 +15,16 @@ class OrderCompleted
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     //カート、購入者用変数
-    public $carts, $userInfos, $totalAmount;
+    public $carts, $userInfos;
 
     /**
      * Create a new event instance.
      */
-    public function __construct($carts, $userInfos, $totalAmount)
+    public function __construct($carts, $userInfos)
     {
         //カート、購入者の内容を受け取る
         $this->carts = $carts;
         $this->userInfos = $userInfos;
-        $this->totalAmount = $totalAmount;
     }
 
     /**

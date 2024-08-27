@@ -153,17 +153,17 @@ class CartController extends Controller
             'phoneNumber' => $user->phone_number,
         ];
 
-        $totalAmount = $this->calculateTotalAmount($carts);
+        //$totalAmount = $this->calculateTotalAmount($carts);
 
         //購入後の処理
-        event(new OrderCompleted($carts, $userInfos, $totalAmount));
+        event(new OrderCompleted($carts, $userInfos));
 
         //セッションのカートを削除する
         $request->session()->forget('carts');
 
         return view('cart.regComplete');
     }
-
+/*
     public function calculateTotalAmount($carts)
     {
         $totalAmount = 0;
@@ -174,7 +174,7 @@ class CartController extends Controller
 
         return $totalAmount;
     }
-
+*/
     public function buyer (Request $request)
     {
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
@@ -202,9 +202,6 @@ class CartController extends Controller
             return view('no');
         }
 
-        $totalAmount = $this->calculateTotalAmount($carts);
-
-
         //フォームのname="action"の値を取得(送信するか確認画面にするかの判定)
         $action = $request->input('action');
         
@@ -227,8 +224,11 @@ class CartController extends Controller
                 'address3' => $inputs['address3'],
                 'phoneNumber' => $inputs['phoneNumber'],
             ];
+
+            //$totalAmount = $this->calculateTotalAmount($carts);
+
             //購入後の処理
-            event(new OrderCompleted($carts, $userInfos, $totalAmount));
+            event(new OrderCompleted($carts, $userInfo));
 
             //カートを空にする
             $request->session()->forget('carts'); 
