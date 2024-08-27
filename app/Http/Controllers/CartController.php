@@ -11,16 +11,19 @@ use App\Events\OrderCompleted;
 
 use App\UseCases\Cart\CheckIdExists;
 use App\UseCases\Cart\UpdateQuantityById;
+use App\UseCases\Cart\RemoveCartItemsById;
 
 class CartController extends Controller
 {
     public function __construct(
         CheckIdExists $checkIdExists,
         UpdateQuantityById $updateQuantityById,
+        RemoveCartItemsById $removeCartItemsById,
         )//use必須
     {
         $this->checkIdExists = $checkIdExists;
         $this->updateQuantityById = $updateQuantityById;
+        $this->removeCartItemsById = $removeCartItemsById;
     }
 
     //
@@ -83,34 +86,13 @@ class CartController extends Controller
 
         //\Log::info('log開始');
         //カートから指定したIDを持つ要素を削除する
-        $carts = $this->removeCartItemsById($carts, $id);
+        $carts = ($this->removeCartItemsById)($carts, $id);
 
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
 
         return redirect('/cart');
         
-    }
-
-    /*
-    array_filter()の1つ目の引数はフィルタリングする配列で、2つ目の引数は
-    コールバック関数です。配列の各要素に対して実行され、その要素が新しい配列に含まれるべきかどうかを判断する。
-    よって、$item = [
-        'product' => $product,
-        'quantity' => 1,
-        ]
-    となる。$item['product']でProductインスタンスにアクセスし、->idでID要素を参照する
-    */
-    public function removeCartItemsById($array, $id)
-    {
-        $tmp = array_filter($array, function($item) use ($id) {
-            return $item['product']->id != $id;
-        });
-
-        //カート配列の添え字を０オリジンにする
-        $tmp = array_values($tmp);
-
-        return $tmp;
     }
 
     public function register (Request $request)
@@ -288,29 +270,5 @@ class CartController extends Controller
 
         return redirect('/cart');
     }
-    /*
-    public function updateQuantityById($array, $id, $newQuantity)
-    {
-        foreach ($array as &$item) {
-            //\Log::info('product->id=' . $item['product']->id);
-            if ($item['product']->id === $id) {
-                $item['quantity'] = $newQuantity;
-                //\Log::info('quantity=' . $item['quantity']);
-            
-                break;
-            }
-        }
-        return $array;
-    }
-    
-    public function checkIdExists($array, $id)
-    {
-        foreach ($array as $item) {
-            if ($item['product']->id === $id) {
-                return true;
-            }
-        }
-        return false;
-    }
-        */
+
 }
