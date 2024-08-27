@@ -5,14 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Product;
-
 use App\Http\Requests\QuantityRequest;
 use App\Http\Requests\BuyerRequest;
-
 use App\Events\OrderCompleted;
+
+use App\UseCases\Cart\CheckIdExists;
+use App\UseCases\Cart\UpdateQuantityById;
 
 class CartController extends Controller
 {
+    public function __construct(
+        CheckIdExists $checkIdExists,
+        UpdateQuantityById $updateQuantityById,
+        )//use必須
+    {
+        $this->checkIdExists = $checkIdExists;
+        $this->updateQuantityById = $updateQuantityById;
+    }
+
     //
     public function index (Request $request)
     {
@@ -30,7 +40,7 @@ class CartController extends Controller
 
         //既にカートに追加されている商品ならエラー画面を表示する
         if (!empty($carts) 
-            && $this->checkIdExists($carts, (int)$request->id)
+            && ($this->checkIdExists)($carts, (int)$request->id)
         ) {
             return view('cart.duplication');
         }
@@ -269,14 +279,14 @@ class CartController extends Controller
         $newQuantity = $request->quantity;
 
         //個数を更新する
-        $carts = $this->updateQuantityById($carts, $id, $newQuantity);
+        $carts = ($this->updateQuantityById)($carts, $id, $newQuantity);
 
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
 
         return redirect('/cart');
     }
-    
+    /*
     public function updateQuantityById($array, $id, $newQuantity)
     {
         foreach ($array as &$item) {
@@ -290,6 +300,7 @@ class CartController extends Controller
         }
         return $array;
     }
+    
     public function checkIdExists($array, $id)
     {
         foreach ($array as $item) {
@@ -299,4 +310,5 @@ class CartController extends Controller
         }
         return false;
     }
+        */
 }
