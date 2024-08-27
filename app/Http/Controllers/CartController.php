@@ -85,9 +85,6 @@ class CartController extends Controller
         //カートから指定したIDを持つ要素を削除する
         $carts = $this->removeCartItemsById($carts, $id);
 
-        //カート配列の添え字を０オリジンにする
-        $carts = array_values($carts);
-
         //カートをsessionに保存する
         $request->session()->put('carts', $carts);
 
@@ -106,9 +103,14 @@ class CartController extends Controller
     */
     public function removeCartItemsById($array, $id)
     {
-        return array_filter($array, function($item) use ($id) {
+        $tmp = array_filter($array, function($item) use ($id) {
             return $item['product']->id != $id;
         });
+
+        //カート配列の添え字を０オリジンにする
+        $tmp = array_values($tmp);
+
+        return $tmp;
     }
 
     public function register (Request $request)
