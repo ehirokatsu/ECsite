@@ -87,7 +87,8 @@ watch(searchWord, () => {
                                 <p class="text-gray-600 mb-2">¥{{ product.cost }}</p>
                             </div>
                             <div class="">
-                                カートに入れる
+                                <Link v-bind:href="route('vue.cart.store')" method="post" :data="{ id: product.id }">カートに入れる</Link>
+                                
                                 <div class="flex p-2">
                                     <div class="p-1">
                                         <!--文字列連結等の式を入れるにはbindが必要-->

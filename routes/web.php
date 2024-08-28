@@ -157,6 +157,10 @@ Route::put('/vue/{id}', 'App\Http\Controllers\VueController@update')->name('vue.
 Route::delete('/vue/{id}', 'App\Http\Controllers\VueController@destroy')->name('vue.destroy');
 Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vue.search');
 
+Route::get('/vue/cart', 'App\Http\Controllers\VueCartController@index')->name('vue.cart.index');
+Route::post('/vue/cart', 'App\Http\Controllers\VueCartController@store')->name('vue.cart.store');
+
+
 //Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');
 Route::get('/vue/ajaxlink/create', 'App\Http\Controllers\VueAjaxLinkController@create')->name('vue.ajaxlink.create');
