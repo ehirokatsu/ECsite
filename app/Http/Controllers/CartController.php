@@ -59,12 +59,7 @@ class CartController extends Controller
         
         //初回は$cartがnullなので、配列初期化しないとpushできない
         if (empty($carts)) {
-            $carts = [
-                [
-                    'product' => $product,
-                    'quantity' => 1,
-                ]
-            ];  
+            $carts = [$array];  
         } else {
             //カートに追加する
             array_push($carts, $array);
