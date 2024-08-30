@@ -38,7 +38,7 @@ class ProductFactory extends Factory
 
         return [
             //
-            'name' => $this->faker->name(),
+            'name' => Str::limit($this->faker->name(), 30),  // 名前を30文字以内に制限
             'cost' => $this->faker->randomNumber(4, true),
             'image' => $imageFilename,
         ];
