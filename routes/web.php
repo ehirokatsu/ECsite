@@ -159,6 +159,8 @@ Route::get('/vue/search', 'App\Http\Controllers\VueController@search')->name('vu
 
 Route::get('/vue/cart', 'App\Http\Controllers\VueCartController@index')->name('vue.cart.index');
 Route::post('/vue/cart', 'App\Http\Controllers\VueCartController@store')->name('vue.cart.store');
+Route::delete('/vue/cart/{id}', 'App\Http\Controllers\VueCartController@destroy')->name('vue.cart.destroy')->where('id', '[0-9]+');
+Route::put('/vue/cart/{id}', 'App\Http\Controllers\VueCartController@quantityUpdate')->name('vue.cart.quantityUpdate')->where('id', '[0-9]+');
 
 
 //Vue(Link)

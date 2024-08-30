@@ -28,6 +28,17 @@ const props = defineProps<{
     carts: Cart[];
 }>();
 
+const quantities = ref(props.carts.map(cart => cart.quantity));
+
+// 数量更新用の関数
+function updateQuantity(index: number) {
+    const cart = props.carts[index];
+    const form = useForm({
+        quantity: quantities.value[index]
+    });
+
+    form.put(route('vue.cart.quantityUpdate', { id: cart.product.id }));
+}
 
 </script>
 
@@ -57,7 +68,7 @@ const props = defineProps<{
                         </div>
                     </div>
                     <div 
-                        v-for="cart in props.carts" 
+                        v-for="(cart, index) in carts" 
                         :key="cart.product.id"
                     >
                         <div class="flex p-2 rounded-md justify-center">
@@ -72,25 +83,16 @@ const props = defineProps<{
                             </div>
                             <div class="">
                                 <div class="flex p-3">
-                                    <!--
-                                    <form action="{{ route('cart.quantityUpdate', ['id' => $cart['product']['id']]) }}" method="post">
-                                        <label for="">個数</label>
-                                        <input type="number" name="quantity" class="w-20" value="{{ $cart['quantity'] }}">
+                                    <!-- ドロップダウンリストで数量を選択 -->
+                                    <select 
+                                        v-model="quantities[index]" 
+                                        @change="updateQuantity(index)" 
+                                        class="w-20">
+                                        <option v-for="n in 10" :value="n">{{ n }}</option>
+                                    </select>
                                         
-                                        <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
-                                        
-                                        <button type="submit" class=" m-2">
-                                        更新する
-                                        </button>
-                                    </form>
-                                    -->
-                                    <!--
-                                    <form action="{{ route('cart.destroy', ['id' => $cart['product']['id']]) }}" method="post">
-                                    <button type="submit" class="m-2">
-                                        削除する
-                                    </button>
-                                    </form>
-                                    -->
+                                    <PrimaryButton @click="updateQuantity(index)" class="m-2">更新する</PrimaryButton>
+                                    <Link v-bind:href="route('vue.cart.destroy', {'id': cart['product'].id})" as="button" method="delete">削除する</Link>
                                 </div>
                             </div>
                         </div>

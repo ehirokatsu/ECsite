@@ -33,7 +33,7 @@ const logout = (): void => {
             <nav class="flex justify-between">
                 <div class="flex">
                     <NavLink v-bind:href="route('vue.index')">トップ</NavLink>
-                    <NavLink v-bind:href="route('cart.index')">カート</NavLink>
+                    <NavLink v-bind:href="route('vue.cart.index')">カート</NavLink>
                     <NavLink v-bind:href="route('contact.index')">問合せ</NavLink>
                     <NavLink v-bind:href="route('vue.index')">注文履歴</NavLink>
                     <NavLink v-bind:href="route('vue.index')">アカウント編集</NavLink>
