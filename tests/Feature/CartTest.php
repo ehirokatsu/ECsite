@@ -34,8 +34,8 @@ class CartTest extends TestCase
         $response->assertStatus(302)->assertRedirect(route('cart.index'));
         
         //sessionに保存されていること
-        $response->assertSessionHas('carts', function ($value) {
-            return $value[0]['product']->id === 1;
+        $response->assertSessionHas('carts', function ($value) use ($product) {
+            return $value[0]['product']->id === $product->id;
         });
 
         //別の商品を追加
