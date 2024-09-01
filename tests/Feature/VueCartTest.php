@@ -99,7 +99,7 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
-        
+*/
     //カートの商品の個数を変更できること
     public function test_change_quantity(): void
     {
@@ -107,16 +107,16 @@ class VueCartTest extends TestCase
         $product = Product::factory()->create();
 
         //カートに追加
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product->id,
         ]);
 
         //カート一覧画面にリダイレクトすること
-        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        $response->assertStatus(302)->assertRedirect(route('vue.cart.index'));
         
         //個数を変更する
         $updateQuantity = 2;
-        $response = $this->put(route('cart.quantityUpdate', ['id' => $product->id]), [
+        $response = $this->put(route('vue.cart.quantityUpdate', ['id' => $product->id]), [
             'quantity' => $updateQuantity,
         ]);
 
@@ -131,7 +131,7 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
-
+/*
     //購入する時にログインして購入できること
     public function test_login_can_buy(): void
     {
