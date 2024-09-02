@@ -14,10 +14,10 @@ import { useForm } from '@inertiajs/vue3';
 const form = useForm({
 });
 const submit = (id: number) => {
-    if (window.confirm('本当にこの商品を削除しますか？')) {
-        // 削除を実行するロジックをここに追加する
-        form.delete(route('vue.destroy', {'id': id}));
-    }
+    // 削除を実行するロジックをここに追加する
+    form.delete(route('vue.destroy', {'id': id}), {
+        onBefore: () => confirm('本当に削除しますか?'),
+    });
 }
 
 //検索機能 useFormで実装。
