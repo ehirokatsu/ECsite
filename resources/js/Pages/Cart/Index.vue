@@ -6,12 +6,8 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
-import { ref, watch } from "vue";
-
-//deleteメソッドをフォームで使用する場合
-//delete送信用ダミー
+import { ref } from "vue";
 import { useForm } from '@inertiajs/vue3';
-
 
 interface Product {
     id: number;
@@ -37,74 +33,58 @@ function updateQuantity(index: number) {
         quantity: quantities.value[index]
     });
 
-    form.put(route('vue.cart.quantityUpdate', { id: cart.product.id }));
+    form.put(route('vue.cart.quantityUpdate', {
+        id: cart.product.id,
+    }),{ preserveScroll: true });
 }
 
 </script>
 
 <template>
     <Layout title="カート一覧">
-
-    <h2>カートの一覧です。</h2>
-
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div v-if="carts">
-                    <div class="flex">
-                        <button class="m-2">
-                            <!--
-                            <a href="{{ route('cart.regConfirm') }}">購入する</a>
-                            -->
-                        </button>
-                        <div class="m-2">
-                            <!--
-                            <form action="{{ route('cart.allDelete') }}" method="post">
-                            <button type="submit">
-                                <span>カートを空にする</span>
-                            </button>
-                            </form>
-                            -->
+        <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">カートの一覧</h2>
+            <div v-if="carts.length" class="space-y-6">
+                <div 
+                    v-for="(cart, index) in carts" 
+                    :key="cart.product.id"
+                    class="flex items-center bg-gray-100 rounded-lg shadow-sm p-4"
+                >
+                    <div class="relative w-32 h-32">
+                        <img 
+                            class="rounded-md object-cover" 
+                            v-bind:src="'/storage/' + cart.product.image" 
+                            alt="Product Image"
+                        >
+                    </div>
+                    <div class="ml-6 flex-1">
+                        <h2 class="text-lg font-semibold mb-1 text-gray-800">{{ cart.product.name }}</h2>
+                        <p class="text-gray-600 mb-3">¥{{ cart.product.cost }}</p>
+                        <div class="flex items-center space-x-3">
+                            <select 
+                                v-model="quantities[index]" 
+                                v-on:change="updateQuantity(index)" 
+                                class="form-select block w-24 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            >
+                                <option v-for="n in 10" :value="n">{{ n }}</option>
+                            </select>
+                            <PrimaryButton @click="updateQuantity(index)">更新</PrimaryButton>
+                            <Link 
+                                v-bind:href="route('vue.cart.destroy', { id: cart.product.id })" 
+                                as="button" 
+                                method="delete"
+                                preserve-scroll
+                                class="text-red-600 hover:text-red-800 ml-4"
+                            >
+                                削除
+                            </Link>
                         </div>
                     </div>
-                    <div 
-                        v-for="(cart, index) in carts" 
-                        :key="cart.product.id"
-                    >
-                        <div class="flex p-2 rounded-md justify-center">
-                            <div class="relative w-40 h-40 mb-3">
-                            <img class="absolute inset-0 w-full h-full object-cover" v-bind:src="'/storage/' + cart['product'].image" alt="Product Image">
-                            </div>
-                            <div class="mr-20">
-                                <div class="p-4">
-                                    <h2 class="text-lg font-semibold mb-2">{{ cart['product'].name }}</h2>
-                                    <p class="text-gray-600 mb-2">¥{{ cart['product'].cost }}</p>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="flex p-3">
-                                    <!-- ドロップダウンリストで数量を選択 -->
-                                    <select 
-                                        v-model="quantities[index]" 
-                                        @change="updateQuantity(index)" 
-                                        class="w-20">
-                                        <option v-for="n in 10" :value="n">{{ n }}</option>
-                                    </select>
-                                        
-                                    <PrimaryButton @click="updateQuantity(index)" class="m-2">更新する</PrimaryButton>
-                                    <Link v-bind:href="route('vue.cart.destroy', {'id': cart['product'].id})" as="button" method="delete">削除する</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div v-else>
-                    カートは空です。
                 </div>
             </div>
+            <div v-else class="text-center text-gray-600">
+                カートは空です。
+            </div>
         </div>
-    </div>
-
     </Layout>
-
 </template>
