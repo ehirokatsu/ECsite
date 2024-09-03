@@ -68,7 +68,9 @@ function updateQuantity(index: number) {
                             >
                                 <option v-for="n in 10" :value="n">{{ n }}</option>
                             </select>
+                            <!--
                             <PrimaryButton @click="updateQuantity(index)">更新</PrimaryButton>
+                            -->
                             <Link 
                                 v-bind:href="route('vue.cart.destroy', { id: cart.product.id })" 
                                 as="button" 
@@ -76,7 +78,7 @@ function updateQuantity(index: number) {
                                 preserve-scroll
                                 class="text-red-600 hover:text-red-800 ml-4"
                             >
-                                削除
+                                <DangerButton>削除</DangerButton> 
                             </Link>
                         </div>
                     </div>
