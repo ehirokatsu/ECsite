@@ -123,4 +123,12 @@ class VueCartController extends Controller
 
         return redirect()->route('vue.cart.index');
     }
+
+    public function allDelete (Request $request)
+    {
+        //カートを空にする
+        $request->session()->forget('carts');
+
+        return redirect()->route('vue.cart.index');
+    }
 }

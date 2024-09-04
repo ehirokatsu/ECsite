@@ -162,6 +162,9 @@ Route::post('/vue/cart', 'App\Http\Controllers\VueCartController@store')->name('
 Route::delete('/vue/cart/{id}', 'App\Http\Controllers\VueCartController@destroy')->name('vue.cart.destroy')->where('id', '[0-9]+');
 Route::put('/vue/cart/{id}', 'App\Http\Controllers\VueCartController@quantityUpdate')->name('vue.cart.quantityUpdate')->where('id', '[0-9]+');
 
+//Route::delete('/vue/cart/　だと、Route::delete('/vue/{id}に適用されてしまうので下記のようにした。
+Route::delete('/vue/cart/all', 'App\Http\Controllers\VueCartController@allDelete')->name('vue.cart.allDelete');
+
 
 //Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');

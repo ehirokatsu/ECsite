@@ -24,7 +24,8 @@ const props = defineProps<{
     carts: Cart[];
 }>();
 
-const quantities = ref(props.carts.map(cart => cart.quantity));
+//cartがない場合は、配列初期化する。初期化しないとcartが無い場合エラーで表示されない
+const quantities = ref(props.carts ? props.carts.map(cart => cart.quantity) : []);
 
 // 数量更新用の関数
 function updateQuantity(index: number) {
@@ -44,7 +45,19 @@ function updateQuantity(index: number) {
     <Layout title="カート一覧">
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">カートの一覧</h2>
-            <div v-if="carts.length" class="space-y-6">
+            <div v-if="carts" class="space-y-6">
+                <div class="flex items-center space-x-3">
+                    <PrimaryButton>購入する</PrimaryButton>
+                    <Link 
+                        v-bind:href="route('vue.cart.allDelete')" 
+                        as="button" 
+                        method="delete"
+                        preserve-scroll
+                        class="text-red-600 hover:text-red-800 ml-4"
+                    >
+                        <DangerButton>カートを空にする</DangerButton>
+                    </Link>
+                </div>
                 <div 
                     v-for="(cart, index) in carts" 
                     :key="cart.product.id"
