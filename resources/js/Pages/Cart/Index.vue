@@ -6,7 +6,7 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useForm } from '@inertiajs/vue3';
 
 interface Product {
@@ -26,6 +26,20 @@ const props = defineProps<{
 
 //cartがない場合は、配列初期化する。初期化しないとcartが無い場合エラーで表示されない
 const quantities = ref(props.carts ? props.carts.map(cart => cart.quantity) : []);
+
+const totalAmount = computed(
+    (): number => {
+
+        let total = 0;
+        if (props.carts) {
+
+            props.carts.forEach(cart => {
+            total += cart.product.cost * cart.quantity;
+            });
+        }
+        return total;
+    }
+);
 
 // 数量更新用の関数
 function updateQuantity(index: number) {
@@ -47,6 +61,9 @@ function updateQuantity(index: number) {
             <h2 class="text-2xl font-bold text-gray-800 mb-6">カートの一覧</h2>
             <div v-if="carts" class="space-y-6">
                 <div class="flex items-center space-x-3">
+                    <div>
+                    合計金額：{{ totalAmount }}
+                    </div>
                     <PrimaryButton>購入する</PrimaryButton>
                     <Link 
                         v-bind:href="route('vue.cart.allDelete')" 
