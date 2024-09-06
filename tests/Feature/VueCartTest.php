@@ -378,7 +378,7 @@ class VueCartTest extends TestCase
         //エラー画面に遷移すること
         $response->assertStatus(200)->assertViewIs('no');
     }
-
+*/
     //カートを全削除できること
     public function test_cart_all_delete(): void
     {
@@ -387,7 +387,7 @@ class VueCartTest extends TestCase
         $product2 = Product::factory()->create();
 
         //1つ目の商品をカートに入れる
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product->id,
         ]);
         
@@ -397,7 +397,7 @@ class VueCartTest extends TestCase
         });
 
         //2つ目の商品をカートに入れる
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product2->id,
         ]);
 
@@ -407,10 +407,10 @@ class VueCartTest extends TestCase
         });
 
         //全削除ボタンを押下する
-        $response = $this->delete(route('cart.allDelete'));
+        $response = $this->delete(route('vue.cart.allDelete'));
 
         //カート一覧にリダイレクトすること
-        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        $response->assertStatus(302)->assertRedirect(route('vue.cart.index'));
 
         //カートの中身がクリアされていること
         $response->assertSessionMissing('carts');
@@ -423,7 +423,7 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image); // 画像を削除します
         }
     }
-        */
+        
     public function checkFileExists($path) {
         if (\File::exists($path) && !is_dir($path)) {
             return true;
