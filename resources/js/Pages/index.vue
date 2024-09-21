@@ -56,20 +56,22 @@ watch(searchWord, () => {
 <template>
     <Layout title="商品一覧">
 
-    <h2>商品の一覧です。</h2>
-    <!--フラッシュメッセージ表示-->
-    <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
-        {{ $page.props.flash.message }}
-    </div>
-    <!--検索-->
-    <div>   
-        <InputLabel>検索</InputLabel>
-        <TextInput v-model="searchWord"></TextInput>
-        <!--Linkでボタン押下でGetリクエストを送信する-->
-        <Link v-bind:href="route('vue.search', {query: searchWord})">検索</Link>
-    </div>
+
     <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <h2>商品の一覧です。</h2>
+            <!--フラッシュメッセージ表示-->
+            <div v-if="$page.props.flash?.message" class="bg-green-200 p-2 m-1">
+                {{ $page.props.flash.message }}
+            </div>
+            <!--検索-->
+            <div class="py-2">   
+                <TextInput v-model="searchWord"></TextInput>
+                <!--Linkでボタン押下でGetリクエストを送信する-->
+                <Link v-bind:href="route('vue.search', {query: searchWord})">
+                    <PrimaryButton>検索</PrimaryButton>
+                </Link>
+            </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div 
                     v-for="product in searchResults" 
