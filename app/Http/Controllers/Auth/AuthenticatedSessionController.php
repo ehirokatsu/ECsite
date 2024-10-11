@@ -20,7 +20,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create2(): Response
+    public function create(): Response
     {
         return Inertia::render('Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
         ]);
     }
     //Blade用
-    public function create(): View
+    public function create2(): View
     {
         return view('auth.login');
     }

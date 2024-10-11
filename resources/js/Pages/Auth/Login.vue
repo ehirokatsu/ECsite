@@ -25,6 +25,18 @@ const submit = () => {
         },
     });
 };
+
+//簡単ログイン用
+const submitEasy = () => {
+    form.email = "test@test.com";
+    form.password = "testtest";
+
+    form.post(route('login'), {
+        onFinish: () => {
+            form.reset('password');
+        },
+    });
+};
 </script>
 
 <template>
@@ -37,7 +49,7 @@ const submit = () => {
 
         <form @submit.prevent="submit">
             <div>
-                <InputLabel for="email" value="Email" />
+                <InputLabel for="email" value="メールアドレス" />
 
                 <TextInput
                     id="email"
@@ -53,7 +65,7 @@ const submit = () => {
             </div>
 
             <div class="mt-4">
-                <InputLabel for="password" value="Password" />
+                <InputLabel for="password" value="パスワード" />
 
                 <TextInput
                     id="password"
@@ -84,7 +96,16 @@ const submit = () => {
                 </Link>
 
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Log in
+                    ログイン
+                </PrimaryButton>
+            </div>
+        </form>
+
+        <!--簡単ログイン用のフォームを追加-->
+        <form @submit.prevent="submitEasy" class="">
+            <div class="flex justify-end">
+                <PrimaryButton class="mt-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    簡単ログイン
                 </PrimaryButton>
             </div>
         </form>
