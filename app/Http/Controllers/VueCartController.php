@@ -131,4 +131,30 @@ class VueCartController extends Controller
 
         return redirect()->route('vue.cart.index');
     }
+
+    public function loginConfirm (Request $request)
+    {
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($request->session()->get('carts'))) {
+            return view('no');
+        }
+
+        //ログインしていない場合、ログイン画面にリダイレクトする
+        if (\Auth::guest()) {
+
+            //セッションにログイン後のリダイレクト先を指定する
+            $request->session()->put('redirect_to', '/vue/cart/purchaseConfirm');
+
+            return redirect()->guest('login');
+        }
+        
+        return redirect()->route('vue.cart.purchaseConfirm');
+    }
+
+    
+    public function purchaseConfirm (Request $request)
+    {
+
+        return Inertia::render('Cart/PurchaseConfirm');
+    }
 }

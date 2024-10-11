@@ -165,6 +165,11 @@ Route::put('/vue/cart/{id}', 'App\Http\Controllers\VueCartController@quantityUpd
 //Route::delete('/vue/cart/　だと、Route::delete('/vue/{id}に適用されてしまうので下記のようにした。
 Route::delete('/vue/cart/all', 'App\Http\Controllers\VueCartController@allDelete')->name('vue.cart.allDelete');
 
+//カートの購入ボタン押下
+Route::post('/vue/cart/loginConfirm', 'App\Http\Controllers\VueCartController@loginConfirm')->name('vue.cart.loginConfirm');
+
+//ログイン後の購入者情報確認画面を開く
+Route::get('/vue/cart/purchaseConfirm', 'App\Http\Controllers\VueCartController@purchaseConfirm')->name('vue.cart.purchaseConfirm');
 
 //Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');
