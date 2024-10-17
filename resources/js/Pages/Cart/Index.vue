@@ -65,9 +65,9 @@ function updateQuantity(index: number) {
                     合計金額：{{ totalAmount }}
                     </div>
                     <Link
-                    v-bind:href="route('vue.cart.loginConfirm')" 
+                    v-bind:href="route('vue.cart.purchaseConfirm')" 
                         as="button" 
-                        method="post"
+                        method="get"
                         preserve-scroll
                     >
                         <PrimaryButton>購入する</PrimaryButton>
