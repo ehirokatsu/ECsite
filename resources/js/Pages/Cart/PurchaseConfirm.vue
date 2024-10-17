@@ -35,14 +35,33 @@ const props = defineProps<{
     user: User; 
 }>();
 
-
 </script>
 
 <template>
-    <Layout title="カート一覧">
+    <Layout title="購入情報">
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">購入者情報は以下でよろしいですか？</h2>
- 
+            {{ user.name }}
+            <div class="space-y-6">
+                <div 
+                    v-for="(cart, index) in carts" 
+                    :key="cart.product.id"
+                    class="flex items-center bg-gray-100 rounded-lg shadow-sm p-4"
+                >
+                    <div class="relative w-32 h-32">
+                        <img 
+                            class="rounded-md object-cover" 
+                            v-bind:src="'/storage/' + cart.product.image" 
+                            alt="Product Image"
+                        >
+                    </div>
+                    <div class="ml-6 flex-1">
+                        <h2 class="text-lg font-semibold mb-1 text-gray-800">{{ cart.product.name }}</h2>
+                        <p class="text-gray-600 mb-3">¥{{ cart.product.cost }}</p>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
     </Layout>
 </template>

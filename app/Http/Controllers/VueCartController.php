@@ -148,10 +148,23 @@ class VueCartController extends Controller
             return redirect()->guest('login');
         }
         
-        return redirect()->route('vue.cart.purchaseConfirm');
+        // ログインしたユーザー情報を取得
+        $user = auth()->user();
+
+        //現在のカート内容を取得
+        $carts = $request->session()->get('carts');
+
+        /*これだとpropsにデータを渡せなかった。
+        return redirect()->route('vue.cart.purchaseConfirm')
+        ->with('cart', session()->get('cart'))
+        ->with('user', $user);
+        */
+        return Inertia::render('Cart/PurchaseConfirm', [
+            'carts' => $carts,
+            'user' => $user,
+        ]);
     }
 
-    
     public function purchaseConfirm (Request $request)
     {
 
