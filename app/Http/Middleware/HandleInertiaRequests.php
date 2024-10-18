@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'message' => $request->session()->get('message'),
             ],
+            //カートをvueから参照できるように追加
             'carts' => $request->session()->get('carts'),
         ]);
     }
