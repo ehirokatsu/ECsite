@@ -8,36 +8,8 @@ import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
 import { computed, ref } from "vue";
 import { useForm } from '@inertiajs/vue3';
+import type { User, Cart } from '@/types/index.d.ts';
 
-interface Product {
-    id: number;
-    name: string;
-    cost: number;
-    image: string;
-}
-interface Cart {
-    product: Product;
-    quantity: number;
-}
-
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at: string;
-    postal_code: string;
-    address_1: string;
-    address_2: string;
-    address_3: string;
-    phone_number: string;
-}
-
-/*
-const props2 = defineProps<{
-    carts: Cart[];
-    //user: User; 
-}>();
-*/
 import { usePage } from '@inertiajs/vue3';
 
 // Inertia.js でページ情報を取得
