@@ -45,14 +45,8 @@ class AuthenticatedSessionController extends Controller
         //カートからリダイレクトされた場合
         if (session()->has('redirect_to')) {
  
-            // ログインしたユーザー情報を取得
-            $user = auth()->user();
-    
             //セッションに保存しているルートにリダイレクトさせる
-            //vueではセッションを直接参照できないため、ここでvueにcart情報を渡す
-            return redirect(session()->pull('redirect_to'))
-            ->with('cart', session()->get('cart'))
-            ->with('user', $user);
+            return redirect(session()->pull('redirect_to'));
         }
         
         return redirect()->intended(RouteServiceProvider::HOME);
