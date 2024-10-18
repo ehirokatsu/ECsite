@@ -19,10 +19,12 @@ interface Cart {
     product: Product;
     quantity: number;
 }
+
 interface User {
     id: number;
     name: string;
     email: string;
+    email_verified_at: string;
     postal_code: string;
     address_1: string;
     address_2: string;
@@ -30,10 +32,18 @@ interface User {
     phone_number: string;
 }
 
-const props = defineProps<{
+/*
+const props2 = defineProps<{
     carts: Cart[];
-    user: User; 
+    //user: User; 
 }>();
+*/
+import { usePage } from '@inertiajs/vue3';
+
+// Inertia.js でページ情報を取得
+const { props } = usePage<{ auth: { user: User }; carts: Cart[] }>();
+const user = computed(() => props.auth?.user || null);
+const carts = computed(() => props.carts || []);
 
 </script>
 
@@ -42,6 +52,7 @@ const props = defineProps<{
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">購入者情報は以下でよろしいですか？</h2>
             {{ user.name }}
+            {{ user.postal_code }}
             <div class="space-y-6">
                 <div 
                     v-for="(cart, index) in carts" 

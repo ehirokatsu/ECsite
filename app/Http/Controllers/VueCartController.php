@@ -132,7 +132,7 @@ class VueCartController extends Controller
         return redirect()->route('vue.cart.index');
     }
 
-    public function loginConfirm (Request $request)
+    public function purchaseConfirm (Request $request)
     {
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
         if (empty($request->session()->get('carts'))) {
@@ -148,25 +148,19 @@ class VueCartController extends Controller
             return redirect()->guest('login');
         }
         
-        // ログインしたユーザー情報を取得
+        /*ユーザー情報はauthの認証情報から、カートは元々セッションに格納しているので省略
         $user = auth()->user();
-
-        //現在のカート内容を取得
         $carts = $request->session()->get('carts');
-
-        /*これだとpropsにデータを渡せなかった。
-        return redirect()->route('vue.cart.purchaseConfirm')
-        ->with('cart', session()->get('cart'))
-        ->with('user', $user);
+        $request->session()->flash('user', $user);
+        $request->session()->flash('carts', $carts);
         */
+
+        /*login処理ではリダイレクトさせるので、下記のrenderでは渡さない方法にした。
         return Inertia::render('Cart/PurchaseConfirm', [
             'carts' => $carts,
             'user' => $user,
         ]);
-    }
-
-    public function purchaseConfirm (Request $request)
-    {
+        */
 
         return Inertia::render('Cart/PurchaseConfirm');
     }
