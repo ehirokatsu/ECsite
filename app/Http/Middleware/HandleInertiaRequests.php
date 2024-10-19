@@ -45,6 +45,8 @@ class HandleInertiaRequests extends Middleware
             ],
             //カートをvueから参照できるように追加
             'carts' => $request->session()->get('carts'),
+            //ログイン画面にて購入ボタンから遷移したことを判定
+            'redirect_to' => $request->session()->get('redirect_to'),
         ]);
     }
 }

@@ -29,11 +29,13 @@ export interface FlashMessage {
     message?: string;
 }
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
-    auth: {
+    auth?: {//usePAgeを使用するときにauthを任意にするので「？」をつけた
         user: User;
     };
     //フラッシュメッセージ用に追加
     flash?: FlashMessage; 
     //購入者情報表示用に追加
     carts?: Cart[];
+    //ログイン画面にて購入ボタンから遷移したことを判定
+    redirect_to?: string
 };

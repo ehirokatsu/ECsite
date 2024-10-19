@@ -37,6 +37,21 @@ const submitEasy = () => {
         },
     });
 };
+
+//カートから遷移した場合のみ登録せず購入ボタンを表示
+import { ref, onMounted } from "vue";
+import { usePage } from '@inertiajs/vue3';
+
+const isFromCart = ref(false);
+const { props } = usePage<{ redirect_to: string}>();
+const redirect_to = props.redirect_to || null;
+
+onMounted(() => {
+  if (redirect_to === "/vue/cart/purchaseConfirm") {
+    isFromCart.value = true;
+  }
+});
+
 </script>
 
 <template>
@@ -109,5 +124,18 @@ const submitEasy = () => {
                 </PrimaryButton>
             </div>
         </form>
+
+        <!--登録のフォームを追加-->
+        <div v-if="isFromCart" class="mb-4">
+            <Link
+                v-bind:href="route('vue.cart.inputPurchaseInfo')" 
+                    as="button" 
+                    method="get"
+                    preserve-scroll
+                >
+                    <PrimaryButton>登録せずに購入する</PrimaryButton>
+            </Link>
+        </div>
+
     </GuestLayout>
 </template>
