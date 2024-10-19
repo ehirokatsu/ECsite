@@ -167,6 +167,8 @@ Route::delete('/vue/cart/all', 'App\Http\Controllers\VueCartController@allDelete
 
 //カートの購入ボタン押下
 Route::get('/vue/cart/purchaseConfirm', 'App\Http\Controllers\VueCartController@purchaseConfirm')->name('vue.cart.purchaseConfirm');
+Route::post('/vue/cart/purchaseComplete', 'App\Http\Controllers\VueCartController@purchaseComplete')->name('vue.cart.purchaseComplete');
+
 
 //Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');

@@ -164,4 +164,9 @@ class VueCartController extends Controller
 
         return Inertia::render('Cart/PurchaseConfirm');
     }
+
+    public function purchaseComplete (Request $request)
+    {
+        return Inertia::render('Cart/PurchaseComplete');
+    }
 }

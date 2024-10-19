@@ -23,8 +23,13 @@ const carts = computed(() => props.carts || []);
     <Layout title="購入情報">
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">購入者情報は以下でよろしいですか？</h2>
-            {{ user.name }}
-            {{ user.postal_code }}
+            <div class="mt-4">{{ user.name }}</div>
+            <div class="mt-4">{{ user.email }}</div>
+            <div class="mt-4">{{ user.postal_code }}</div>
+            <div class="mt-4">{{ user.address_1 }}</div>
+            <div class="mt-4">{{ user.address_2 }}</div>
+            <div class="mt-4">{{ user.address_3 }}</div>
+            <div class="mt-4">{{ user.phone_number }}</div>
             <div class="space-y-6">
                 <div 
                     v-for="(cart, index) in carts" 
@@ -45,6 +50,14 @@ const carts = computed(() => props.carts || []);
                     </div>
                 </div>
             </div>
+            <Link
+                v-bind:href="route('vue.cart.purchaseComplete')" 
+                    as="button" 
+                    method="post"
+                    preserve-scroll
+                >
+                    <PrimaryButton>確定する</PrimaryButton>
+            </Link>
         </div>
     </Layout>
 </template>
