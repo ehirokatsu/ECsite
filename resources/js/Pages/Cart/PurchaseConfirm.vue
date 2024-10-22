@@ -6,16 +6,31 @@ import InputLabel from '@/Components/InputLabel.vue';
 import InputError from '@/Components/InputError.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useForm } from '@inertiajs/vue3';
 import type { User, Cart } from '@/types/index.d.ts';
 
 import { usePage } from '@inertiajs/vue3';
 
+const props = defineProps<{
+    inputUser: User
+}>();
+
+const inputUser = props.inputUser;
+
 // Inertia.js でページ情報を取得
-const { props } = usePage<{ auth: { user: User }; carts: Cart[] }>();
-const user = computed(() => props.auth?.user || null);
-const carts = computed(() => props.carts || []);
+const page = usePage<{ auth: { user: User }; carts: Cart[] }>();
+const user = computed(() => props.inputUser || page.props.auth?.user || null);
+const carts = computed(() => page.props.carts || []);
+
+
+
+
+
+/*
+inputUserがあればそれを採用する。なければuserを採用。どちらもなければエラー
+*/
+
 
 </script>
 

@@ -174,4 +174,11 @@ class VueCartController extends Controller
     {
         return Inertia::render('Cart/InputPurchaseInfo');
     }
+
+    public function confirmPurchaseInfo (Request $request)
+    {
+        return Inertia::render('Cart/PurchaseConfirm',[
+            'inputUser' => $request->inputUser,
+        ]);
+    }
 }
