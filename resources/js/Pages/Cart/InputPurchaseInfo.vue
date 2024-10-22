@@ -16,9 +16,9 @@ import { usePage } from '@inertiajs/vue3';
 
 
 // Inertia.js でページ情報を取得
-const { props } = usePage<{ auth: { user: User }; carts: Cart[] }>();
-const user = computed(() => props.auth?.user || null);
-const carts = computed(() => props.carts || []);
+const page = usePage<{ auth: { user: User }; carts: Cart[] }>();
+const user = computed(() => page.props.auth?.user || null);
+const carts = computed(() => page.props.carts || []);
 
 const form = useForm({
     inputUser: {
@@ -44,6 +44,22 @@ const submit = () => {
         <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
             <h2 class="text-2xl font-bold text-gray-800 mb-6">購入者情報を入力してください</h2>
             <form @submit.prevent="submit">
+                
+                <div>
+                    <InputLabel for="name" value="名前" />
+
+                    <TextInput
+                        id="name"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.name"
+                        required
+                        autofocus
+                        autocomplete="name"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
                 <div>
                     <InputLabel for="email" value="メールアドレス" />
 
@@ -59,7 +75,81 @@ const submit = () => {
 
                     <InputError class="mt-2" :message="form.errors.inputUser" />
                 </div>
+                <div>
+                    <InputLabel for="postal_code" value="郵便番号" />
 
+                    <TextInput
+                        id="postal_code"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.postal_code"
+                        required
+                        autofocus
+                        autocomplete="postal_code"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
+                <div>
+                    <InputLabel for="address_1" value="住所1" />
+
+                    <TextInput
+                        id="address_1"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.address_1"
+                        required
+                        autofocus
+                        autocomplete="address_1"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
+                <div>
+                    <InputLabel for="address_2" value="住所2" />
+
+                    <TextInput
+                        id="address_2"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.address_2"
+                        required
+                        autofocus
+                        autocomplete="address_2"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
+                <div>
+                    <InputLabel for="address_3" value="住所3" />
+
+                    <TextInput
+                        id="address_3"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.address_3"
+                        required
+                        autofocus
+                        autocomplete="address_3"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
+                <div>
+                    <InputLabel for="phone_number" value="電話番号" />
+
+                    <TextInput
+                        id="phone_number"
+                        type="text"
+                        class="mt-1 block w-full"
+                        v-model="form.inputUser.phone_number"
+                        required
+                        autofocus
+                        autocomplete="phone_number"
+                    />
+
+                    <InputError class="mt-2" :message="form.errors.inputUser" />
+                </div>
                 <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     確定
                 </PrimaryButton>
