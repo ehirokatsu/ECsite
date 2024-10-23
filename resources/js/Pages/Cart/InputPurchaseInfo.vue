@@ -8,32 +8,29 @@ import TextInput from '@/Components/TextInput.vue';
 import { Link } from '@inertiajs/vue3';
 import { computed, ref, onMounted } from "vue";
 import { useForm } from '@inertiajs/vue3';
-import type { User, Cart } from '@/types/index.d.ts';
+import type { User } from '@/types/index.d.ts';
 
-import { usePage } from '@inertiajs/vue3';
+const props = defineProps<{
+    inputUser: User
+}>();
 
+const user = props?.inputUser;
+console.log(user);
 
-
-
-// Inertia.js でページ情報を取得
-const page = usePage<{ auth: { user: User }; carts: Cart[] }>();
-const user = computed(() => page.props.auth?.user || null);
-const carts = computed(() => page.props.carts || []);
-
+//初期値をコントローラから受け取った入力値
 const form = useForm({
     inputUser: {
-        name: '',
-        email: '',
-        postal_code: '',
-        address_1: '',
-        address_2: '',
-        address_3: '',
-        phone_number: '',
+        name: user?.name || '',
+        email: user?.email || '',
+        postal_code: user?.postal_code || '',
+        address_1: user?.address_1 || '',
+        address_2: user?.address_2 || '',
+        address_3: user?.address_3 || '',
+        phone_number: user?.phone_number || '',
     },
 });
 
 const submit = () => {
-
     form.post(route('vue.cart.confirmPurchaseInfo'));
 };
 

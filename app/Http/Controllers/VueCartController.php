@@ -167,7 +167,10 @@ class VueCartController extends Controller
 
     public function purchaseComplete (Request $request)
     {
+
+        //dd($request->flag);
         return Inertia::render('Cart/PurchaseComplete');
+        
     }
 
     public function inputPurchaseInfo (Request $request)
@@ -178,6 +181,13 @@ class VueCartController extends Controller
     public function confirmPurchaseInfo (Request $request)
     {
         return Inertia::render('Cart/PurchaseConfirm',[
+            'inputUser' => $request->inputUser,
+        ]);
+    }
+
+    public function correctPurchaseInfo (Request $request)
+    {
+        return Inertia::render('Cart/InputPurchaseInfo',[
             'inputUser' => $request->inputUser,
         ]);
     }

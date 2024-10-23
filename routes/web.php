@@ -177,6 +177,11 @@ Route::get('/vue/cart/inputPurchaseInfo', 'App\Http\Controllers\VueCartControlle
 //購入者情報の入力画面から確定
 Route::post('/vue/cart/purchaseConfirm', 'App\Http\Controllers\VueCartController@confirmPurchaseInfo')->name('vue.cart.confirmPurchaseInfo');
 
+//購入者情報を修正
+Route::post('/vue/cart/inputPurchaseInfo', 'App\Http\Controllers\VueCartController@correctPurchaseInfo')->name('vue.cart.correctPurchaseInfo');
+
+
+
 
 //Vue(Link)
 Route::get('/vue/ajaxlink', 'App\Http\Controllers\VueAjaxLinkController@index')->name('vue.ajaxlink.index');

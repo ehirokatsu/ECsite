@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="MKTPZ0MQTkgO8NUzVNR1" name="ページ1">
-        <mxGraphModel dx="1786" dy="689" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="1724" dy="579" grid="1" gridSize="10" guides="1" tooltips="1" connect="0" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -36,13 +36,13 @@
                         <mxGeometry x="320" y="120" width="160" height="130" as="geometry"/>
                     </mxCell>
                 </object>
-                <mxCell id="91" value="/vue/cart/purchaseConfirm&lt;br&gt;購入者情報・商品確認" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="91" value="/vue/cart/PurchaseConfirm&lt;br&gt;購入者情報・商品確認" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="667" y="130" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="96" value="/vue/cart/purchaseComplete" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="1000" y="140" width="160" height="80" as="geometry"/>
                 </mxCell>
-                <object label="/vue/cart/buyer&lt;br&gt;購入者情報入力" id="97">
+                <object label="/vue/cart/&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(31, 31, 31); font-family: Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 11px;&quot;&gt;inputPurchaseInfo&lt;/span&gt;&lt;br&gt;購入者情報入力" id="97">
                     <mxCell style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
                         <mxGeometry x="300" y="360" width="120" height="80" as="geometry"/>
                     </mxCell>
@@ -71,7 +71,7 @@
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="101" value="post&lt;br&gt;inputBuyer" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="100" vertex="1" connectable="0">
+                <mxCell id="101" value="get&lt;br&gt;inputPurchaseInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="100" vertex="1" connectable="0">
                     <mxGeometry x="-0.172" relative="1" as="geometry">
                         <mxPoint y="-20" as="offset"/>
                     </mxGeometry>
@@ -83,7 +83,7 @@
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="103" value="post&lt;br&gt;rpurchaseComplete" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="102" vertex="1" connectable="0">
+                <mxCell id="103" value="post&lt;br&gt;purchaseComplete" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="102" vertex="1" connectable="0">
                     <mxGeometry x="-0.172" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -115,7 +115,7 @@
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="110" value="post&lt;br&gt;correctBuyer" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="109" vertex="1" connectable="0">
+                <mxCell id="110" value="post&lt;br&gt;inputPurchaseInfo" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="109" vertex="1" connectable="0">
                     <mxGeometry x="-0.172" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -129,7 +129,7 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="113" value="post&lt;br&gt;inputBuyerComfirm" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="112" vertex="1" connectable="0">
+                <mxCell id="113" value="post&lt;br&gt;purchaseConfirm" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="112" vertex="1" connectable="0">
                     <mxGeometry x="-0.172" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
