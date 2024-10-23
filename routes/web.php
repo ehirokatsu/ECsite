@@ -181,6 +181,10 @@ Route::post('/vue/cart/purchaseConfirm', 'App\Http\Controllers\VueCartController
 Route::post('/vue/cart/inputPurchaseInfo', 'App\Http\Controllers\VueCartController@correctPurchaseInfo')->name('vue.cart.correctPurchaseInfo');
 
 
+Route::get('/no', function () {
+    return Inertia::render('no');
+})->name('vue.no');
+
 
 
 //Vue(Link)

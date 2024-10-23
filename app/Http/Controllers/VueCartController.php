@@ -136,7 +136,7 @@ class VueCartController extends Controller
     {
         //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
         if (empty($request->session()->get('carts'))) {
-            return view('no');
+            return redirect()->route('vue.no');
         }
 
         //ログインしていない場合、ログイン画面にリダイレクトする
@@ -175,6 +175,11 @@ class VueCartController extends Controller
 
     public function inputPurchaseInfo (Request $request)
     {
+        //URL指定などカートが空でアクセスしたら、不正検出画面を表示する
+        if (empty($request->session()->get('carts'))) {
+            return redirect()->route('vue.no');
+        }
+        
         return Inertia::render('Cart/InputPurchaseInfo');
     }
 
