@@ -40,7 +40,7 @@
                     <mxGeometry x="667" y="130" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="96" value="/vue/cart/purchaseComplete" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="1000" y="140" width="160" height="80" as="geometry"/>
+                    <mxGeometry x="960" y="150" width="160" height="80" as="geometry"/>
                 </mxCell>
                 <object label="/vue/cart/&lt;span style=&quot;color: rgb(206, 145, 120); background-color: rgb(31, 31, 31); font-family: Menlo, Monaco, &amp;quot;Courier New&amp;quot;, monospace; font-size: 11px;&quot;&gt;inputPurchaseInfo&lt;/span&gt;&lt;br&gt;購入者情報入力" id="97">
                     <mxCell style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
@@ -76,7 +76,7 @@
                         <mxPoint y="-20" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="102" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="91" target="96" edge="1">
+                <mxCell id="102" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="104" target="96" edge="1">
                     <mxGeometry width="80" relative="1" as="geometry">
                         <mxPoint x="493.72" y="170.48000000000002" as="sourcePoint"/>
                         <mxPoint x="610.6400000000001" y="169.51999999999998" as="targetPoint"/>
@@ -149,9 +149,6 @@
                             <mxPoint x="670" y="40"/>
                         </Array>
                     </mxGeometry>
-                </mxCell>
-                <mxCell id="118" value="get&lt;br&gt;purchaseConfirm" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="440" y="40" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
