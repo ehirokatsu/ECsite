@@ -10,6 +10,7 @@ use App\UseCases\Cart\UpdateQuantityById;
 use App\UseCases\Cart\RemoveCartItemsById;
 
 use App\Http\Requests\QuantityRequest;
+use App\Events\OrderCompleted;
 
 class VueCartController extends Controller
 {
@@ -168,7 +169,47 @@ class VueCartController extends Controller
     public function purchaseComplete (Request $request)
     {
 
-        //dd($request->flag);
+        //dd($request->inputUser['name']);
+
+        if (empty($request->session()->get('carts'))) {
+            return redirect()->route('vue.no');
+        }
+
+        $carts = $request->session()->get('carts');
+
+        if (empty(\Auth::user())) {
+            //購入者情報を格納
+            $userInfos = [
+                'name' => $request->inputUser['name'],
+                'email' => $request->inputUser['email'],
+                'postalCode' => $request->inputUser['postal_code'],
+                'address1' => $request->inputUser['address_1'],
+                'address2' => $request->inputUser['address_2'],
+                'address3' => $request->inputUser['address_3'],
+                'phoneNumber' => $request->inputUser['phone_number'],
+            ];
+        } else {
+            $userInfos = [
+                'id' => \Auth::user()->id,
+                'name' => $request->inputUser['name'],
+                'email' => $request->inputUser['email'],
+                'postalCode' => $request->inputUser['postal_code'],
+                'address1' => $request->inputUser['address_1'],
+                'address2' => $request->inputUser['address_2'],
+                'address3' => $request->inputUser['address_3'],
+                'phoneNumber' => $request->inputUser['phone_number'],
+            ];
+        }
+
+        //登録せず購入は、購入者情報をデータベースに残す？残さないならロジックを分ける必要がある。
+
+        //購入後の処理
+        event(new OrderCompleted($carts, $userInfos));
+
+        //カートを空にする
+        $request->session()->forget('carts'); 
+
+
         return Inertia::render('Cart/PurchaseComplete');
         
     }
