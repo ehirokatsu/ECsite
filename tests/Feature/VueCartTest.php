@@ -66,20 +66,20 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product2->image); // 画像を削除します
         }
     }
-/*
-    //同じ商品をカートに追加すると別画面が表示されカートに入っていないこと
+
+    //同じ商品をカートに追加すると数量が増えること
     public function test_same_product_cart(): void
     {
         //商品を追加
         $product = Product::factory()->create();
 
         //カートに追加
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product->id,
         ]);
 
         //カート一覧画面にリダイレクトすること
-        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        $response->assertStatus(302)->assertRedirect(route('vue.cart.index'));
 
         //sessionに保存されていること
         $response->assertSessionHas('carts', function ($value) use ($product) {
@@ -87,19 +87,19 @@ class VueCartTest extends TestCase
         });
 
         //カートに追加
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product->id,
         ]);
 
-        //エラーページが表示されること
-        $response->assertStatus(200)->assertViewIs('cart.duplication');
-
+        $response->assertSessionHas('carts', function ($value) use ($product) {
+            return $value[0]['quantity'] === 2;
+        });
         //商品追加で生成した画像を削除
         if ($this->checkFileExists(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image)) {
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
-*/
+
     //カートの商品の個数を変更できること
     public function test_change_quantity(): void
     {
@@ -131,7 +131,7 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
-/*
+
     //購入する時にログインして購入できること
     public function test_login_can_buy(): void
     {
@@ -139,15 +139,15 @@ class VueCartTest extends TestCase
         $product = Product::factory()->create();
 
         //カートに商品を追加
-        $response = $this->post(route('cart.store'), [
+        $response = $this->post(route('vue.cart.store'), [
             'id' => $product->id
         ]);
 
         //カート一覧画面にリダイレクトすること
-        $response->assertStatus(302)->assertRedirect(route('cart.index'));
+        $response->assertStatus(302)->assertRedirect(route('vue.cart.index'));
         
         //購入ボタンを押下
-        $response = $this->get(route('cart.regConfirm'));
+        $response = $this->get(route('vue.cart.purchaseConfirm'));
 
         //ログイン画面へリダイレクトすること
         $response->assertStatus(302)->assertRedirect(route('login'));
@@ -162,22 +162,25 @@ class VueCartTest extends TestCase
         ]);
 
         //購入確認画面へリダイレクトすること
-        $response->assertStatus(302)->assertRedirect(route('cart.regConfirm'));
+        $response->assertStatus(302)->assertRedirect(route('vue.cart.purchaseConfirm'));
 
-        //購入完了確定ボタンを押下
-        $response = $this->actingAs($user)->post(route('cart.regComplete'), [
+        $inputUser = [
             'name' => $user->name,
             'email' => $user->email,
-            'postalCode' => $user->postal_code,
-            'address1' => $user->address_1,
-            'address2' => $user->address_2,
-            'address3' => $user->address_3,
-            'phoneNumber' => $user->phone_number,
-            'action' => 'submit',
+            'postal_code' => $user->postal_code,
+            'address_1' => $user->address_1,
+            'address_2' => $user->address_2,
+            'address_3' => $user->address_3,
+            'phone_number' => $user->phone_number,
+        ];
+
+        //購入完了確定ボタンを押下
+        $response = $this->actingAs($user)->post(route('vue.cart.purchaseComplete'), [
+            'inputUser' => $inputUser,
         ]);
 
         //購入完了画面へ遷移すること
-        $response->assertStatus(200)->assertViewIs('cart.regComplete');
+        $response->assertStatus(200);
 
         //カートの中身がクリアされていること
         $response->assertSessionMissing('carts');
@@ -187,7 +190,7 @@ class VueCartTest extends TestCase
             unlink(storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image);
         }
     }
-
+/*
     //購入する時に登録して購入できること
     public function test_register_can_buy(): void
     {
