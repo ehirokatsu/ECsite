@@ -16,22 +16,21 @@ const props = defineProps<{
     inputUser: User
 }>();
 
-const inputUser = props.inputUser;
-
 // Inertia.js でページ情報を取得
 const page = usePage<{ auth: { user: User }; carts: Cart[] }>();
-const user = computed(() => props.inputUser || page.props.auth?.user || null);
-const carts = computed(() => page.props.carts || []);
+
+//
+const user = props.inputUser || page.props.auth.user;
 
 const form = useForm({
     inputUser: {
-        name: user.value.name || '',
-        email: user.value.email || '',
-        postal_code: user.value.postal_code || '',
-        address_1: user.value.address_1 || '',
-        address_2: user.value.address_2 || '',
-        address_3: user.value.address_3 || '',
-        phone_number: user.value.phone_number || '',
+        name: user.name,
+        email: user.email,
+        postal_code: user.postal_code,
+        address_1: user.address_1,
+        address_2: user.address_2,
+        address_3: user.address_3,
+        phone_number: user.phone_number,
     },
 });
 
@@ -59,7 +58,7 @@ const submit2 = () => {
                 <div class="mt-4">{{ user.phone_number }}</div>
                 <div class="space-y-6">
                     <div 
-                        v-for="(cart, index) in carts" 
+                        v-for="(cart, index) in page.props.carts" 
                         :key="cart.product.id"
                         class="flex items-center bg-gray-100 rounded-lg shadow-sm p-4"
                     >
