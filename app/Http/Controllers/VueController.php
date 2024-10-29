@@ -45,11 +45,17 @@ class VueController extends Controller
         //メソッドインジェクションなら以下だけで良い
         //$saveImage();
 
-        $products = ($this->indexAction)();
+        try {
+            $products = ($this->indexAction)();
 
-        return Inertia::render('index', [
-            'products' => $products,
-        ]);
+            return Inertia::render('index', [
+                'products' => $products,
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error : ' . $e->getMessage());
+            return redirect()->route('vue.index')->with('message', '商品の内容を取得できませんでした');
+        }
     }
 
     public function create()

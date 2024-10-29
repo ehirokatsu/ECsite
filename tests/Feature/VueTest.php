@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
 use App\UseCases\Image\CheckFileExists;
+use App\Http\Controllers\VueController;
+use App\UseCases\Product\StoreAction;
+use App\UseCases\Product\IndexAction;
+use App\UseCases\Product\EditAction;
+use App\UseCases\Product\UpdateAction;
+use App\UseCases\Product\DeleteAction;
+use App\UseCases\Product\SearchAction;
 
 class VueTest extends TestCase
 {
@@ -34,8 +41,50 @@ class VueTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_index_catches_exception_and_redirects()
+    {
+        // Logファサードをフェイクして、ログ記録の検証に備える
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Test Exception');;
+
+        // 各依存クラスのモックを作成
+        $storeAction = \Mockery::mock(StoreAction::class);
+        $indexAction = \Mockery::mock(IndexAction::class);
+        $editAction = \Mockery::mock(EditAction::class);
+        $updateAction = \Mockery::mock(UpdateAction::class);
+        $deleteAction = \Mockery::mock(DeleteAction::class);
+        $searchAction = \Mockery::mock(SearchAction::class);
+
+        // indexActionのモックに例外をスローさせる
+        $indexAction->shouldReceive('__invoke')
+                    ->andThrow(new \Exception('Test Exception'));
+
+        // モックを使ってVueControllerのインスタンスを作成
+        $controller = new VueController(
+            $storeAction,
+            $indexAction,
+            $editAction,
+            $updateAction,
+            $deleteAction,
+            $searchAction
+        );
+
+        // DIコンテナにモックを登録
+        $this->app->instance(VueController::class, $controller);
+
+        // ルートを呼び出してテスト
+        $response = $this->get(route('vue.index'));
+
+        // リダイレクトとセッションの確認
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', '商品の内容を取得できませんでした');
+
+    }
+
     public function test_product_index(): void
     {
+
         //ログインユーザ無しでアクセスできること
         $response = $this->get(route('vue.index'));
         $response->assertStatus(200);
@@ -80,6 +129,8 @@ class VueTest extends TestCase
 
         //indexにリダイレクトされること
         $response->assertStatus(302)->assertRedirect(route('vue.index'));
+
+        $response->assertSessionHas('message', '追加しました');
 
         //バリデーションエラーが無いこと
         $response->assertValid(['name', 'imageFileName', 'cost']);
