@@ -110,5 +110,31 @@ class VueErrorTest extends TestCase
         $response->assertSessionHas('message', '商品を追加できませんでした');
 
     }
-    
+
+    public function test_edit_catches_exception_and_redirects()
+    {
+        //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Test Exception');
+
+        $this->dependencies['editAction']->shouldReceive('__invoke')
+        ->andThrow(new \Exception('Test Exception'));
+
+        //array_valueは連想配列から配列の値のみを抽出する
+        //スプレッド演算子「...」でstoreAction等を順番にVueControllerのコンストラクタに渡すことが可能
+        $controller = new VueController(...array_values($this->dependencies));
+
+        //VueControllerは今回作成したモックで動作させる
+        $this->app->instance(VueController::class, $controller);
+
+
+
+        $product = Product::factory()->create();
+        $response = $this->get(route('vue.edit', ['id' => $product->id]));
+
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', '商品の編集画面に遷移できませんでした');
+
+    }
 }

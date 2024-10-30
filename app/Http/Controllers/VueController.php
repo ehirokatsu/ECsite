@@ -80,10 +80,16 @@ class VueController extends Controller
 
     public function edit(string $id)
     {
-        $product = ($this->editAction)($id);
-        return Inertia::render('edit', [
-            'product' => $product
-        ]);
+        try {
+            $product = ($this->editAction)($id);
+            return Inertia::render('edit', [
+                'product' => $product
+            ]);
+        }  catch (\Exception $e) {
+            \Log::error('Error : ' . $e->getMessage());
+            return redirect()->route('vue.index')->with('message', '商品の編集画面に遷移できませんでした');
+        }
+
     }
 
     public function update(EditConfirmRequest $request, string $id)
