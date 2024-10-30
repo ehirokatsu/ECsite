@@ -65,11 +65,17 @@ class VueController extends Controller
 
     public function store(CreateConfirmRequest $request)
     {
-        //保存処理を行う
-        ($this->storeAction)($request);
-        //session()->flash('status', 'Task was successful!');
+        try {
+            //保存処理を行う
+            ($this->storeAction)($request);
+            //session()->flash('status', 'Task was successful!');
+            return redirect()->route('vue.index')->with('message', '追加しました');
 
-        return redirect()->route('vue.index')->with('message', '追加しました');
+        }  catch (\Exception $e) {
+            \Log::error('Error : ' . $e->getMessage());
+            return redirect()->route('vue.index')->with('message', '商品を追加できませんでした');
+        }
+        
     }
 
     public function edit(string $id)

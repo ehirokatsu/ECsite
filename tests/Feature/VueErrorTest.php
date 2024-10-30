@@ -50,7 +50,7 @@ class VueErrorTest extends TestCase
 
         $this->checkFileExists = $this->app->make(CheckFileExists::class);
 
-        \Log::shouldReceive('error')->once()->with('Error : Test Exception');
+        //\Log::shouldReceive('error')->once()->with('Error : Test Exception');
         $this->dependencies = $this->mockDependencies();
     }
 
@@ -59,11 +59,18 @@ class VueErrorTest extends TestCase
      */
     public function test_index_catches_exception_and_redirects()
     {
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Test Exception');
 
         $this->dependencies['indexAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
 
+        //array_valueは連想配列から配列の値のみを抽出する
+        //スプレッド演算子「...」でstoreAction等を順番にVueControllerのコンストラクタに渡すことが可能
         $controller = new VueController(...array_values($this->dependencies));
+
+        //VueControllerは今回作成したモックで動作させる
         $this->app->instance(VueController::class, $controller);
 
         $response = $this->get(route('vue.index'));
@@ -72,5 +79,36 @@ class VueErrorTest extends TestCase
 
     }
 
+    public function test_store_catches_exception_and_redirects()
+    {
+        //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Test Exception');
+
+        $this->dependencies['storeAction']->shouldReceive('__invoke')
+        ->andThrow(new \Exception('Test Exception'));
+
+        //array_valueは連想配列から配列の値のみを抽出する
+        //スプレッド演算子「...」でstoreAction等を順番にVueControllerのコンストラクタに渡すことが可能
+        $controller = new VueController(...array_values($this->dependencies));
+
+        //VueControllerは今回作成したモックで動作させる
+        $this->app->instance(VueController::class, $controller);
+
+        \Storage::fake('test_images');
+        $imageName = 'test.jpg';
+        $image = UploadedFile::fake()->image($imageName);
+
+        $response = $this->post(route('vue.store'), [
+            'name' => 'testA',
+            'cost' => 2000,
+            'image' => $image
+        ]);
+
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', '商品を追加できませんでした');
+
+    }
     
 }
