@@ -54,7 +54,9 @@ class VueController extends Controller
 
         } catch (\Exception $e) {
             \Log::error('Error : ' . $e->getMessage());
-            return redirect()->route('vue.index')->with('message', '商品の内容を取得できませんでした');
+
+            //indexにリダイレクトすると無限ループになるので、エラー画面を表示する
+            return redirect()->route('vue.no');
         }
     }
 

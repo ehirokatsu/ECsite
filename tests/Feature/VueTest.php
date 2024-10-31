@@ -35,6 +35,7 @@ class VueTest extends TestCase
     {
 
         //ログインユーザ無しでアクセスできること
+        $product = Product::factory()->create();//商品が空だとエラーなので登録しておく
         $response = $this->get(route('vue.index'));
         $response->assertStatus(200);
 

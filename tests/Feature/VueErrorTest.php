@@ -50,7 +50,6 @@ class VueErrorTest extends TestCase
 
         $this->checkFileExists = $this->app->make(CheckFileExists::class);
 
-        //\Log::shouldReceive('error')->once()->with('Error : Test Exception');
         $this->dependencies = $this->mockDependencies();
     }
 
@@ -74,8 +73,22 @@ class VueErrorTest extends TestCase
         $this->app->instance(VueController::class, $controller);
 
         $response = $this->get(route('vue.index'));
-        $response->assertRedirect(route('vue.index'));
-        $response->assertSessionHas('message', '商品の内容を取得できませんでした');
+        $response->assertRedirect(route('vue.no'));
+
+    }
+    public function test_index_catches_exception_and_redirects_noProducts()
+    {
+        // Log ファサードをモックしてエラーの期待をセット
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('IndexAction Error: No products found in the database.');
+
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Error retrieving products: No products found in the database.');
+
+        $response = $this->get(route('vue.index'));
+        $response->assertRedirect(route('vue.no'));
 
     }
 
@@ -127,8 +140,6 @@ class VueErrorTest extends TestCase
 
         //VueControllerは今回作成したモックで動作させる
         $this->app->instance(VueController::class, $controller);
-
-
 
         $product = Product::factory()->create();
         $response = $this->get(route('vue.edit', ['id' => $product->id]));

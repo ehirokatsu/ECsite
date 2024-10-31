@@ -13,8 +13,18 @@ class IndexAction
 
     public function __invoke()
     {
-        //
-        return $products = Product::all();
+        try {
+            $products = Product::all();
+            
+            if ($products->isEmpty()) {
+                throw new \Exception("No products found in the database.");
+            }
 
+            return $products;
+
+        } catch (\Exception $e) {
+            \Log::error('IndexAction Error: ' . $e->getMessage());
+            throw new \Exception("Error retrieving products: " . $e->getMessage());
+        }
     }
 }
