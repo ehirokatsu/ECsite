@@ -97,8 +97,14 @@ class VueController extends Controller
     public function update(EditConfirmRequest $request, string $id)
     {
 
-        ($this->updateAction)($request, $id);
-        return redirect()->route('vue.index')->with('message', '更新しました');
+        try {
+            ($this->updateAction)($request, $id);
+            return redirect()->route('vue.index')->with('message', '更新しました');    
+        } catch  (\Exception $e) {
+            \Log::error('Error : ' . $e->getMessage());
+            return redirect()->route('vue.index')->with('message', '商品の更新に失敗しました');
+
+        }
 
     }
 
