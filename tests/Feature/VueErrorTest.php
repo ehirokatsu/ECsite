@@ -181,4 +181,30 @@ class VueErrorTest extends TestCase
         $response->assertSessionHas('message', '商品の更新に失敗しました');
 
     }
+
+    public function test_destroy_catches_exception_and_redirects()
+    {
+        //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('error')
+        ->once()
+        ->with('Error : Test Exception');
+
+        $this->dependencies['deleteAction']->shouldReceive('__invoke')
+        ->andThrow(new \Exception('Test Exception'));
+
+        //array_valueは連想配列から配列の値のみを抽出する
+        //スプレッド演算子「...」でstoreAction等を順番にVueControllerのコンストラクタに渡すことが可能
+        $controller = new VueController(...array_values($this->dependencies));
+
+        //VueControllerは今回作成したモックで動作させる
+        $this->app->instance(VueController::class, $controller);
+
+        
+        $product = Product::factory()->create();
+        $response = $this->delete(route('vue.destroy', ['id' => $product->id]));
+
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', '商品の削除に失敗しました');
+
+    }
 }

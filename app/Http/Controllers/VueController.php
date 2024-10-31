@@ -110,8 +110,14 @@ class VueController extends Controller
 
     public function destroy(string $id) {
 
-        ($this->deleteAction)($id);
-        return redirect()->route('vue.index')->with('message', '削除しました');
+        try {
+            ($this->deleteAction)($id);
+            return redirect()->route('vue.index')->with('message', '削除しました');
+        } catch  (\Exception $e) {
+            \Log::error('Error : ' . $e->getMessage());
+            return redirect()->route('vue.index')->with('message', '商品の削除に失敗しました');
+        }
+
     }
 
     public function search(Request $request) {
