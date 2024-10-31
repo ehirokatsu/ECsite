@@ -13,6 +13,8 @@ use App\UseCases\Product\EditAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\DeleteAction;
 use App\UseCases\Product\SearchAction;
+use App\Exceptions\ProductNotFoundException;
+use App\Exceptions\ProductImageNotFoundException;
 
 class VueController extends Controller
 {
@@ -113,8 +115,14 @@ class VueController extends Controller
         try {
             ($this->deleteAction)($id);
             return redirect()->route('vue.index')->with('message', '削除しました');
-        } catch  (\Exception $e) {
-            \Log::error('Error : ' . $e->getMessage());
+        } catch (ProductNotFoundException $e) {
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id");
+            return redirect()->route('vue.index')->with('message', '指定された商品が見つかりませんでした');
+        } catch (ProductImageNotFoundException $e) {
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id");
+            return redirect()->route('vue.index')->with('message', '商品画像が見つかりませんでした');
+        } catch (\Exception $e) {
+            \Log::error('DeleteAction Error : ' . $e->getMessage());
             return redirect()->route('vue.index')->with('message', '商品の削除に失敗しました');
         }
 

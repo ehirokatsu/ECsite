@@ -187,7 +187,7 @@ class VueErrorTest extends TestCase
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('error')
         ->once()
-        ->with('Error : Test Exception');
+        ->with('DeleteAction Error : Test Exception');
 
         $this->dependencies['deleteAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
