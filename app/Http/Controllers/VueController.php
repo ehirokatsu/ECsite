@@ -112,19 +112,22 @@ class VueController extends Controller
 
     public function destroy(string $id) {
 
+        \Log::info("Starting method", ['method' => __METHOD__]);
+        //長々と例外の種類に応じてcatchを分けるのはおかしい。
         try {
             ($this->deleteAction)($id);
+            \Log::info("Ending method", ['method' => __METHOD__]);
             return redirect()->route('vue.index')->with('message', '削除しました');
         } catch (ProductNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id");
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id" . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
             \Log::error("Stack Trace: " . $e->getTraceAsString());
             return redirect()->route('vue.index')->with('message', $e->getMessage());
         } catch (ProductImageNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id");
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id" . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
             \Log::error("Stack Trace: " . $e->getTraceAsString());
             return redirect()->route('vue.index')->with('message', '商品画像が見つかりませんでした');
         } catch (\Exception $e) {
-            \Log::error('DeleteAction Error : ' . $e->getMessage());
+            \Log::error('DeleteAction Error : ' . $e->getMessage() . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
             \Log::error("Stack Trace: " . $e->getTraceAsString());
             return redirect()->route('vue.index')->with('message', '商品の削除に失敗しました');
         }

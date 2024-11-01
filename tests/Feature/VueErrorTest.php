@@ -193,6 +193,7 @@ class VueErrorTest extends TestCase
         ->with('DeleteAction Error : Test Exception');
 */
         //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('info');
         \Log::shouldReceive('error')
         ->once()
         ->with(\Mockery::on(function ($message) {
@@ -233,6 +234,7 @@ class VueErrorTest extends TestCase
         $e = new ProductNotFoundException();
 
         //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('info');
         \Log::shouldReceive('error')
         ->once()
         ->with(\Mockery::on(function ($message) {
