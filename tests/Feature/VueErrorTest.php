@@ -197,14 +197,14 @@ class VueErrorTest extends TestCase
         ->once()
         ->with(\Mockery::on(function ($message) {
             // "DeleteAction Error" が含まれることを確認
-            return strpos($message, "DeleteAction Error : Test Exception") !== false;
+            return str_contains($message, "DeleteAction Error : Test Exception");
         }));
     
         \Log::shouldReceive('error')
         ->once()
         ->with(\Mockery::on(function ($message) {
             // "Stack Trace:" が含まれることを確認
-            return strpos($message, "Stack Trace:") !== false;
+            return str_contains($message, "Stack Trace:");
         }));
 
         $this->dependencies['deleteAction']->shouldReceive('__invoke')
@@ -237,14 +237,14 @@ class VueErrorTest extends TestCase
         ->once()
         ->with(\Mockery::on(function ($message) {
             // "DeleteAction Error" が含まれることを確認
-            return strpos($message, "DeleteAction Error") !== false;
+            return str_contains($message, "DeleteAction Error");
         }));
     
         \Log::shouldReceive('error')
         ->once()
         ->with(\Mockery::on(function ($message) {
             // "Stack Trace:" が含まれることを確認
-            return strpos($message, "Stack Trace:") !== false;
+            return str_contains($message, "Stack Trace:");
         }));
         /*
         \Log::shouldReceive('error')
