@@ -117,12 +117,15 @@ class VueController extends Controller
             return redirect()->route('vue.index')->with('message', '削除しました');
         } catch (ProductNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id");
-            return redirect()->route('vue.index')->with('message', '指定された商品が見つかりませんでした');
+            \Log::error("Stack Trace: " . $e->getTraceAsString());
+            return redirect()->route('vue.index')->with('message', $e->getMessage());
         } catch (ProductImageNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id");
+            \Log::error("Stack Trace: " . $e->getTraceAsString());
             return redirect()->route('vue.index')->with('message', '商品画像が見つかりませんでした');
         } catch (\Exception $e) {
             \Log::error('DeleteAction Error : ' . $e->getMessage());
+            \Log::error("Stack Trace: " . $e->getTraceAsString());
             return redirect()->route('vue.index')->with('message', '商品の削除に失敗しました');
         }
 

@@ -22,6 +22,8 @@ use App\UseCases\Product\EditAction;
 use App\UseCases\Product\UpdateAction;
 use App\UseCases\Product\DeleteAction;
 use App\UseCases\Product\SearchAction;
+use App\Exceptions\ProductNotFoundException;
+use App\Exceptions\ProductImageNotFoundException;
 
 class VueErrorTest extends TestCase
 {
@@ -184,10 +186,26 @@ class VueErrorTest extends TestCase
 
     public function test_destroy_catches_exception_and_redirects()
     {
+        /*
+        //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('error')
+        //->once()
+        ->with('DeleteAction Error : Test Exception');
+*/
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('error')
         ->once()
-        ->with('DeleteAction Error : Test Exception');
+        ->with(\Mockery::on(function ($message) {
+            // "DeleteAction Error" が含まれることを確認
+            return strpos($message, "DeleteAction Error : Test Exception") !== false;
+        }));
+    
+        \Log::shouldReceive('error')
+        ->once()
+        ->with(\Mockery::on(function ($message) {
+            // "Stack Trace:" が含まれることを確認
+            return strpos($message, "Stack Trace:") !== false;
+        }));
 
         $this->dependencies['deleteAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
@@ -205,6 +223,51 @@ class VueErrorTest extends TestCase
 
         $response->assertRedirect(route('vue.index'));
         $response->assertSessionHas('message', '商品の削除に失敗しました');
+
+    }
+
+    public function test_destroy_catches_exception_and_redirects_ProductNotFoundException()
+    {
+        $product = Product::factory()->create();
+        
+        $e = new ProductNotFoundException();
+
+        //Log出力用のモック兼、アサート。
+        \Log::shouldReceive('error')
+        ->once()
+        ->with(\Mockery::on(function ($message) {
+            // "DeleteAction Error" が含まれることを確認
+            return strpos($message, "DeleteAction Error") !== false;
+        }));
+    
+        \Log::shouldReceive('error')
+        ->once()
+        ->with(\Mockery::on(function ($message) {
+            // "Stack Trace:" が含まれることを確認
+            return strpos($message, "Stack Trace:") !== false;
+        }));
+        /*
+        \Log::shouldReceive('error')
+        ->withArgs(function ($message) {
+            echo $message; // テスト中にログのメッセージを表示
+            return true;    // テスト通過のためにtrueを返す
+        });
+        */
+
+        $this->dependencies['deleteAction']->shouldReceive('__invoke')
+        ->andThrow($e);
+
+        //array_valueは連想配列から配列の値のみを抽出する
+        //スプレッド演算子「...」でstoreAction等を順番にVueControllerのコンストラクタに渡すことが可能
+        $controller = new VueController(...array_values($this->dependencies));
+
+        //VueControllerは今回作成したモックで動作させる
+        $this->app->instance(VueController::class, $controller);
+
+        $response = $this->delete(route('vue.destroy', ['id' => $product->id]));
+
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', $e->getMessage());
 
     }
 }
