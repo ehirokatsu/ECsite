@@ -9,6 +9,11 @@ use App\Exceptions\ProductImageNotFoundException;
 
 class DeleteAction
 {
+    /**
+     * コンストラクタ
+     *
+     * @param CheckFileExists $checkFileExists 商品画像の存在確認を行うクラスのインスタンス
+     */
     public function __construct(
         CheckFileExists $checkFileExists,
         )//use必須
@@ -16,6 +21,13 @@ class DeleteAction
         $this->checkFileExists = $checkFileExists;
     }
 
+    /**
+     * 商品削除の実行メソッド
+     *
+     * @param string $id 削除対象商品のID
+     * @throws ProductNotFoundException 商品が存在しない場合にスロー
+     * @throws ProductImageNotFoundException 商品画像が存在しない場合にスロー
+     */
     public function __invoke(string $id)
     {
         try {
@@ -37,6 +49,10 @@ class DeleteAction
             $product->delete();
             
         } catch (ModelNotFoundException $e) {
+
+            //ここで商品IDが無い旨のログを出力し、Exceptionでスローし直す？
+            //そうすれば呼び出し元のコントローラではExceptionだけの記述で済む
+
             throw new ProductNotFoundException();
         }
     }
