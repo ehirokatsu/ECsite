@@ -51,7 +51,9 @@ class DeleteAction
         } catch (ModelNotFoundException $e) {
 
             //ここで商品IDが無い旨のログを出力し、Exceptionでスローし直す？
-            //そうすれば呼び出し元のコントローラではExceptionだけの記述で済む
+            //そうすれば呼び出し元のコントローラではExceptionだけの記述で済む、
+            //あくまで、ここで使用するメソッドの例外だけ意識する。findOrFailのように
+            //そして、ここでスローする例外は1個にしておく。そしたら、コントローラではその1こでいい
 
             throw new ProductNotFoundException();
         }
