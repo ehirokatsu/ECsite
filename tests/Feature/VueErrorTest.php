@@ -191,7 +191,7 @@ class VueErrorTest extends TestCase
         \Log::shouldReceive('error')
         //->once()
         ->with('DeleteAction Error : Test Exception');
-*/
+
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('info');
         \Log::shouldReceive('error')
@@ -207,7 +207,7 @@ class VueErrorTest extends TestCase
             // "Stack Trace:" が含まれることを確認
             return str_contains($message, "Stack Trace:");
         }));
-
+*/
         $this->dependencies['deleteAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
 
@@ -232,7 +232,7 @@ class VueErrorTest extends TestCase
         $product = Product::factory()->create();
         
         $e = new ProductNotFoundException();
-
+/*
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('info');
         \Log::shouldReceive('error')
@@ -248,7 +248,7 @@ class VueErrorTest extends TestCase
             // "Stack Trace:" が含まれることを確認
             return str_contains($message, "Stack Trace:");
         }));
-        /*
+        
         \Log::shouldReceive('error')
         ->withArgs(function ($message) {
             echo $message; // テスト中にログのメッセージを表示

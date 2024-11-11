@@ -116,19 +116,28 @@ class VueController extends Controller
         try {
             ($this->deleteAction)($id);
             \Log::info("Ending method", ['method' => __METHOD__]);
-            return redirect()->route('vue.index')->with('message', '削除しました');
+            return redirect()->route('vue.index')->with('message', __('messages.delete_success'));
         } catch (ProductNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id" . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
-            \Log::error("Stack Trace: " . $e->getTraceAsString());
-            return redirect()->route('vue.index')->with('message', $e->getMessage());
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id", [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('vue.index')->with('message', __('messages.product_not_found'));
         } catch (ProductImageNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id" . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
-            \Log::error("Stack Trace: " . $e->getTraceAsString());
-            return redirect()->route('vue.index')->with('message', $e->getMessage());
+            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id", [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('vue.index')->with('message', __('messages.product_image_not_found'));
         } catch (\Exception $e) {
-            \Log::error('DeleteAction Error : ' . $e->getMessage() . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
-            \Log::error("Stack Trace: " . $e->getTraceAsString());
-            return redirect()->route('vue.index')->with('message', '商品の削除に失敗しました');
+            \Log::error('DeleteAction Error : ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('vue.index')->with('message', __('messages.delete_failed'));
         }
 
     }
