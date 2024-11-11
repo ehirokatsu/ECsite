@@ -33,7 +33,7 @@ class DeleteAction
         try {
             //削除対象のレコードを取得する
             //Failの場合はModelNotFoundException をスローします。
-            $product = product::findOrFail($id);
+            $product = Product::findOrFail($id);
 
             //商品画像のフルパスを取得する
             $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;

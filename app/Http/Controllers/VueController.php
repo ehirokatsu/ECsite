@@ -112,10 +112,10 @@ class VueController extends Controller
 
     public function destroy(string $id) {
 
-        \Log::info("Starting method", ['method' => __METHOD__]);
+        \Log::info("Starting destroy method", ['method' => __METHOD__]);
         try {
             ($this->deleteAction)($id);
-            \Log::info("Ending method", ['method' => __METHOD__]);
+            \Log::info("Ending destroy method", ['method' => __METHOD__]);
             return redirect()->route('vue.index')->with('message', __('messages.delete_success'));
         } catch (ProductNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id", [
