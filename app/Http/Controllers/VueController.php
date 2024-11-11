@@ -113,7 +113,6 @@ class VueController extends Controller
     public function destroy(string $id) {
 
         \Log::info("Starting method", ['method' => __METHOD__]);
-        //長々と例外の種類に応じてcatchを分けるのはおかしい。
         try {
             ($this->deleteAction)($id);
             \Log::info("Ending method", ['method' => __METHOD__]);
@@ -125,7 +124,7 @@ class VueController extends Controller
         } catch (ProductImageNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id" . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
             \Log::error("Stack Trace: " . $e->getTraceAsString());
-            return redirect()->route('vue.index')->with('message', '商品画像が見つかりませんでした');
+            return redirect()->route('vue.index')->with('message', $e->getMessage());
         } catch (\Exception $e) {
             \Log::error('DeleteAction Error : ' . $e->getMessage() . ' in ' .  $e->getFile() . ' at line ' . $e->getLine());
             \Log::error("Stack Trace: " . $e->getTraceAsString());
@@ -148,9 +147,8 @@ class VueController extends Controller
         //useFormでAjaxを実現する時の戻りは通常と同じ。
         return Inertia::render('index', [
             'products' => $products,
-        ]);
         
-
+        ]);
     }
 
 }

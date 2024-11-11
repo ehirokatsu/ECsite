@@ -42,6 +42,7 @@ class DeleteAction
             if (($this->checkFileExists)($imageFullPath)) {
                 unlink($imageFullPath);
             } else {
+                \Log::error("商品画像が見つかりません: {$imageFullPath}");
                 throw new ProductImageNotFoundException();
             }
 
@@ -53,9 +54,15 @@ class DeleteAction
             //ここで商品IDが無い旨のログを出力し、Exceptionでスローし直す？
             //そうすれば呼び出し元のコントローラではExceptionだけの記述で済む、
             //あくまで、ここで使用するメソッドの例外だけ意識する。findOrFailのように
-            //そして、ここでスローする例外は1個にしておく。そしたら、コントローラではその1こでいい
+            //ModelNotFoundExceptionをスローするメソッドがある場合は、それを使うのが良い。
 
+            \Log::error("商品が見つかりません: ID {$id}");
             throw new ProductNotFoundException();
+
+        } catch (\Exception $e) {
+            
+            \Log::error('予期しないエラーが発生しました: ' . $e->getMessage());
+            throw $e;
         }
     }
 }
