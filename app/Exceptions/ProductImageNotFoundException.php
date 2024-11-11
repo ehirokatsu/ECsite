@@ -6,5 +6,10 @@ use Exception;
 
 class ProductImageNotFoundException extends Exception
 {
-    protected $message = '商品画像が見つかりません';
+    protected $message;
+
+    public function __construct()
+    {
+        $this->message = __('messages.product_image_not_found');
+    }
 }

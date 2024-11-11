@@ -6,5 +6,10 @@ use Exception;
 
 class ProductNotFoundException extends Exception
 {
-    protected $message = '指定された商品が見つかりません';
+    protected $message;
+
+    public function __construct()
+    {
+        $this->message = __('messages.product_not_found');
+    }
 }
