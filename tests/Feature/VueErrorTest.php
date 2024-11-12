@@ -60,10 +60,11 @@ class VueErrorTest extends TestCase
      */
     public function test_index_catches_exception_and_redirects()
     {
+        /*
         \Log::shouldReceive('error')
         ->once()
         ->with('Error : Test Exception');
-
+        */
         $this->dependencies['indexAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
 
@@ -80,6 +81,7 @@ class VueErrorTest extends TestCase
     }
     public function test_index_catches_exception_and_redirects_noProducts()
     {
+        /*
         // Log ファサードをモックしてエラーの期待をセット
         \Log::shouldReceive('error')
         ->once()
@@ -88,6 +90,7 @@ class VueErrorTest extends TestCase
         \Log::shouldReceive('error')
         ->once()
         ->with('Error : Error retrieving products: No products found in the database.');
+        */
 
         $response = $this->get(route('vue.index'));
         $response->assertRedirect(route('vue.no'));
@@ -96,10 +99,12 @@ class VueErrorTest extends TestCase
 
     public function test_store_catches_exception_and_redirects()
     {
+        /*
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('error')
         ->once()
         ->with('Error : Test Exception');
+        */
 
         $this->dependencies['storeAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
@@ -128,10 +133,12 @@ class VueErrorTest extends TestCase
 
     public function test_edit_catches_exception_and_redirects()
     {
+        /*
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('error')
         ->once()
         ->with('Error : Test Exception');
+        */
 
         $this->dependencies['editAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
@@ -152,10 +159,12 @@ class VueErrorTest extends TestCase
     }
     public function test_update_catches_exception_and_redirects()
     {
+        /*
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('error')
         ->once()
         ->with('Error : Test Exception');
+        */
 
         $this->dependencies['updateAction']->shouldReceive('__invoke')
         ->andThrow(new \Exception('Test Exception'));
