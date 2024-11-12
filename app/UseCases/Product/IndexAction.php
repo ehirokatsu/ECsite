@@ -3,6 +3,8 @@
 namespace App\UseCases\Product;
 
 use App\Models\Product;
+use Illuminate\Database\QueryException;
+use PDOException;
 
 class IndexAction
 {
@@ -22,9 +24,17 @@ class IndexAction
 
             return $products;
 
+        } catch (QueryException $e) {
+            // クエリ実行エラーをキャッチ
+            throw new \Exception("Database query error: " . $e->getMessage(), 0, $e);
+            
+        } catch (PDOException $e) {
+            // データベース接続エラーをキャッチ
+            throw new \Exception("Database connection error: " . $e->getMessage(), 0, $e);
+
         } catch (\Exception $e) {
-            \Log::error('IndexAction Error: ' . $e->getMessage());
-            throw new \Exception("Error retrieving products: " . $e->getMessage());
+
+            throw $e;
         }
     }
 }

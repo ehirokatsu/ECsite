@@ -47,15 +47,23 @@ class VueController extends Controller
         //メソッドインジェクションなら以下だけで良い
         //$saveImage();
 
+        \Log::info("Starting index method", ['method' => __METHOD__]);
+
         try {
             $products = ($this->indexAction)();
+
+            \Log::info("Ending index method", ['method' => __METHOD__]);
 
             return Inertia::render('index', [
                 'products' => $products,
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error : ' . $e->getMessage());
+            \Log::error('IndexAction Error : ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
 
             //indexにリダイレクトすると無限ループになるので、エラー画面を表示する
             return redirect()->route('vue.no');
