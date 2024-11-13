@@ -49,28 +49,44 @@ class IndexActionTest extends TestCase
     {
         // Arrange: DB ファサードでクエリビルダーをモック
         DB::shouldReceive('table')
+            ->with('products')
             ->andThrow(new QueryException('', '', [], new \Exception('Simulated Query Error')));
-
-        // Act & Assert
+    
+        //最終的にスローされる例外をアサートする
         $this->expectException(\Exception::class);
-        //$this->expectExceptionMessage('Database query error: Simulated Query Error');
-
+        $this->expectExceptionMessage('Database query error: Simulated Query Error');
+    
         $action = new IndexAction();
         $action();
     }
 
-    //Exceptionに流れている気がする
+    /*以下だとエラーになってしまうので、上記のように変更
+    public function test_invoke_throws_query_exception()
+    {
+        // Arrange: Product モデルの all メソッドをモック
+        $mock = Mockery::mock('overload:App\Models\Product');
+        $mock->shouldReceive('all')->once()->andThrow(new QueryException('', [], new \Exception('Simulated Query Error')));
+
+        // Act & Assert
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Database query error: Simulated Query Error');
+
+        $action = new IndexAction();
+        $action();
+    }
+    */
 
     public function test_invoke_throws_pdo_exception()
     {
         // Arrange: DB ファサードで PDO エラーをモック
         DB::shouldReceive('table')
-            ->andThrow(new PDOException('PDO Error'));
-
+            ->with('products')
+            ->andReturn(Mockery::mock()->shouldReceive('select')->andThrow(new PDOException('PDO Error'))->getMock());
+    
         // Act & Assert
         $this->expectException(\Exception::class);
-        //$this->expectExceptionMessage('Database connection error: PDO Error');
-
+        $this->expectExceptionMessage('Database connection error: PDO Error');
+    
         $action = new IndexAction();
         $action();
     }
