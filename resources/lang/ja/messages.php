@@ -7,4 +7,5 @@ return [
     'delete_failed' => '商品の削除に失敗しました',
     'update_success' => '更新しました',
     'update_failed' => '商品の更新に失敗しました',
+    'edit_failed' => '商品の編集画面に遷移できませんでした',
 ];

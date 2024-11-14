@@ -92,14 +92,32 @@ class VueController extends Controller
 
     public function edit(string $id)
     {
+        \Log::info("Starting edit method", ['method' => __METHOD__]);
+
         try {
             $product = ($this->editAction)($id);
+
+            \Log::info("Ending edit method", ['method' => __METHOD__]);
+
             return Inertia::render('edit', [
                 'product' => $product
             ]);
+
+        } catch (ProductNotFoundException $e) {
+            \Log::error("EditAction Error : " . $e->getMessage() . " with ID: $id", [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('vue.index')->with('message', __('messages.edit_failed'));
+
         }  catch (\Exception $e) {
-            \Log::error('Error : ' . $e->getMessage());
-            return redirect()->route('vue.index')->with('message', '商品の編集画面に遷移できませんでした');
+            \Log::error('EditAction Error : ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return redirect()->route('vue.index')->with('message', __('messages.edit_failed'));
         }
 
     }
