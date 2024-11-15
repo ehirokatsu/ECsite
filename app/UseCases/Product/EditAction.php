@@ -4,7 +4,6 @@ namespace App\UseCases\Product;
 
 use App\Repositories\ProductRepositoryInterface;
 use App\Exceptions\ProductNotFoundException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EditAction
 {
@@ -19,7 +18,7 @@ class EditAction
     {
         try {
             return $this->productRepositoryInterface->findOrFail($id);
-        } catch (ModelNotFoundException $e) {
+        } catch (ProductNotFoundException $e) {
             throw new ProductNotFoundException("Product not found with ID: $id", 0, $e);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage(), 0, $e);

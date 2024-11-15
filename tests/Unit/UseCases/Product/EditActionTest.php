@@ -49,7 +49,7 @@ class EditActionTest extends TestCase
 
         $this->productRepositoryMock->shouldReceive('findOrFail')
             ->with('999')
-            ->andThrow(ModelNotFoundException::class);
+            ->andThrow(ProductNotFoundException::class);
 
         // Act
         $this->editAction->__invoke('999');
