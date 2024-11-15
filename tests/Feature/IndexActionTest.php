@@ -5,7 +5,7 @@ namespace Tests\Unit\UseCases\Product;
 use Tests\TestCase;
 use App\Models\Product;
 use App\UseCases\Product\IndexAction;
-use App\Repositories\ProductRepository;
+use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
@@ -24,8 +24,8 @@ class IndexActionTest extends TestCase
     {
         parent::setUp();
 
-        // ProductRepository の完全なモックを作成
-        $this->productRepositoryMock = \Mockery::mock(ProductRepository::class);
+        // ProductRepositoryInterface の完全なモックを作成
+        $this->productRepositoryMock = \Mockery::mock(ProductRepositoryInterface::class);
         $this->indexAction = new IndexAction($this->productRepositoryMock);
     }
 
@@ -66,4 +66,31 @@ class IndexActionTest extends TestCase
         $this->indexAction->__invoke();
     }
 
+    public function test_invoke_throws_query_exception()
+    {
+        // Arrange: リポジトリの all() メソッドが QueryException をスローするように設定
+        $this->productRepositoryMock->shouldReceive('all')
+            ->once()
+            ->andThrow(new QueryException('', '', [], new \Exception('Simulated Query Error')));
+    
+        // Act & Assert
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Database query error: Simulated Query Error');
+    
+        $this->indexAction->__invoke();
+    }
+    
+    public function test_invoke_throws_pdo_exception()
+    {
+        // Arrange: リポジトリの all() メソッドが PDOException をスローするように設定
+        $this->productRepositoryMock->shouldReceive('all')
+            ->once()
+            ->andThrow(new PDOException('PDO Error'));
+    
+        // Act & Assert
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Database connection error: PDO Error');
+    
+        $this->indexAction->__invoke();
+    }
 }

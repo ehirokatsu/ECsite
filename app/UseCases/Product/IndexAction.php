@@ -16,9 +16,8 @@ class IndexAction
     public function __invoke()
     {
         try {
-            //テストコードでエラーになったのでallはやめた
+
             $products = $this->productRepositoryInterface->all();
-            //$products = \DB::table('products')->select('*')->get();
             
             if ($products->isEmpty()) {
                 throw new \Exception("No products found in the database.");
