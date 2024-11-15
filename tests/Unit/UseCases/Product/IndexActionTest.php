@@ -2,12 +2,9 @@
 
 namespace Tests\Unit\UseCases\Product;
 
-use Tests\TestCase;
-use App\Models\Product;
+use PHPUnit\Framework\TestCase;
 use App\UseCases\Product\IndexAction;
 use App\Repositories\ProductRepositoryInterface;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use PDOException;
 use Mockery;
@@ -15,8 +12,6 @@ use Exception;
 
 class IndexActionTest extends TestCase
 {
-    use RefreshDatabase;
-
     protected $productRepositoryMock;
     protected $editAction;
     protected $indexAction;
@@ -25,7 +20,7 @@ class IndexActionTest extends TestCase
         parent::setUp();
 
         // ProductRepositoryInterface の完全なモックを作成
-        $this->productRepositoryMock = \Mockery::mock(ProductRepositoryInterface::class);
+        $this->productRepositoryMock = Mockery::mock(ProductRepositoryInterface::class);
         $this->indexAction = new IndexAction($this->productRepositoryMock);
     }
 
@@ -60,7 +55,7 @@ class IndexActionTest extends TestCase
             ->andReturn(collect());
 
         // Act & Assert: 例外が発生することを確認
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('No products found in the database.');
 
         $this->indexAction->__invoke();
@@ -71,10 +66,10 @@ class IndexActionTest extends TestCase
         // Arrange: リポジトリの all() メソッドが QueryException をスローするように設定
         $this->productRepositoryMock->shouldReceive('all')
             ->once()
-            ->andThrow(new QueryException('', '', [], new \Exception('Simulated Query Error')));
+            ->andThrow(new QueryException('', '', [], new Exception('Simulated Query Error')));
     
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database query error: Simulated Query Error');
     
         $this->indexAction->__invoke();
@@ -88,7 +83,7 @@ class IndexActionTest extends TestCase
             ->andThrow(new PDOException('PDO Error'));
     
         // Act & Assert
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessage('Database connection error: PDO Error');
     
         $this->indexAction->__invoke();
