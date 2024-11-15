@@ -5,65 +5,16 @@ namespace Tests\Unit\UseCases\Product;
 use Tests\TestCase;
 use App\Models\Product;
 use App\UseCases\Product\EditAction;
-use App\Repositories\ProductRepository;
+use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Exceptions\ProductNotFoundException;
 use Mockery;
 
-
-
 class EditActionTest extends TestCase
 {
-
     use RefreshDatabase;
 
-    /*リポジトリパターン導入前
-    　Mockery::mock('App\Models\Product');でエラーになり、findOrFailでExceptionを発生できなかった
-
-    public function test_invoke_returns_product_when_found()
-    {
-        // Arrange: テスト用データを生成
-        $product = Product::factory()->create();
-
-        // Act
-        $action = new EditAction();
-        $result = $action($product->id);
-
-        // Assert
-        $this->assertEquals($product->id, $result->id);
-    }
-
-    public function test_invoke_throws_exception_when_no_product_found()
-    {
-        // Arrange: 存在しないIDを設定
-        $nonExistentId = 999;
-
-        // Assert
-        $this->expectException(ModelNotFoundException::class);
-
-        // Act
-        $action = new EditAction();
-        $action($nonExistentId);
-    }
-
-
-    public function test_invoke_throws_generic_exception2()
-    {
-        // Arrange: Product モデルの findOrFail メソッドをモック
-        $mock = Mockery::mock('App\Models\Product');
-        $mock->shouldReceive('findOrFail')->andThrow(new \Exception('Generic Exception'));
-
-        // Assert
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Generic Exception');
-
-        // Act
-        $action = new EditAction();
-        $action('1');
-    }
-
-*/
     protected $productRepositoryMock;
     protected $editAction;
 
@@ -71,12 +22,12 @@ class EditActionTest extends TestCase
     {
         parent::setUp();
 
-        // ProductRepository の完全なモックを作成
-        $this->productRepositoryMock = \Mockery::mock(ProductRepository::class);
+        // ProductRepositoryInterface のモックを作成
+        $this->productRepositoryMock = \Mockery::mock(ProductRepositoryInterface::class);
         $this->editAction = new EditAction($this->productRepositoryMock);
     }
 
-    public function testInvokeReturnsProductWhenFound()
+    public function test_invoke_returns_product_when_found()
     {
         // Arrange
         $productMock = \Mockery::mock(Product::class);
@@ -91,8 +42,9 @@ class EditActionTest extends TestCase
         $this->assertInstanceOf(Product::class, $result);
     }
 
-    public function testInvokeThrowsProductNotFoundExceptionWhenNotFound()
+    public function test_invoke_throws_product_not_found_exception_when_not_found()
     {
+        // Assert
         $this->expectException(ProductNotFoundException::class);
 
         $this->productRepositoryMock->shouldReceive('findOrFail')
@@ -103,8 +55,9 @@ class EditActionTest extends TestCase
         $this->editAction->__invoke('999');
     }
 
-    public function testInvokeThrowsGenericExceptionForOtherErrors()
+    public function test_invoke_throws_generic_exception_for_other_errors()
     {
+        // Assert
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Some error');
 
@@ -122,5 +75,3 @@ class EditActionTest extends TestCase
         parent::tearDown();
     }
 }
-
-
