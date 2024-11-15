@@ -2,23 +2,23 @@
 
 namespace App\UseCases\Product;
 
-use App\Repositories\ProductRepository;
+use App\Repositories\ProductRepositoryInterface;
 use App\Exceptions\ProductNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class EditAction
 {
-    protected $productRepository;
+    protected $productRepositoryInterface;
 
-    public function __construct(ProductRepository $productRepository)
+    public function __construct(ProductRepositoryInterface $productRepositoryInterface)
     {
-        $this->productRepository = $productRepository;
+        $this->productRepositoryInterface = $productRepositoryInterface;
     }
 
     public function __invoke(string $id)
     {
         try {
-            return $this->productRepository->findOrFail($id);
+            return $this->productRepositoryInterface->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             throw new ProductNotFoundException("Product not found with ID: $id", 0, $e);
         } catch (\Exception $e) {
