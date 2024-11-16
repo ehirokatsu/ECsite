@@ -57,7 +57,19 @@ class VueController extends Controller
             return Inertia::render('index', [
                 'products' => $products,
             ]);
+/*
+            //Productがない時それ以外の2パターンをキャッチする
+        } catch (ProductNotFoundException $e) {
+            \Log::error('IndexAction Error : ' . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
 
+            //indexにリダイレクトすると無限ループになるので、エラー画面を表示する
+            return redirect()->route('vue.no');
+
+*/
         } catch (\Exception $e) {
             \Log::error('IndexAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),
@@ -143,6 +155,8 @@ class VueController extends Controller
             ($this->deleteAction)($id);
             \Log::info("Ending destroy method", ['method' => __METHOD__]);
             return redirect()->route('vue.index')->with('message', __('messages.delete_success'));
+
+            //以下も不要。ユーザーに商品がない胸を伝える必要はない。しかし、商品がない場合と、想定外のエラーを分けて表示したいなら必要。
         } catch (ProductNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id", [
                 'file' => $e->getFile(),
@@ -150,6 +164,8 @@ class VueController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             return redirect()->route('vue.index')->with('message', __('messages.product_not_found'));
+
+            //以下は不要。ユーザーに商品画像がない胸を伝える必要はない。
         } catch (ProductImageNotFoundException $e) {
             \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id", [
                 'file' => $e->getFile(),

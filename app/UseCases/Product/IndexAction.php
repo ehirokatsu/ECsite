@@ -25,14 +25,6 @@ class IndexAction
 
             return $products;
 
-        } catch (QueryException $e) {
-            // クエリ実行エラーをキャッチ
-            throw new \Exception("Database query error: " . $e->getMessage(), 0, $e);
-
-        } catch (PDOException $e) {
-            // データベース接続エラーをキャッチ
-            throw new \Exception("Database connection error: " . $e->getMessage(), 0, $e);
-
         } catch (\Exception $e) {
 
             throw $e;
