@@ -10,6 +10,7 @@ class ProductNotFoundException extends Exception
 
     public function __construct()
     {
-        $this->message = __('messages.product_not_found');
+        // メッセージが指定されていない場合はデフォルトメッセージを設定
+        parent::__construct($message ?? __('messages.product_not_found'));
     }
 }
