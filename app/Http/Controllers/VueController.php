@@ -57,19 +57,7 @@ class VueController extends Controller
             return Inertia::render('index', [
                 'products' => $products,
             ]);
-/*
-            //Productがない時それ以外の2パターンをキャッチする
-        } catch (ProductNotFoundException $e) {
-            \Log::error('IndexAction Error : ' . $e->getMessage(), [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
 
-            //indexにリダイレクトすると無限ループになるので、エラー画面を表示する
-            return redirect()->route('vue.no');
-
-*/
         } catch (\Exception $e) {
             \Log::error('IndexAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),

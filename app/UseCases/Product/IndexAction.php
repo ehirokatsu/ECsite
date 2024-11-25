@@ -3,8 +3,6 @@
 namespace App\UseCases\Product;
 
 use App\Repositories\ProductRepositoryInterface;
-use Illuminate\Database\QueryException;
-use PDOException;
 
 class IndexAction
 {
@@ -15,6 +13,7 @@ class IndexAction
 
     public function __invoke()
     {
+        //Productテーブルからの取得はエラーを伴う可能性があるため、try-catchで囲む
         try {
 
             $products = $this->productRepositoryInterface->all();
@@ -25,6 +24,7 @@ class IndexAction
 
             return $products;
 
+        //例外は全てExceptionでキャッチして上位にスローする方針
         } catch (\Exception $e) {
 
             throw $e;

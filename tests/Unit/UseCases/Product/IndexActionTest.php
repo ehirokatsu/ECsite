@@ -70,7 +70,7 @@ class IndexActionTest extends TestCase
     
         // Act & Assert
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Database query error: Simulated Query Error');
+        $this->expectExceptionMessage('Simulated Query Error');
     
         $this->indexAction->__invoke();
     }
@@ -84,7 +84,7 @@ class IndexActionTest extends TestCase
     
         // Act & Assert
         $this->expectException(Exception::class);
-        $this->expectExceptionMessage('Database connection error: PDO Error');
+        $this->expectExceptionMessage('PDO Error');
     
         $this->indexAction->__invoke();
     }
