@@ -3,6 +3,7 @@
 namespace App\UseCases\Product;
 
 use App\Repositories\ProductRepositoryInterface;
+use Exception;
 
 class IndexAction
 {
@@ -19,13 +20,13 @@ class IndexAction
             $products = $this->productRepositoryInterface->all();
             
             if ($products->isEmpty()) {
-                throw new \Exception("No products found in the database.");
+                throw new Exception("No products found in the database.");
             }
 
             return $products;
 
         //例外は全てExceptionでキャッチして上位にスローする方針
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
 
             throw $e;
             
