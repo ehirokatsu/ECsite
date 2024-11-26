@@ -28,7 +28,7 @@ class IndexAction
         //例外は全てExceptionでキャッチして上位にスローする方針
         } catch (Exception $e) {
 
-            throw $e;
+            throw new Exception("error: " . $e->getMessage(), 0, $e);
             
         }
     }

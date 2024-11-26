@@ -15,6 +15,7 @@ use App\UseCases\Product\DeleteAction;
 use App\UseCases\Product\SearchAction;
 use App\Exceptions\ProductNotFoundException;
 use App\Exceptions\ProductImageNotFoundException;
+use Exception;
 
 class VueController extends Controller
 {
@@ -58,7 +59,7 @@ class VueController extends Controller
                 'products' => $products,
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error('IndexAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -83,7 +84,7 @@ class VueController extends Controller
             //session()->flash('status', 'Task was successful!');
             return redirect()->route('vue.index')->with('message', '追加しました');
 
-        }  catch (\Exception $e) {
+        }  catch (Exception $e) {
             \Log::error('Error : ' . $e->getMessage());
             return redirect()->route('vue.index')->with('message', '商品を追加できませんでした');
         }
@@ -103,7 +104,7 @@ class VueController extends Controller
                 'product' => $product
             ]);
 
-        }  catch (\Exception $e) {
+        }  catch (Exception $e) {
             \Log::error('EditAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -120,7 +121,7 @@ class VueController extends Controller
         try {
             ($this->updateAction)($request, $id);
             return redirect()->route('vue.index')->with('message', '更新しました');    
-        } catch  (\Exception $e) {
+        } catch  (Exception $e) {
             \Log::error('Error : ' . $e->getMessage());
             return redirect()->route('vue.index')->with('message', '商品の更新に失敗しました');
 
@@ -137,7 +138,7 @@ class VueController extends Controller
             return redirect()->route('vue.index')->with('message', __('messages.delete_success'));
 
         //エラーメッセージは1種類。ユーザーに商品がない旨を伝える必要はない。しかし、商品がない場合と、想定外のエラーを分けて表示したいなら必要。
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             \Log::error('DeleteAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
