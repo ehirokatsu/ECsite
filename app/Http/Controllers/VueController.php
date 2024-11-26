@@ -103,14 +103,6 @@ class VueController extends Controller
                 'product' => $product
             ]);
 
-        } catch (ProductNotFoundException $e) {
-            \Log::error("EditAction Error : " . $e->getMessage() . " with ID: $id", [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->route('vue.index')->with('message', __('messages.edit_failed'));
-
         }  catch (\Exception $e) {
             \Log::error('EditAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),
@@ -144,23 +136,7 @@ class VueController extends Controller
             \Log::info("Ending destroy method", ['method' => __METHOD__]);
             return redirect()->route('vue.index')->with('message', __('messages.delete_success'));
 
-            //以下も不要。ユーザーに商品がない胸を伝える必要はない。しかし、商品がない場合と、想定外のエラーを分けて表示したいなら必要。
-        } catch (ProductNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " with ID: $id", [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->route('vue.index')->with('message', __('messages.product_not_found'));
-
-            //以下は不要。ユーザーに商品画像がない胸を伝える必要はない。
-        } catch (ProductImageNotFoundException $e) {
-            \Log::error("DeleteAction Error : " . $e->getMessage() . " for Product ID: $id", [
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->route('vue.index')->with('message', __('messages.product_image_not_found'));
+        //エラーメッセージは1種類。ユーザーに商品がない旨を伝える必要はない。しかし、商品がない場合と、想定外のエラーを分けて表示したいなら必要。
         } catch (\Exception $e) {
             \Log::error('DeleteAction Error : ' . $e->getMessage(), [
                 'file' => $e->getFile(),

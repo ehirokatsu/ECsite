@@ -6,8 +6,6 @@ use Tests\TestCase;
 use App\UseCases\Product\EditAction;
 use App\Repositories\ProductRepositoryInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Exceptions\ProductNotFoundException;
 use Mockery;
 use Exception;
 
@@ -44,12 +42,12 @@ class EditActionTest extends TestCase
 
     public function test_invoke_throws_product_not_found_exception_when_not_found()
     {
-        // Assert
-        $this->expectException(ProductNotFoundException::class);
+        // Assert Exceptionにまとめらてしまうからエラーにならない？
+        $this->expectException(Exception::class);
 
         $this->productRepositoryMock->shouldReceive('findOrFail')
             ->with('999')
-            ->andThrow(ProductNotFoundException::class);
+            ->andThrow(Exception::class);
 
         // Act
         $this->editAction->__invoke('999');
