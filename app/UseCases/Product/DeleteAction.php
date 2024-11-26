@@ -4,8 +4,8 @@ namespace App\UseCases\Product;
 
 use App\Models\Product;
 use App\UseCases\Image\CheckFileExists;
-use App\Exceptions\ProductNotFoundException;
-use App\Exceptions\ProductImageNotFoundException;
+use App\Repositories\ProductRepositoryInterface;
+use Exception;
 
 class DeleteAction
 {
@@ -16,24 +16,23 @@ class DeleteAction
      */
     public function __construct(
         CheckFileExists $checkFileExists,
+        ProductRepositoryInterface $productRepositoryInterface
         )//use必須
     {
         $this->checkFileExists = $checkFileExists;
+        $this->productRepositoryInterface = $productRepositoryInterface;
     }
 
     /**
      * 商品削除の実行メソッド
      *
      * @param string $id 削除対象商品のID
-     * @throws ProductNotFoundException 商品が存在しない場合にスロー
-     * @throws ProductImageNotFoundException 商品画像が存在しない場合にスロー
      */
     public function __invoke(string $id)
     {
         try {
             //削除対象のレコードを取得する
-            //Failの場合はModelNotFoundException をスローします。
-            $product = Product::findOrFail($id);
+            $product = $this->productRepositoryInterface->findOrFail($id);
 
             //商品画像のフルパスを取得する
             $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
@@ -42,22 +41,14 @@ class DeleteAction
             if (($this->checkFileExists)($imageFullPath)) {
                 unlink($imageFullPath);
             } else {
-                throw new ProductImageNotFoundException();
+                throw new Exception("Product image not found" . $imageFullPath);
             }
 
             //商品レコードを削除する
             $product->delete();
-            
-        } catch (ModelNotFoundException $e) {
 
-            //ここで商品IDが無い旨のログを出力し、Exceptionでスローし直す？
-            //そうすれば呼び出し元のコントローラではExceptionだけの記述で済む、
-            //あくまで、ここで使用するメソッドの例外だけ意識する。findOrFailのように
-            //ModelNotFoundExceptionをスローするメソッドがある場合は、それを使うのが良い。
-            throw new ProductNotFoundException();
-
-        } catch (\Exception $e) {
-            throw $e;
+        } catch (Exception $e) {
+            throw new Exception("error: " . $e->getMessage(), 0, $e);
         }
     }
 }

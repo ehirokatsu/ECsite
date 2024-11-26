@@ -235,13 +235,13 @@ class VueErrorTest extends TestCase
         $response->assertSessionHas('message', '商品の削除に失敗しました');
 
     }
-
+/*
     public function test_destroy_catches_exception_and_redirects_ProductNotFoundException()
     {
         $product = Product::factory()->create();
         
         $e = new ProductNotFoundException();
-/*
+
         //Log出力用のモック兼、アサート。
         \Log::shouldReceive('info');
         \Log::shouldReceive('error')
@@ -263,7 +263,7 @@ class VueErrorTest extends TestCase
             echo $message; // テスト中にログのメッセージを表示
             return true;    // テスト通過のためにtrueを返す
         });
-        */
+        
 
         $this->dependencies['deleteAction']->shouldReceive('__invoke')
         ->andThrow($e);
@@ -281,4 +281,5 @@ class VueErrorTest extends TestCase
         $response->assertSessionHas('message', $e->getMessage());
 
     }
+        */
 }
