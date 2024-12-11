@@ -21,7 +21,7 @@ class EditAction
             return $this->productRepositoryInterface->findOrFail($id);
 
         } catch (Exception $e) {
-            throw $e;
+            throw new Exception("error: " . $e->getMessage(), 0, $e);
         }
     }
 }
