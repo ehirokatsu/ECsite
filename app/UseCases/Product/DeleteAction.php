@@ -33,6 +33,9 @@ class DeleteAction
     {
         try {
             //削除対象のレコードを取得する
+            //リポジトリクラスにしているが、Eloquentを完全に隠蔽できていない。
+            //隠蔽すると下記のdeleteメソッドや専用のProductデータクラスを作成する必要があり手間なので、中途半端だが現状でよしにする。
+            //テストコードは、Eloquentをモックできないので、DeleteAction分は未作成。
             $product = $this->productRepositoryInterface->findOrFail($id);
 
             //商品画像のフルパスを取得する
