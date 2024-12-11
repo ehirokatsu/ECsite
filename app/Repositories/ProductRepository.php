@@ -9,6 +9,8 @@ use Exception;
 
 class ProductRepository implements ProductRepositoryInterface
 {
+    //そのままProductをリターンすると、ユースケースがエロクエントに依存し、テストコードも動作できない
+    //やはりユースケースはエロクエントに依存させた方がいいか。そのうえでコントローラ部分だけテストコードを充実させればいいかもしれない。
     public function findOrFail(string $id)
     {
         try {

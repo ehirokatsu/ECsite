@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\UseCases\Image\CheckFileExists;
 use App\Repositories\ProductRepositoryInterface;
 use Exception;
+use Illuminate\Support\Facades\Config;
 
 class DeleteAction
 {
@@ -35,7 +36,7 @@ class DeleteAction
             $product = $this->productRepositoryInterface->findOrFail($id);
 
             //商品画像のフルパスを取得する
-            $imageFullPath = storage_path('app/' . \Config::get('filepath.imageSaveFolder')) . $product->image;
+            $imageFullPath = storage_path('app/' . Config::get('filepath.imageSaveFolder')) . $product->image;
             
             //商品画像を削除する
             if (($this->checkFileExists)($imageFullPath)) {
