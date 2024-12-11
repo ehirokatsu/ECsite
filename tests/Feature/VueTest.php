@@ -257,10 +257,42 @@ class VueTest extends TestCase
         $response = $this->get(route('vue.edit', ['id' => '1']));
         $response->assertStatus(302);
         $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', __('messages.edit_failed'));
 
     }
     //delete 存在しないID　先に画像を削除しておいてから削除処理をする。　EXceptionを期待する。
 
+    public function test_product_delete_error_no_id(): void
+    {
+        $response = $this->delete(route('vue.destroy', ['id' => '1']));
 
+        $response->assertStatus(302);
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', __('messages.delete_failed'));
+        
+
+    }
+
+    public function test_product_delete_error_no_image(): void
+    {
+        //管理者ユーザを作成
+        $adminUser = User::factory()->create();
+        $product = Product::factory()->create();
+
+        //factory内のfakerで生成した画像を削除する
+        if (($this->checkFileExists)(storage_path('app/test/') . $product->image)) {
+            unlink(storage_path('app/test/') . $product->image); // 画像を削除します
+        }
+
+        //削除できていること
+        $response = $this->actingAs($adminUser)->delete(route('vue.destroy', ['id' => $product->id]));
+
+        $response->assertStatus(302);
+        $response->assertRedirect(route('vue.index'));
+        $response->assertSessionHas('message', __('messages.delete_failed'));
+        
+
+    }
+    
 
 }
