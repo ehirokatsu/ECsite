@@ -23,7 +23,7 @@ class ProductRepository implements ProductRepositoryInterface
 
         } catch (QueryException $e) {
 
-            throw new \Exception("Database query error: " . $e->getMessage(), 0, $e);
+            throw new Exception("Database query error: " . $e->getMessage(), 0, $e);
 
         }
     }
