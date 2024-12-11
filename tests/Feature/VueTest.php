@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Storage;
 
 use Carbon\Carbon;
 use App\UseCases\Image\CheckFileExists;
+use Exception;
+
 
 class VueTest extends TestCase
 {
@@ -238,4 +240,27 @@ class VueTest extends TestCase
     }
 */
     
+
+    public function test_product_edit(): void
+    {
+
+        $product = Product::factory()->create();
+        $response = $this->get(route('vue.edit', ['id' => $product->id]));
+        $response->assertStatus(200);
+
+    }
+
+    //Editで存在しないID
+    public function test_product_edit_error(): void
+    {
+
+        $response = $this->get(route('vue.edit', ['id' => '1']));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('vue.index'));
+
+    }
+    //delete 存在しないID　先に画像を削除しておいてから削除処理をする。　EXceptionを期待する。
+
+
+
 }
