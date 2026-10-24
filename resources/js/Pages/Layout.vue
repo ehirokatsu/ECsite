@@ -24,7 +24,7 @@ const logout = (): void => {
                     MyECサイト
                 </h1>
                 <div v-if="$page.props.auth.user">
-                    ようこそ {{ $page.props.auth.user.name }} さま
+                    ようこそ {{ $page.props.auth.user?.name }} さま
                 </div>
                 <div v-else>
                     ようこそ ゲスト さま
