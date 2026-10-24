@@ -34,13 +34,13 @@ const logout = (): void => {
                 <div class="flex">
                     <NavLink v-bind:href="route('vue.index')">トップ</NavLink>
                     <NavLink v-bind:href="route('vue.cart.index')">カート</NavLink>
-                    <NavLink v-bind:href="route('contact.index')">問合せ</NavLink>
+                    <NavLink v-bind:href="route('contact.index')" external>問合せ</NavLink>
                     <NavLink v-bind:href="route('vue.index')">注文履歴</NavLink>
                     <NavLink v-bind:href="route('vue.index')">アカウント編集</NavLink>
                     <NavLink v-bind:href="route('vue.create')">商品追加</NavLink>
                 </div>
                 <div class="flex justify-end">
-                    <NavLink v-bind:href="route('index')">Bladeトップ</NavLink>
+                    <NavLink v-bind:href="route('index')" external>Bladeトップ</NavLink>
                     <NavLink v-bind:href="route('vue.index')">Vueトップ</NavLink>
                     <NavLink v-bind:href="route('vue.ajaxlink.index')">VueLinkトップ</NavLink>
                     <NavLink v-bind:href="route('vue.ajaxlink.create')">VueLink追加</NavLink>

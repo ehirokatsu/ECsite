@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/vue3';
 const props = defineProps<{
     href: string;
     active?: boolean;
+    external?: boolean;
 }>();
 
 const classes = computed(() =>
@@ -15,7 +16,10 @@ const classes = computed(() =>
 </script>
 
 <template>
-    <Link :href="href" :class="classes">
+    <a v-if="external" :href="href" :class="classes">
+        <slot />
+    </a>
+    <Link v-else :href="href" :class="classes">
         <slot />
     </Link>
 </template>
