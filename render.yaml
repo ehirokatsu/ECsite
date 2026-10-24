@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ECsite
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    envVars:
+      - key: DEMO_MODE
+        value: "true"
+      - key: APP_DEBUG
+        value: "false"

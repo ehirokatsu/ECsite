@@ -16,6 +16,7 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
+        @include('demo-notice')
         @inertia
     </body>
 </html>
