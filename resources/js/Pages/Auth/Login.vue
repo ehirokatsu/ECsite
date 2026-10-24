@@ -43,7 +43,7 @@ import { ref, onMounted } from "vue";
 import { usePage } from '@inertiajs/vue3';
 
 const isFromCart = ref(false);
-const { props } = usePage();
+const { props } = usePage<{ redirect_to: string}>();
 const redirect_to = props.redirect_to || null;
 
 onMounted(() => {

@@ -24,9 +24,9 @@ const imageRef3 = ref(image3);
 let isSpinRunning: boolean = false;
 const isSpinRunningRef = ref(isSpinRunning)
 
-let timeoutId1: ReturnType<typeof setInterval> | undefined;
-let timeoutId2: ReturnType<typeof setInterval> | undefined;
-let timeoutId3: ReturnType<typeof setInterval> | undefined;
+let timeoutId1;
+let timeoutId2;
+let timeoutId3;
 
 //STOPボタンを押下済か判定するフラグ。HTMLで使用するのでリアクティブにする。
 let isStopSelected1: boolean = true;

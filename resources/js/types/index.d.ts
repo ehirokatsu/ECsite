@@ -29,8 +29,8 @@ export interface FlashMessage {
     message?: string;
 }
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
-    auth: {
-        user: User | null;
+    auth?: {//usePAgeを使用するときにauthを任意にするので「？」をつけた
+        user: User;
     };
     //フラッシュメッセージ用に追加
     flash?: FlashMessage; 
